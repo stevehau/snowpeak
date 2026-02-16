@@ -1,7 +1,7 @@
 import { fetchScoresFromCloud, saveScoreToCloud, clearScoresFromCloud } from './firebase'
 
 const STORAGE_KEY = 'snowpeak_high_scores_v4'
-const MAX_SCORES = 10
+const MAX_SCORES = 50
 const FOUR_MINUTES_MS = 4 * 60 * 1000
 
 export function getHighScores() {
