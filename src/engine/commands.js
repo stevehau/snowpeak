@@ -451,7 +451,7 @@ export function handleRead(state, { itemId }) {
     s = addOutput(s, 'A faded photograph falls out of the envelope. It shows Tobias Snowpeak and friends on the slopes, grinning from ear to ear.', 'normal')
     s = {
       ...s,
-      output: [...s.output, { type: 'image', src: '/founderskids.jpg', text: 'Tobias Snowpeak and friends on the slopes' }],
+      output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}founderskids.jpg`, text: 'Tobias Snowpeak and friends on the slopes' }],
     }
     s = addOutputLines(s, victoryText)
 
@@ -472,7 +472,7 @@ export function handleRead(state, { itemId }) {
     // Victory image
     s = {
       ...s,
-      output: [...s.output, { type: 'image', src: '/victory.svg', text: 'The Golden Ski Trophy' }],
+      output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}victory.svg`, text: 'The Golden Ski Trophy' }],
     }
 
     s = { ...s, gameOver: true, puzzles: { ...s.puzzles, victory: true } }
