@@ -1,10 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Terminal from './components/Terminal'
 import NameEntry from './components/NameEntry'
 import { useGame } from './hooks/useGame'
+import { playVictoryFanfare } from './engine/sounds'
 
 function Game({ playerInfo }) {
   const { gameState, processCommand } = useGame(playerInfo.name, playerInfo.mode)
+  const fanfarePlayed = useRef(false)
+
+  useEffect(() => {
+    if (gameState.gameOver && !fanfarePlayed.current) {
+      fanfarePlayed.current = true
+      playVictoryFanfare()
+    }
+  }, [gameState.gameOver])
 
   return (
     <div className="terminal">

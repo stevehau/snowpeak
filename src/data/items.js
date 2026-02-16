@@ -73,7 +73,7 @@ still." -- T.S.`,
   },
   note_from_founder: {
     id: 'note_from_founder',
-    name: "founder's note",
+    name: 'welcome note',
     description: 'A weathered note pinned to the base of the statue. It reads: "To future adventurers: The greatest treasures are found not alone, but with the help of friends -- even the grumpy ones. Seek the still water, and bring light to the darkness below. -- T. Snowpeak"',
     takeable: true,
   },
