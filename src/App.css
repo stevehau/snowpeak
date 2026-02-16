@@ -25,6 +25,7 @@ body {
 .terminal {
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -182,6 +183,9 @@ body {
   gap: 4px;
   padding-top: 10px;
   border-top: 1px solid var(--dark-green);
+  flex-shrink: 0;
+  max-height: 40vh;
+  overflow-y: auto;
 }
 
 .choice-button {

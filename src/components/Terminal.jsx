@@ -98,7 +98,7 @@ function Terminal({ output, onCommand, gameOver, mode, gameState }) {
           ))}
         </div>
       )}
-      {!gameOver && mode !== 'easy' && (
+      {!gameOver && (
         <form className="terminal-input-form" onSubmit={handleSubmit}>
           <span className="prompt-char">&gt;</span>
           <input
