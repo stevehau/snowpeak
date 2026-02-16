@@ -351,23 +351,6 @@ body {
   padding: 8px 14px;
 }
 
-@media (pointer: coarse) {
-  .arcade-touch-btn {
-    padding: 14px 28px;
-    font-size: 24px;
-  }
-  .arcade-touch-start {
-    font-size: 16px;
-    padding: 14px 20px;
-  }
-  .arcade-controls {
-    padding: 10px 0;
-  }
-  .arcade-controls-inner {
-    gap: 16px;
-  }
-}
-
 /* Wide base */
 .arcade-base {
   width: 70%;
@@ -377,4 +360,98 @@ body {
   border-bottom: var(--cab-border);
   border-radius: 0 0 4px 4px;
   background: var(--cab-dark);
+}
+
+/* ── Mobile: touch-first layout ── */
+@media (pointer: coarse) {
+  .slalom-container {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .arcade-cabinet {
+    width: 100%;
+    height: 100%;
+    filter: none;
+  }
+
+  /* Hide decorative chrome on mobile */
+  .arcade-top,
+  .arcade-base {
+    display: none;
+  }
+
+  .arcade-marquee {
+    width: 100%;
+    padding: 4px 0;
+    font-size: 13px;
+    letter-spacing: 2px;
+    border: none;
+    border-bottom: 1px solid var(--cab-green);
+    flex-shrink: 0;
+  }
+
+  /* Screen fills available space */
+  .arcade-screen-bezel {
+    width: 100%;
+    height: auto;
+    flex: 1;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  /* Controls: full-width bar pinned at bottom */
+  .arcade-controls {
+    width: 100%;
+    border: none;
+    border-top: 1px solid var(--cab-green);
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .arcade-controls-inner {
+    gap: 0;
+  }
+
+  .arcade-touch-btn {
+    flex: 1;
+    padding: 20px 0;
+    font-size: 28px;
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid rgba(51, 255, 51, 0.3);
+    box-shadow: none;
+  }
+
+  .arcade-touch-btn:last-child {
+    border-right: none;
+  }
+
+  .arcade-touch-btn:active {
+    background: rgba(51, 255, 51, 0.2);
+    box-shadow: none;
+  }
+
+  .arcade-touch-start {
+    font-size: 18px;
+    letter-spacing: 3px;
+    padding: 20px 0;
+  }
+}
+
+/* Extra-short phones (e.g. iPhone SE, landscape) */
+@media (pointer: coarse) and (max-height: 500px) {
+  .arcade-marquee {
+    display: none;
+  }
+  .arcade-touch-btn {
+    padding: 14px 0;
+    font-size: 24px;
+  }
+  .arcade-touch-start {
+    padding: 14px 0;
+    font-size: 16px;
+  }
 }
