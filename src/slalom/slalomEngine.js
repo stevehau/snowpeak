@@ -208,13 +208,34 @@ function spawnGates(state) {
 
 function overlapsGate(x, width, y, gates) {
   const obsPad = 20  // extra clearance around obstacle
-  for (const gate of gates) {
-    // Check if obstacle is vertically near this gate
-    if (Math.abs(y - gate.y) > 60) continue
-    // Check if obstacle horizontally overlaps the gate opening
-    const obsLeft = x - obsPad
-    const obsRight = x + width + obsPad
-    if (obsRight > gate.leftX && obsLeft < gate.rightX) return true
+  const obsLeft = x - obsPad
+  const obsRight = x + width + obsPad
+  const obsCenterX = x + width / 2
+
+  for (let i = 0; i < gates.length; i++) {
+    const gate = gates[i]
+
+    // Wide vertical exclusion zone around each gate (approach + exit)
+    if (Math.abs(y - gate.y) < 120) {
+      // Block obstacles inside the gate opening
+      if (obsRight > gate.leftX && obsLeft < gate.rightX) return true
+    }
+
+    // Protect the corridor between consecutive gates:
+    // If the obstacle is between two gates vertically, check if it
+    // sits in the path a skier would need to take between them
+    const nextGate = gates[i + 1]
+    if (nextGate && y > gate.y && y < nextGate.y) {
+      const blend = (y - gate.y) / (nextGate.y - gate.y)
+      const gateCenterA = (gate.leftX + gate.rightX) / 2
+      const gateCenterB = (nextGate.leftX + nextGate.rightX) / 2
+      const corridorCenter = gateCenterA + blend * (gateCenterB - gateCenterA)
+      // Corridor width: interpolate between the two gate gaps, with padding
+      const gapA = gate.rightX - gate.leftX
+      const gapB = nextGate.rightX - nextGate.leftX
+      const corridorHalf = (gapA + blend * (gapB - gapA)) / 2 + obsPad
+      if (Math.abs(obsCenterX - corridorCenter) < corridorHalf) return true
+    }
   }
   return false
 }
