@@ -1,3 +1,5 @@
+import { fetchScoresFromCloud, saveScoreToCloud } from './firebase'
+
 const STORAGE_KEY = 'snowpeak_high_scores_v3'
 const MAX_SCORES = 10
 
@@ -29,12 +31,23 @@ export function saveHighScore(name, steps, elapsedMs, mode) {
   const time = formatTime(elapsedMs)
   const scores = getHighScores()
 
-  // Prevent duplicate entries (React StrictMode runs reducers twice)
+  const scoreEntry = {
+    name,
+    steps,
+    time,
+    elapsedMs,
+    mode: mode || 'standard',
+    date: new Date().toISOString(),
+  }
+
+  // Prevent duplicate entries
   const isDuplicate = scores.some(
     s => s.name === name && s.steps === steps && s.elapsedMs === elapsedMs
   )
   if (!isDuplicate) {
-    scores.push({ name, steps, time, elapsedMs, mode: mode || 'standard', date: new Date().toISOString() })
+    scores.push(scoreEntry)
+    // Fire-and-forget save to cloud
+    saveScoreToCloud(scoreEntry)
   }
 
   sortScores(scores)
@@ -53,6 +66,34 @@ export function saveHighScore(name, steps, elapsedMs, mode) {
     s => s.name === name && s.steps === steps && s.elapsedMs === elapsedMs
   )
   return { rank: rank + 1, scores: trimmed }
+}
+
+// Fetch scores from Firestore and merge into localStorage
+export async function loadScoresFromCloud() {
+  const cloudScores = await fetchScoresFromCloud()
+  if (!cloudScores || cloudScores.length === 0) return getHighScores()
+
+  // Merge cloud scores with any local scores
+  const localScores = getHighScores()
+  const merged = [...cloudScores]
+
+  for (const local of localScores) {
+    const exists = merged.some(
+      s => s.name === local.name && s.steps === local.steps && s.elapsedMs === local.elapsedMs
+    )
+    if (!exists) merged.push(local)
+  }
+
+  sortScores(merged)
+  const trimmed = merged.slice(0, MAX_SCORES)
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed))
+  } catch {
+    // localStorage full or unavailable
+  }
+
+  return trimmed
 }
 
 export function formatTime(ms) {

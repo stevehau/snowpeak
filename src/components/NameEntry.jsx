@@ -1,13 +1,17 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { getHighScores, formatDate } from '../engine/scores'
+import { getHighScores, loadScoresFromCloud, formatDate } from '../engine/scores'
 import { containsProfanity } from '../engine/profanity'
 
 function NameEntry({ onSubmit }) {
   const [name, setName] = useState('')
   const [phase, setPhase] = useState('name') // 'name' -> 'mode'
   const [nameError, setNameError] = useState('')
+  const [scores, setScores] = useState(getHighScores())
   const inputRef = useRef(null)
-  const scores = getHighScores()
+
+  useEffect(() => {
+    loadScoresFromCloud().then(setScores)
+  }, [])
 
   useEffect(() => {
     if (inputRef.current) {
