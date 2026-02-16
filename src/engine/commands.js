@@ -339,6 +339,15 @@ export function handleTalk(state, { npcId }) {
 
   let s = addOutput(state, chosen.text, 'npc')
 
+  // Show Dill Pickle's image on first interaction only
+  if (npcId === 'dill_pickle' && !state.puzzles.dill_pickle_image_shown) {
+    s = {
+      ...s,
+      output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}skishop.jpg`, text: 'Dill Pickle in the ski shop' }],
+      puzzles: { ...s.puzzles, dill_pickle_image_shown: true },
+    }
+  }
+
   // Show Coach Joe's image and play whistle on first interaction only
   if (npcId === 'coach_joe' && !state.puzzles.coach_joe_image_shown) {
     s = addSound(s, 'whistle')
