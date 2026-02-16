@@ -265,6 +265,44 @@ export function playVictoryFanfare() {
   }
 }
 
+// Kid giggle — Mr Smiles interactions
+function playKidLaugh() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    const notes = [
+      { freq: 400, start: 0, dur: 0.08 },
+      { freq: 520, start: 0.09, dur: 0.07 },
+      { freq: 620, start: 0.17, dur: 0.07 },
+      { freq: 500, start: 0.25, dur: 0.07 },
+      { freq: 680, start: 0.33, dur: 0.09 },
+      { freq: 560, start: 0.44, dur: 0.07 },
+      { freq: 720, start: 0.52, dur: 0.12 },
+    ]
+
+    for (const note of notes) {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(note.freq, ctx.currentTime + note.start)
+
+      gain.gain.setValueAtTime(0, ctx.currentTime + note.start)
+      gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + note.start + 0.01)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + note.start + note.dur)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start(ctx.currentTime + note.start)
+      osc.stop(ctx.currentTime + note.start + note.dur + 0.02)
+    }
+
+    setTimeout(() => ctx.close(), 1500)
+  } catch {
+    // Audio not available
+  }
+}
+
 // Dispatcher — play a sound by name
 export function playSound(name) {
   const sounds = {
@@ -275,6 +313,7 @@ export function playSound(name) {
     wind: playWind,
     cave_echo: playCaveEcho,
     vault_rumble: playVaultRumble,
+    kid_laugh: playKidLaugh,
     victory: playVictoryFanfare,
   }
   const fn = sounds[name]

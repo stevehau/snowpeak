@@ -339,6 +339,25 @@ export function handleTalk(state, { npcId }) {
 
   let s = addOutput(state, chosen.text, 'npc')
 
+  // Show Mr Smiles image on first interaction
+  if (npcId === 'mr_smiles' && !state.puzzles.mr_smiles_image_shown) {
+    s = addSound(s, 'kid_laugh')
+    s = {
+      ...s,
+      output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}mistersmiles.jpg`, text: 'Mr Smiles' }],
+      puzzles: { ...s.puzzles, mr_smiles_image_shown: true },
+    }
+  }
+
+  // Show Mr Smiles with poles when he gets them back
+  if (npcId === 'mr_smiles' && chosen.effects?.removeItem === 'ski_poles') {
+    s = addSound(s, 'kid_laugh')
+    s = {
+      ...s,
+      output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}smilespoles.jpg`, text: 'Mr Smiles with his ski poles' }],
+    }
+  }
+
   // Show Dill Pickle's image on first interaction only
   if (npcId === 'dill_pickle' && !state.puzzles.dill_pickle_image_shown) {
     s = {
