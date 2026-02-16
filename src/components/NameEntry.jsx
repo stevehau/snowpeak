@@ -69,7 +69,7 @@ function NameEntry({ onSubmit }) {
         {scores.length > 0 && (
           <>
             <div className="output-line output-system">
-              --- HIGH SCORES ---
+              --- TOP ADVENTURERS WHO UNLOCKED THE SECRET ---
             </div>
             <div className="output-line output-system">
               {'  #   PLAYER           STEPS  TIME     MODE       DATE'}
