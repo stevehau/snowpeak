@@ -121,7 +121,7 @@ export function handleMove(state, { direction }) {
   }
 
   // Warm coat required for cold areas
-  const coldRooms = ['frozen_waterfall', 'mountain_peak']
+  const coldRooms = ['ski_slopes', 'frozen_waterfall', 'ski_lift_top', 'mountain_peak']
   if (coldRooms.includes(targetRoomId) && !state.inventory.includes('warm_coat')) {
     return addOutput(state, "The bitter mountain wind cuts right through you! It's far too cold to continue without a warm coat. You turn back, shivering.", 'error')
   }
@@ -133,7 +133,7 @@ export function handleMove(state, { direction }) {
 
   // 10% chance a friendly Husky appears (not in cave/vault)
   const noHuskyRooms = ['hidden_cave', 'underground_vault']
-  if (!noHuskyRooms.includes(targetRoomId) && Math.random() < 0.1) {
+  if (!noHuskyRooms.includes(targetRoomId) && Math.random() < 0.2) {
     const FINGER_ENCOUNTER = 5
     const hasFingerAlready = s.inventory.includes('frozen_finger')
     let idx = Math.floor(Math.random() * huskyEncounters.length)

@@ -270,7 +270,7 @@ export const rooms = {
     exits: { west: 'frozen_waterfall' },
     hiddenExits: {},
     lockedExits: { down: { roomId: 'underground_vault', keyId: 'strange_medallion', message: 'Stone steps lead down to a heavy door with a circular indentation. It looks like a medallion-shaped key is needed.' } },
-    items: ['strange_medallion', 'torch'],
+    items: ['torch'],
     npcs: [],
   },
   underground_vault: {
@@ -315,11 +315,11 @@ export const rooms = {
   /     SNOWPEAK     MOUNTAIN  \\
  /  PANORAMIC VIEW OF WORLD     \\
 /________________________________\\`,
-    description: 'You stand at the summit of Snowpeak Mountain. The wind howls around you but the view is breathtaking -- an endless panorama of snow-covered peaks stretching to the horizon. Far below, the resort looks like a toy village. You can see everything from here: the frozen waterfall, the village, the winding slopes. The ski lift can carry you back down.',
+    description: 'You stand at the summit of Snowpeak Mountain. The wind howls around you but the view is breathtaking -- an endless panorama of snow-covered peaks stretching to the horizon. Far below, the resort looks like a toy village. You can see everything from here: the frozen waterfall, the village, the winding slopes. Half-buried in the snow near a cairn of stacked rocks, something glints in the sunlight. The ski lift can carry you back down.',
     exits: { down: 'ski_lift_top' },
     hiddenExits: {},
     lockedExits: {},
-    items: [],
+    items: ['strange_medallion'],
     npcs: [],
   },
 }
