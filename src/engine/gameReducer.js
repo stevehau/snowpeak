@@ -10,7 +10,7 @@ import {
 } from './commands'
 import { helpText } from '../data/story'
 import { checkPuzzleTriggers } from '../data/puzzles'
-import { getHighScores, formatScoreBoard, clearAllScores } from './scores'
+import { getHighScores, formatScoreBoard, clearAllScores, formatTime } from './scores'
 
 export function gameReducer(state, action) {
   if (state.gameOver && action.type !== 'ADD_OUTPUT') {
@@ -44,12 +44,15 @@ export function gameReducer(state, action) {
     case 'READ':
       newState = handleRead(state, action.payload)
       break
-    case 'HELP':
+    case 'HELP': {
+      const elapsed = formatTime(Date.now() - (state.startTime || Date.now()))
+      const statsLine = { text: `Current stats:  ${state.turnCount} steps  |  ${elapsed} elapsed`, type: 'system' }
       newState = {
         ...state,
-        output: [...state.output, ...helpText],
+        output: [...state.output, ...helpText, statsLine],
       }
       break
+    }
     case 'SCORES': {
       const scores = getHighScores()
       if (scores.length === 0) {
