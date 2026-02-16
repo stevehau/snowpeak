@@ -12,7 +12,7 @@ const VERB_PATTERNS = [
   { verbs: ['look', 'l', 'examine', 'inspect', 'describe'], action: 'LOOK' },
   { verbs: ['take', 'get', 'grab', 'pickup'], action: 'TAKE' },
   { verbs: ['drop', 'put', 'discard', 'leave'], action: 'DROP' },
-  { verbs: ['use', 'apply'], action: 'USE' },
+  { verbs: ['use', 'apply', 'play'], action: 'USE' },
   { verbs: ['give', 'offer', 'hand', 'show'], action: 'GIVE' },
   { verbs: ['talk', 'speak', 'ask', 'chat'], action: 'TALK' },
   { verbs: ['read'], action: 'READ' },
@@ -43,9 +43,22 @@ function matchNpc(noun, state) {
   return null
 }
 
+// Aliases that map alternative phrases to canonical item IDs
+const ITEM_ALIASES = {
+  'arcade game': 'arcade_machine',
+}
+
 function matchItem(noun, state) {
   const room = state.rooms[state.currentRoomId]
   const allItems = [...room.items, ...state.inventory]
+
+  // Check aliases first
+  const nounPhrase = noun.join(' ')
+  for (const [alias, itemId] of Object.entries(ITEM_ALIASES)) {
+    if (nounPhrase.includes(alias) && allItems.includes(itemId)) {
+      return itemId
+    }
+  }
 
   for (const itemId of allItems) {
     const item = state.items[itemId]

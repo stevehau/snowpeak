@@ -17,7 +17,7 @@ export const items = {
                         |
    [Ski Rental]---[Main Street]---[Village]
                         |
-   [Lodge Bar]---[Lodge Lobby]---[Balcony]
+   [Game Room]---[Lodge Bar]---[Lodge Lobby]---[Balcony]
                         |
                    [Basement??]
 
@@ -137,5 +137,11 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
     name: 'frozen finger',
     description: 'A stiff, frozen finger of mysterious origin, delivered to you by an enthusiastic Husky. It\'s ice-cold and slightly blue. You have no idea whose it is or why a dog had it. Probably best not to think about it too hard.',
     takeable: true,
+  },
+  arcade_machine: {
+    id: 'arcade_machine',
+    name: 'arcade machine',
+    description: 'A battered arcade cabinet in the game room. The side art shows a pixelated skier racing downhill through slalom gates. The screen glows with green text: "SLALOM CHALLENGE - INSERT COIN". A hand-written note taped to the coin slot reads "FREE PLAY." Try "play arcade game" to play!',
+    takeable: false,
   },
 }

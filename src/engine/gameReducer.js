@@ -75,6 +75,28 @@ export function gameReducer(state, action) {
         output: [...state.output, { text: 'High score table has been erased.', type: 'system' }],
       }
       break
+    case 'SLALOM_RESULT': {
+      const { score, gatesPassed, difficulty } = action.payload
+      const lines = [
+        { text: '', type: 'normal' },
+        { text: 'The arcade screen fades and you step back from the machine.', type: 'normal' },
+        { text: `Final Score: ${score}  |  Gates: ${gatesPassed}  |  Difficulty: ${difficulty}`, type: 'system' },
+      ]
+      if (score >= 2000) {
+        lines.push({ text: "You beat Coach Joe's high score! You are the Slalom Champion!", type: 'victory' })
+      } else {
+        lines.push({ text: 'Not bad! Coach Joe\'s high score is 2000. Think you can beat it?', type: 'normal' })
+      }
+      newState = {
+        ...state,
+        launchSlalom: false,
+        output: [...state.output, ...lines],
+        puzzles: score >= 2000
+          ? { ...state.puzzles, slalom_champion: true }
+          : state.puzzles,
+      }
+      break
+    }
     case 'ADD_OUTPUT':
       return {
         ...state,

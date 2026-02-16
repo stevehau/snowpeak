@@ -303,6 +303,40 @@ function playKidLaugh() {
   }
 }
 
+// Arcade start — coin-insert jingle
+function playArcadeStart() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    const notes = [
+      { freq: 660, start: 0, dur: 0.08 },
+      { freq: 880, start: 0.1, dur: 0.08 },
+      { freq: 1100, start: 0.2, dur: 0.15 },
+    ]
+
+    for (const note of notes) {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+
+      osc.type = 'square'
+      osc.frequency.value = note.freq
+
+      gain.gain.setValueAtTime(0, ctx.currentTime + note.start)
+      gain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + note.start + 0.01)
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + note.start + note.dur)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start(ctx.currentTime + note.start)
+      osc.stop(ctx.currentTime + note.start + note.dur + 0.02)
+    }
+
+    setTimeout(() => ctx.close(), 800)
+  } catch {
+    // Audio not available
+  }
+}
+
 // Dispatcher — play a sound by name
 export function playSound(name) {
   const sounds = {
@@ -315,6 +349,7 @@ export function playSound(name) {
     vault_rumble: playVaultRumble,
     kid_laugh: playKidLaugh,
     victory: playVictoryFanfare,
+    arcade_start: playArcadeStart,
   }
   const fn = sounds[name]
   if (fn) fn()

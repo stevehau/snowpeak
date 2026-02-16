@@ -29,5 +29,5 @@ export function useGame(playerName, mode) {
     }
   }, [])
 
-  return { gameState, processCommand }
+  return { gameState, processCommand, dispatch }
 }

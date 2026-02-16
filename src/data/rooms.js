@@ -41,12 +41,34 @@ export const rooms = {
     |__|____|_|_______________|____ _|
     |====BAR COUNTER=================|
     |________________________________|`,
-    description: 'A dimly lit bar with a crackling fireplace that provides the only warmth in the whole resort. Taxidermied animal heads line the walls, all wearing tiny ski goggles. The shelves behind the bar are mostly empty, save for a few dusty bottles. The air smells of old wood and stale pretzels.',
-    exits: { west: 'lodge_lobby' },
+    description: 'A dimly lit bar with a crackling fireplace that provides the only warmth in the whole resort. Taxidermied animal heads line the walls, all wearing tiny ski goggles. The shelves behind the bar are mostly empty, save for a few dusty bottles. The air smells of old wood and stale pretzels. To the east, a doorway leads to a game room.',
+    exits: { west: 'lodge_lobby', east: 'game_room' },
     hiddenExits: {},
     lockedExits: {},
     items: ['broken_radio', 'whiskey_bottle'],
     npcs: ['angry_boss'],
+  },
+  game_room: {
+    id: 'game_room',
+    name: 'Game Room',
+    ascii: `
+     _________________________________
+    |  ___   GAME ROOM          ___  |
+    | |   |                    |   | |
+    | | S |   ___________      | D | |
+    | | L |  |           |     | A | |
+    | | A |  | POOL TABLE|     | R | |
+    | | L |  |    (o)    |     | T | |
+    | | O |  |___________|     | S | |
+    | | M |                    |   | |
+    | |___|  [FREE PLAY]       |___| |
+    |________________________________|`,
+    description: 'A recreation room off the bar, filled with old entertainment. A battered arcade cabinet dominates one corner, its screen glowing with green pixels. A pool table with faded felt sits in the center, and a dartboard hangs on the far wall. The room smells of old carpet and nostalgia.',
+    exits: { west: 'lodge_bar' },
+    hiddenExits: {},
+    lockedExits: {},
+    items: ['arcade_machine'],
+    npcs: [],
   },
   lodge_balcony: {
     id: 'lodge_balcony',

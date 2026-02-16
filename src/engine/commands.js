@@ -485,6 +485,21 @@ export function handleTalk(state, { npcId }) {
 }
 
 export function handleUse(state, { itemId }) {
+  // Arcade machine is a room item, not an inventory item
+  if (itemId === 'arcade_machine') {
+    const room = state.rooms[state.currentRoomId]
+    if (!room.items.includes('arcade_machine')) {
+      return addOutput(state, "There's no arcade machine here.", 'error')
+    }
+    let s = addOutput(state, 'You step up to the arcade machine and press START. The screen flickers to life...', 'normal')
+    s = addOutput(s, '', 'normal')
+    s = addOutput(s, '* SLALOM CHALLENGE *', 'title')
+    s = addOutput(s, 'The cabinet hums and the screen fills with green pixels. Time to hit the slopes!', 'normal')
+    s = addSound(s, 'arcade_start')
+    s = { ...s, launchSlalom: true }
+    return s
+  }
+
   if (!state.inventory.includes(itemId)) {
     return addOutput(state, "You're not carrying that.", 'error')
   }

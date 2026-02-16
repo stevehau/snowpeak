@@ -236,3 +236,123 @@ body {
   letter-spacing: 2px;
   padding-bottom: 4px;
 }
+
+.slalom-container {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg);
+  overflow: hidden;
+}
+
+.slalom-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Upright arcade cabinet shell */
+.arcade-cabinet {
+  --cab-green: #33ff33;
+  --cab-dim: #1a8c1a;
+  --cab-dark: #0d4d0d;
+  --cab-border: 2px solid var(--cab-green);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: drop-shadow(0 0 18px rgba(51, 255, 51, 0.15));
+}
+
+/* Tapered top crown */
+.arcade-top {
+  width: 60%;
+  height: 12px;
+  border-left: var(--cab-border);
+  border-right: var(--cab-border);
+  border-top: var(--cab-border);
+  border-radius: 8px 8px 0 0;
+  background: var(--cab-dark);
+}
+
+/* Marquee banner */
+.arcade-marquee {
+  width: 80%;
+  padding: 6px 0;
+  border-left: var(--cab-border);
+  border-right: var(--cab-border);
+  background: var(--cab-dark);
+  color: var(--cab-green);
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 3px;
+  text-shadow: 0 0 8px rgba(51, 255, 51, 0.6);
+}
+
+/* Screen bezel — wraps the canvas */
+.arcade-screen-bezel {
+  border: var(--cab-border);
+  border-radius: 4px;
+  padding: 6px;
+  background: #000;
+  box-shadow: inset 0 0 20px rgba(51, 255, 51, 0.08);
+  /* Scale canvas to fit viewport while keeping aspect ratio */
+  width: min(480px, 70vw);
+  height: min(640px, 65vh);
+}
+
+/* Control panel */
+.arcade-controls {
+  width: 90%;
+  border-left: var(--cab-border);
+  border-right: var(--cab-border);
+  border-bottom: var(--cab-border);
+  background: var(--cab-dark);
+  padding: 8px 0;
+}
+
+.arcade-controls-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+/* Joystick circle */
+.arcade-stick {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--cab-green);
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(51, 255, 51, 0.4);
+}
+
+.arcade-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* Two round buttons */
+.arcade-btn {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--cab-green);
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(51, 255, 51, 0.4);
+}
+
+/* Wide base */
+.arcade-base {
+  width: 70%;
+  height: 18px;
+  border-left: var(--cab-border);
+  border-right: var(--cab-border);
+  border-bottom: var(--cab-border);
+  border-radius: 0 0 4px 4px;
+  background: var(--cab-dark);
+}

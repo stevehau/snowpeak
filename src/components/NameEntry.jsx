@@ -144,6 +144,13 @@ function NameEntry({ onSubmit }) {
             [2] EASY (CHEAT) MODE
             <span className="mode-desc">Choose from multiple choice options each turn, beginner friendly</span>
           </button>
+          <button
+            className="mode-button"
+            onClick={() => handleModeSelect('bonus')}
+          >
+            [3] BONUS CONTENT
+            <span className="mode-desc">Play mini-games and view release notes</span>
+          </button>
         </div>
       )}
     </>
