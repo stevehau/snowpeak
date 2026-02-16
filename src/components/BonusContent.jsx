@@ -46,6 +46,13 @@ function BonusContent({ onBack }) {
           <div className="output-line output-system">{'='.repeat(40)}</div>
           <div className="output-line output-normal">&nbsp;</div>
 
+          <div className="output-line output-title">v1.5 -- Mobile & Responsive</div>
+          <div className="output-line output-normal">  - Fully responsive layout for phones and tablets</div>
+          <div className="output-line output-normal">  - Touch controls for the slalom arcade game</div>
+          <div className="output-line output-normal">  - Smarter obstacle placement for fairer gameplay</div>
+          <div className="output-line output-normal">  - NPC portraits for all characters</div>
+          <div className="output-line output-normal">&nbsp;</div>
+
           <div className="output-line output-title">v1.4 -- Game Room & Custom Arcade Game</div>
           <div className="output-line output-normal">  - Added a game room off the lodge bar</div>
           <div className="output-line output-normal">  - Custom-built slalom arcade mini-game with retro 80s graphics</div>
