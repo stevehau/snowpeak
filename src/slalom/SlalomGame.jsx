@@ -1,7 +1,7 @@
 // Slalom Challenge — React component wrapper
 // Canvas, game loop, keyboard input, phase management
 
-import { useRef, useEffect, useCallback } from 'react'
+import { useRef, useEffect, useCallback, useState } from 'react'
 import { CANVAS } from './slalomConfig.js'
 import { createSlalomState, tick } from './slalomEngine.js'
 import { render } from './slalomRenderer.js'
@@ -126,6 +126,34 @@ export default function SlalomGame({ standalone = false, onGameOver }) {
     }
   }, [standalone, onGameOver])
 
+  // Touch helpers
+  const handleStart = useCallback(() => {
+    const state = stateRef.current
+    if (state.phase === 'ready') {
+      stateRef.current = { ...state, phase: 'playing' }
+    } else if (state.phase === 'gameover') {
+      if (standalone) {
+        stateRef.current = { ...createSlalomState(), phase: 'ready' }
+      } else if (onGameOver) {
+        onGameOver({ score: state.score, gatesPassed: state.gatesPassed, difficulty: state.difficulty })
+      }
+    }
+  }, [standalone, onGameOver])
+
+  const setLeft = useCallback((down) => {
+    stateRef.current = {
+      ...stateRef.current,
+      input: { ...stateRef.current.input, left: down },
+    }
+  }, [])
+
+  const setRight = useCallback((down) => {
+    stateRef.current = {
+      ...stateRef.current,
+      input: { ...stateRef.current.input, right: down },
+    }
+  }, [])
+
   return (
     <div className="slalom-container">
       <div className="arcade-cabinet">
@@ -141,11 +169,27 @@ export default function SlalomGame({ standalone = false, onGameOver }) {
         </div>
         <div className="arcade-controls">
           <div className="arcade-controls-inner">
-            <div className="arcade-stick" />
-            <div className="arcade-buttons">
-              <div className="arcade-btn" />
-              <div className="arcade-btn" />
-            </div>
+            <button
+              className="arcade-touch-btn"
+              onTouchStart={(e) => { e.preventDefault(); setLeft(true) }}
+              onTouchEnd={(e) => { e.preventDefault(); setLeft(false) }}
+              onMouseDown={() => setLeft(true)}
+              onMouseUp={() => setLeft(false)}
+              onMouseLeave={() => setLeft(false)}
+            >&#9664;</button>
+            <button
+              className="arcade-touch-btn arcade-touch-start"
+              onTouchStart={(e) => { e.preventDefault(); handleStart() }}
+              onMouseDown={handleStart}
+            >START</button>
+            <button
+              className="arcade-touch-btn"
+              onTouchStart={(e) => { e.preventDefault(); setRight(true) }}
+              onTouchEnd={(e) => { e.preventDefault(); setRight(false) }}
+              onMouseDown={() => setRight(true)}
+              onMouseUp={() => setRight(false)}
+              onMouseLeave={() => setRight(false)}
+            >&#9654;</button>
           </div>
         </div>
         <div className="arcade-base" />
