@@ -39,30 +39,29 @@ function NameEntry({ onSubmit }) {
     <>
       <div className="terminal-output">
         <div className="output-line output-normal">&nbsp;</div>
-        <div className="output-line output-title">
-          THE SECRET OF SNOWPEAK RESORT
-        </div>
-        <div className="output-line output-title">
-          A Zork-Style Text Adventure
-        </div>
-        <div className="output-line output-title">
-          ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        </div>
-        <div className="output-line output-ascii">
-{`
-               /\\
-              /  \\     *  .  *
-             / /\\ \\   .  *  .
-            / /  \\ \\    *  .
-           /  \\  /  \\
-          /____\\/____\\
-         /  SNOWPEAK   \\
-        / ~~~ RESORT ~~~ \\
-       /___________________\\
-`}
+        <div className="output-line output-ascii welcome-art">
+{`         *  .  *  .  *  .  *  .  *
+      .     *     .     *     .
+            .  *  .  *  .  *
+               *  .  *
+                 /\\
+                /  \\         *  .  *
+               / /\\ \\       .  *  .
+              / /  \\ \\        *  .
+             / /    \\ \\      .  *
+            /  \\    /  \\
+           /____\\  /____\\
+          / ~~~~ SNOWPEAK ~~~~ \\
+         / ~~~~~ RESORT  ~~~~~ \\
+        /________________________\\
+       /     est. 1976            \\
+      /____________________________\\`}
         </div>
         <div className="output-line output-normal">&nbsp;</div>
-        <div className="output-line output-normal">
+        <div className="welcome-title">THE SECRET OF SNOWPEAK RESORT</div>
+        <div className="welcome-subtitle">A Zork-Style Text Adventure</div>
+        <div className="output-line output-normal">&nbsp;</div>
+        <div className="output-line output-system">
           Welcome, adventurer! Before we begin...
         </div>
         <div className="output-line output-normal">&nbsp;</div>

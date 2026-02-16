@@ -206,3 +206,27 @@ body {
   border-color: var(--green);
   outline: none;
 }
+
+.welcome-art {
+  color: #44ddff;
+  text-shadow: 0 0 8px rgba(68, 221, 255, 0.4);
+  font-size: 15px;
+  line-height: 1.15;
+}
+
+.welcome-title {
+  text-align: center;
+  font-size: 1.8em;
+  color: #ffcc00;
+  text-shadow: 0 0 12px rgba(255, 204, 0, 0.5), 0 0 30px rgba(255, 204, 0, 0.2);
+  letter-spacing: 3px;
+  padding: 4px 0;
+}
+
+.welcome-subtitle {
+  text-align: center;
+  font-size: 1.1em;
+  color: var(--dim-green);
+  letter-spacing: 2px;
+  padding-bottom: 4px;
+}
