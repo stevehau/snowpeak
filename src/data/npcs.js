@@ -13,7 +13,7 @@ export const npcs = {
       {
         state: 1,
         condition: { hasItem: 'whiskey_bottle' },
-        text: 'You offer the bottle of whiskey. Angry Boss\'s eyes widen. Her red face softens just slightly.\n\n"Well... maybe this trip isn\'t ALL bad." She takes a long swig and exhales. "You know what, kid? I\'ll tell you something. Yesterday I was stomping around the slopes in a rage -- don\'t judge me -- and I saw something STRANGE. Behind that frozen waterfall up north... there\'s a CAVE. I could see an opening in the ice. Looked like someone sealed it up years ago. Might be worth checking out."\n\nShe takes another swig and almost smiles. Almost.',
+        text: 'You offer the bottle of juice. Angry Boss\'s eyes widen. Her red face softens just slightly.\n\n"Well... maybe this trip isn\'t ALL bad." She takes a long swig and exhales. "You know what, kid? I\'ll tell you something. Yesterday I was stomping around the slopes in a rage -- don\'t judge me -- and I saw something STRANGE. Behind that frozen waterfall up north... there\'s a CAVE. I could see an opening in the ice. Looked like someone sealed it up years ago. Might be worth checking out."\n\nShe takes another swig and almost smiles. Almost.',
         effects: { removeItem: 'whiskey_bottle', setFlag: ['angry_boss', 'calmed', true] },
       },
       {
