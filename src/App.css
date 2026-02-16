@@ -142,6 +142,35 @@ body {
   caret-color: var(--green);
 }
 
+.name-entry-form {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.prompt-label {
+  color: var(--green);
+  text-shadow: var(--glow);
+  font-size: 18px;
+}
+
+.name-input-row {
+  display: flex;
+  align-items: center;
+}
+
+.name-input-row input {
+  background: transparent;
+  border: none;
+  color: var(--green);
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  flex: 1;
+  text-shadow: var(--glow);
+  caret-color: var(--green);
+}
+
 .mode-select {
   display: flex;
   gap: 16px;
@@ -235,6 +264,109 @@ body {
   color: var(--dim-green);
   letter-spacing: 2px;
   padding-bottom: 4px;
+}
+
+/* ── Mobile: responsive text adventure layout ── */
+@media (max-width: 600px) {
+  body {
+    font-size: 16px;
+  }
+
+  .terminal {
+    padding: 10px;
+  }
+
+  /* Let ASCII art scroll horizontally instead of breaking layout */
+  .output-ascii,
+  .welcome-art {
+    font-size: 11px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .welcome-title {
+    font-size: 1.4em;
+    letter-spacing: 1px;
+  }
+
+  .welcome-subtitle {
+    font-size: 1em;
+    letter-spacing: 1px;
+  }
+
+  /* Stack mode buttons vertically */
+  .mode-select {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mode-button {
+    font-size: 16px;
+    padding: 14px 16px;
+  }
+
+  .mode-desc {
+    font-size: 13px;
+  }
+
+  /* Larger choice buttons for touch */
+  .choice-button {
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+
+  /* Taller input area for easier tapping */
+  .terminal-input-form {
+    padding-top: 8px;
+  }
+
+  .terminal-input-form input {
+    font-size: 16px;
+    padding: 6px 0;
+  }
+
+  .prompt-char {
+    font-size: 16px;
+  }
+
+  .prompt-label {
+    font-size: 16px;
+  }
+
+  .name-input-row input {
+    font-size: 16px;
+    padding: 6px 0;
+  }
+
+  /* High score table: smaller font to fit */
+  .output-system {
+    font-size: 13px;
+  }
+
+  /* Images: full width on mobile */
+  .output-image img {
+    max-width: 100%;
+  }
+}
+
+/* Extra-narrow screens (iPhone SE, small Android) */
+@media (max-width: 380px) {
+  .terminal {
+    padding: 8px;
+  }
+
+  .output-ascii,
+  .welcome-art {
+    font-size: 9px;
+  }
+
+  .welcome-title {
+    font-size: 1.2em;
+  }
+
+  .output-system {
+    font-size: 11px;
+  }
 }
 
 .slalom-container {

@@ -109,19 +109,22 @@ function NameEntry({ onSubmit }) {
               {nameError}
             </div>
           )}
-          <form className="terminal-input-form" onSubmit={handleNameSubmit}>
-            <span className="prompt-char">What name should I call you?</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={name}
-              onChange={(e) => { setName(e.target.value); setNameError('') }}
-              autoFocus
-              spellCheck={false}
-              autoComplete="off"
-              maxLength={15}
-              placeholder=""
-            />
+          <form className="terminal-input-form name-entry-form" onSubmit={handleNameSubmit}>
+            <label className="prompt-label">What name should I call you?</label>
+            <div className="name-input-row">
+              <span className="prompt-char">&gt;</span>
+              <input
+                ref={inputRef}
+                type="text"
+                value={name}
+                onChange={(e) => { setName(e.target.value); setNameError('') }}
+                autoFocus
+                spellCheck={false}
+                autoComplete="off"
+                maxLength={15}
+                placeholder=""
+              />
+            </div>
           </form>
         </>
       )}
