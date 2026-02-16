@@ -77,7 +77,11 @@ function Terminal({ output, onCommand, gameOver, mode, gameState }) {
           line.type === 'sound' ? null :
           line.type === 'image' ? (
             <div key={i} className="output-line output-image">
-              <img src={line.src} alt={line.text || 'image'} />
+              <img src={line.src} alt={line.text || 'image'} onLoad={() => {
+                if (outputRef.current) {
+                  outputRef.current.scrollTop = outputRef.current.scrollHeight
+                }
+              }} />
             </div>
           ) : (
             <div key={i} className={`output-line output-${line.type || 'normal'}`}>
