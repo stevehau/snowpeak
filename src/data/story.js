@@ -26,6 +26,8 @@ export const victoryText = [
   { text: 'Thank you for playing!', type: 'victory' },
 ]
 
+export const GAME_VERSION = '1.4.0'
+
 export const helpText = [
   { text: '--- AVAILABLE COMMANDS ---', type: 'system' },
   { text: '', type: 'normal' },
@@ -40,5 +42,7 @@ export const helpText = [
   { text: 'Read:        read <item> -- read a readable item', type: 'system' },
   { text: 'Scores:      scores -- view the high score leaderboard', type: 'system' },
   { text: 'Help:        help -- show this message', type: 'system' },
+  { text: '', type: 'normal' },
+  { text: `The Secret of Snowpeak Resort v${GAME_VERSION}`, type: 'system' },
   { text: '', type: 'normal' },
 ]

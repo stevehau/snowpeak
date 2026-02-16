@@ -115,8 +115,8 @@ export function formatScoreBoard(scores) {
   const lines = []
   lines.push({ text: '', type: 'normal' })
   lines.push({ text: '--- TOP ADVENTURERS WHO UNLOCKED THE SECRET ---', type: 'system' })
-  lines.push({ text: '  #   PLAYER           STEPS  TIME     MODE       DATE', type: 'system' })
-  lines.push({ text: '  -   ------           -----  ----     ----       ----', type: 'system' })
+  lines.push({ text: '  #   PLAYER           STEPS   TIME      MODE        DATE', type: 'system' })
+  lines.push({ text: '  --  --------         -----   -------   ---------   ----', type: 'system' })
 
   for (let i = 0; i < scores.length; i++) {
     const s = scores[i]

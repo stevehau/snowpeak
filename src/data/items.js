@@ -98,7 +98,7 @@ still." -- T.S.`,
   strange_medallion: {
     id: 'strange_medallion',
     name: 'strange medallion',
-    description: 'A heavy bronze medallion about the size of your palm. It\'s shaped like a snowflake with a ski carved in the center. The craftsmanship is extraordinary. It feels important -- like a key to something ancient.',
+    description: 'A heavy bronze medallion half-buried in the snow near the summit cairn. It\'s about the size of your palm, shaped like a snowflake with a ski carved in the center. The craftsmanship is extraordinary. It feels important -- like a key to something ancient.',
     takeable: true,
   },
   golden_ski_trophy: {
@@ -131,5 +131,11 @@ Founder, Snowpeak Resort
 THE END
 
 Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
+  },
+  frozen_finger: {
+    id: 'frozen_finger',
+    name: 'frozen finger',
+    description: 'A stiff, frozen finger of mysterious origin, delivered to you by an enthusiastic Husky. It\'s ice-cold and slightly blue. You have no idea whose it is or why a dog had it. Probably best not to think about it too hard.',
+    takeable: true,
   },
 }

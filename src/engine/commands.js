@@ -1,6 +1,19 @@
 import { victoryText } from '../data/story'
 import { saveHighScore, formatTime, formatScoreBoard } from './scores'
 
+const huskyEncounters = [
+  'A friendly Siberian Husky bounds out of nowhere, tail wagging furiously! It drops a snow-covered stick at your feet, barks once, then zooms away in a blur of fluff.',
+  'You hear excited panting behind you. A Siberian Husky with bright blue eyes nudges your hand with its cold nose, demands exactly three pets, then trots off looking very satisfied.',
+  'A Husky appears, spins in three tight circles chasing its own tail, stops to give you a goofy tongue-out grin, then disappears around the corner at full speed.',
+  'A fluffy Siberian Husky slides across the icy ground on its belly like a furry toboggan, bumps gently into your leg, looks up at you with zero shame, and scrambles off.',
+  'A Husky pops its head out from behind a snowdrift, lets out a dramatic "AWOOOO!", then army-crawls toward you for belly rubs before bounding away happily.',
+  'A snow-dusted Husky trots up carrying something in its mouth. It drops a frozen finger at your feet, wags its tail proudly, and prances away before you can react. That\'s... unsettling.',
+  'You spot a Husky rolling ecstatically in a fresh patch of snow, all four paws in the air. It notices you watching, freezes mid-roll, then bolts off as if nothing happened.',
+  'A Siberian Husky zooms past at incredible speed, loops back, sniffs your boots thoroughly, sneezes directly on your shoes, and gallops away looking enormously pleased.',
+  'A Husky appears with snow on its nose and what appears to be a tiny snowball balanced on its head. It sits perfectly still for two seconds, shakes everything off, and dashes into the distance.',
+  'A playful Husky rushes up and play-bows in front of you, butt wiggling in the air. It lets out a series of excited yips, does a victory lap around you, and vanishes into the snow.',
+]
+
 function addOutput(state, text, type = 'normal') {
   return {
     ...state,
@@ -107,10 +120,36 @@ export function handleMove(state, { direction }) {
     return addOutput(state, "You can't go that way.", 'error')
   }
 
+  // Warm coat required for cold areas
+  const coldRooms = ['frozen_waterfall', 'mountain_peak']
+  if (coldRooms.includes(targetRoomId) && !state.inventory.includes('warm_coat')) {
+    return addOutput(state, "The bitter mountain wind cuts right through you! It's far too cold to continue without a warm coat. You turn back, shivering.", 'error')
+  }
+
   let s = { ...state, currentRoomId: targetRoomId, previousRoomId: state.currentRoomId }
   s = addOutput(s, '', 'normal')
   s = describeRoom(s, targetRoomId)
   s = { ...s, rooms: { ...s.rooms, [targetRoomId]: { ...s.rooms[targetRoomId], visited: true } } }
+
+  // 10% chance a friendly Husky appears (not in cave/vault)
+  const noHuskyRooms = ['hidden_cave', 'underground_vault']
+  if (!noHuskyRooms.includes(targetRoomId) && Math.random() < 0.1) {
+    const FINGER_ENCOUNTER = 5
+    const hasFingerAlready = s.inventory.includes('frozen_finger')
+    let idx = Math.floor(Math.random() * huskyEncounters.length)
+    // If player already has the finger, pick a different encounter
+    if (idx === FINGER_ENCOUNTER && hasFingerAlready) {
+      idx = (idx + 1) % huskyEncounters.length
+    }
+    s = addOutput(s, '', 'normal')
+    s = addOutput(s, huskyEncounters[idx], 'npc')
+    // Give the frozen finger item
+    if (idx === FINGER_ENCOUNTER && !hasFingerAlready) {
+      s = { ...s, inventory: [...s.inventory, 'frozen_finger'] }
+      s = addOutput(s, '\n[Frozen finger added to inventory]', 'system')
+    }
+  }
+
   return s
 }
 
