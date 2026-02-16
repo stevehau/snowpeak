@@ -18,7 +18,8 @@ export function generateChoices(state) {
 
   // 1. ALL movement options (prioritize unvisited rooms)
   const allExits = { ...room.exits, ...room.hiddenExits }
-  const lockedExitDirs = Object.keys(room.lockedExits || {})
+  const showLockedExits = state.currentRoomId !== 'hidden_cave'
+  const lockedExitDirs = showLockedExits ? Object.keys(room.lockedExits || {}) : []
   const allDirs = [...Object.keys(allExits), ...lockedExitDirs]
 
   const dirLabels = {

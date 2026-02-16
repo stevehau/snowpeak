@@ -66,9 +66,10 @@ function describeRoom(state, roomId) {
     s = addOutput(s, `${npcNames.join(' and ')} ${room.npcs.length === 1 ? 'is' : 'are'} here.`, 'normal')
   }
 
-  // List exits
+  // List exits (hide locked exits in hidden_cave until medallion unlocks them)
   const allExits = { ...room.exits, ...room.hiddenExits }
-  const lockedExitDirs = Object.keys(room.lockedExits || {})
+  const showLockedExits = roomId !== 'hidden_cave'
+  const lockedExitDirs = showLockedExits ? Object.keys(room.lockedExits || {}) : []
   const exitDirs = [...Object.keys(allExits), ...lockedExitDirs]
   if (exitDirs.length > 0) {
     s = addOutput(s, `\nExits: ${exitDirs.join(', ')}`, 'system')
@@ -100,7 +101,11 @@ export function handleMove(state, { direction }) {
         ...state,
         rooms: { ...state.rooms, [state.currentRoomId]: newRoom },
       }
-      s = addOutput(s, `You use the ${state.items[locked.keyId].name} to unlock the way ${direction}.`, 'normal')
+      if (locked.roomId === 'basement') {
+        s = addOutput(s, `The rusty key fits perfectly in the lock. With a satisfying click, the heavy wooden door creaks open, revealing stone steps leading down into darkness.`, 'normal')
+      } else {
+        s = addOutput(s, `You use the ${state.items[locked.keyId].name} to unlock the way ${direction}.`, 'normal')
+      }
       s = addOutput(s, '', 'normal')
       s = { ...s, currentRoomId: targetRoomId, previousRoomId: state.currentRoomId }
       s = describeRoom(s, targetRoomId)
@@ -135,17 +140,21 @@ export function handleMove(state, { direction }) {
   const noHuskyRooms = ['hidden_cave', 'underground_vault']
   if (!noHuskyRooms.includes(targetRoomId) && Math.random() < 0.2) {
     const FINGER_ENCOUNTER = 5
-    const hasFingerAlready = s.inventory.includes('frozen_finger')
+    const fingerGiven = s.puzzles.finger_given
     let idx = Math.floor(Math.random() * huskyEncounters.length)
-    // If player already has the finger, pick a different encounter
-    if (idx === FINGER_ENCOUNTER && hasFingerAlready) {
+    // If finger was already given, pick a different encounter
+    if (idx === FINGER_ENCOUNTER && fingerGiven) {
       idx = (idx + 1) % huskyEncounters.length
     }
     s = addOutput(s, '', 'normal')
     s = addOutput(s, huskyEncounters[idx], 'npc')
-    // Give the frozen finger item
-    if (idx === FINGER_ENCOUNTER && !hasFingerAlready) {
-      s = { ...s, inventory: [...s.inventory, 'frozen_finger'] }
+    // Give the frozen finger item (once only)
+    if (idx === FINGER_ENCOUNTER && !fingerGiven) {
+      s = {
+        ...s,
+        inventory: [...s.inventory, 'frozen_finger'],
+        puzzles: { ...s.puzzles, finger_given: true },
+      }
       s = addOutput(s, '\n[Frozen finger added to inventory]', 'system')
     }
   }
@@ -527,18 +536,23 @@ export function handleRead(state, { itemId }) {
     s = addOutputLines(s, victoryText)
 
     // Calculate and save score
-    const elapsedMs = Date.now() - state.startTime
-    const steps = state.turnCount + 1
-    const { rank, scores } = saveHighScore(state.playerName, steps, elapsedMs, state.mode)
+    try {
+      const elapsedMs = Date.now() - (state.startTime || Date.now())
+      const steps = state.turnCount + 1
+      const { rank, scores } = saveHighScore(state.playerName || 'Adventurer', steps, elapsedMs, state.mode || 'standard')
 
-    s = addOutput(s, '', 'normal')
-    s = addOutput(s, `${state.playerName}'s stats:  ${steps} steps  |  ${formatTime(elapsedMs)}`, 'victory')
-    if (rank === 1) {
-      s = addOutput(s, 'NEW #1 HIGH SCORE!', 'victory')
-    } else {
-      s = addOutput(s, `Ranked #${rank} on the leaderboard!`, 'victory')
+      s = addOutput(s, '', 'normal')
+      s = addOutput(s, `${state.playerName}'s stats:  ${steps} steps  |  ${formatTime(elapsedMs)}`, 'victory')
+      if (rank === 1) {
+        s = addOutput(s, 'NEW #1 HIGH SCORE!', 'victory')
+      } else {
+        s = addOutput(s, `Ranked #${rank} on the leaderboard!`, 'victory')
+      }
+      s = addOutputLines(s, formatScoreBoard(scores))
+    } catch (e) {
+      s = addOutput(s, '', 'normal')
+      s = addOutput(s, 'Congratulations on completing the adventure!', 'victory')
     }
-    s = addOutputLines(s, formatScoreBoard(scores))
 
     // Victory image
     s = {
