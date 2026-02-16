@@ -72,10 +72,10 @@ function NameEntry({ onSubmit }) {
               --- TOP ADVENTURERS WHO UNLOCKED THE SECRET ---
             </div>
             <div className="output-line output-system">
-              {'  #   PLAYER           STEPS  TIME     MODE       DATE'}
+              {'  #   PLAYER           STEPS  ELAPSED TIME  MODE       DATE'}
             </div>
             <div className="output-line output-system">
-              {'  -   ------           -----  ----     ----       ----'}
+              {'  -   ------           -----  ------------  ----       ----'}
             </div>
             {scores.map((s, i) => (
               <div key={i} className="output-line output-system">
@@ -83,7 +83,7 @@ function NameEntry({ onSubmit }) {
                 {String(i + 1).padEnd(4)}
                 {s.name.slice(0, 15).padEnd(18)}
                 {String(s.steps).padEnd(7)}
-                {(s.time || '').padEnd(9)}
+                {(s.time || '').padEnd(14)}
                 {(s.mode || 'standard').padEnd(11)}
                 {formatDate(s.date)}
               </div>

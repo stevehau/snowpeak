@@ -27,7 +27,7 @@ export const rooms = {
     id: 'lodge_bar',
     name: 'Lodge Bar',
     ascii: `
-     ________________________________
+     _________________________________
     |  _   _   _                     |
     | (o) (o) (o)  <-- ski goggles!  |
     |  |   |   |                     |
@@ -37,7 +37,7 @@ export const rooms = {
     |   ___   |    |  _  _  _        |
     |  |   |  |    | |_||_||_|       |
     |  | ~ |  |    | |  |  |         |
-    |  |/\\.| |____|_|__|__|__       |
+    |  |/\\.| |____|_|__|__|__        |
     |__|____|_|_______________|____ _|
     |====BAR COUNTER=================|
     |________________________________|`,
@@ -77,7 +77,7 @@ export const rooms = {
     id: 'basement',
     name: 'Mysterious Basement',
     ascii: `
-    ___________________________________
+     ___________________________________
     |  ~  ~  ~  COBWEBS  ~  ~  ~       |
     |    _______                       |
     |   |       |   ____  ____         |
@@ -127,7 +127,7 @@ export const rooms = {
     id: 'ski_rental',
     name: 'Ski Rental Shop',
     ascii: `
-     ________________________________
+     _________________________________
     | "HELP YOURSELF" - Management   |
     |________________________________|
     |   /|  /|  /|     __|__         |
@@ -158,8 +158,8 @@ export const rooms = {
       /  \\  /  \\  / \\  /  \\
      /____\\/____\\/___\\/____\\
       A-FRAMES     VILLAGE
-            _____
-           | /_\\|
+            ______
+           | /_\\ |
            ||   ||    TOBIAS
            || O ||    SNOWPEAK
            ||/\\||    statue
@@ -203,7 +203,7 @@ export const rooms = {
     name: 'Ski Lift Top Station',
     ascii: `
      >>>>  FIERCE WIND  >>>>
-         _______________
+         ________________
         |  SKI LIFT TOP |
         |    STATION    |
         |_______________|

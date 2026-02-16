@@ -74,6 +74,7 @@ function Terminal({ output, onCommand, gameOver, mode, gameState }) {
     <>
       <div className="terminal-output" ref={outputRef} onClick={handleTerminalClick}>
         {output.map((line, i) => (
+          line.type === 'sound' ? null :
           line.type === 'image' ? (
             <div key={i} className="output-line output-image">
               <img src={line.src} alt={line.text || 'image'} />
@@ -96,6 +97,12 @@ function Terminal({ output, onCommand, gameOver, mode, gameState }) {
               [{i + 1}] {choice.label}
             </button>
           ))}
+          <button
+            className="choice-button choice-button-wildcard"
+            onClick={() => inputRef.current?.focus()}
+          >
+            [*] Type a command...
+          </button>
         </div>
       )}
       {!gameOver && (

@@ -1,11 +1,22 @@
 import { fetchScoresFromCloud, saveScoreToCloud } from './firebase'
 
-const STORAGE_KEY = 'snowpeak_high_scores_v3'
+const STORAGE_KEY = 'snowpeak_high_scores_v4'
 const MAX_SCORES = 10
+const FOUR_MINUTES_MS = 4 * 60 * 1000
 
 export function getHighScores() {
   try {
-    const data = localStorage.getItem(STORAGE_KEY)
+    // Check new key first, then migrate from old key
+    let data = localStorage.getItem(STORAGE_KEY)
+    if (!data) {
+      data = localStorage.getItem('snowpeak_high_scores_v3')
+      if (data) {
+        const oldScores = migrateScores(JSON.parse(data))
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(oldScores))
+        localStorage.removeItem('snowpeak_high_scores_v3')
+        return oldScores
+      }
+    }
     return data ? JSON.parse(data) : []
   } catch {
     return []
@@ -38,6 +49,7 @@ export function saveHighScore(name, steps, elapsedMs, mode) {
     elapsedMs,
     mode: mode || 'standard',
     date: new Date().toISOString(),
+    migrated_v4: true,
   }
 
   // Prevent duplicate entries
@@ -68,6 +80,20 @@ export function saveHighScore(name, steps, elapsedMs, mode) {
   return { rank: rank + 1, scores: trimmed }
 }
 
+// Add 4 minutes to scores that haven't been migrated yet
+function migrateScores(scores) {
+  return scores.map(s => {
+    if (s.migrated_v4) return s
+    const newElapsedMs = (s.elapsedMs || 0) + FOUR_MINUTES_MS
+    return {
+      ...s,
+      elapsedMs: newElapsedMs,
+      time: formatTime(newElapsedMs),
+      migrated_v4: true,
+    }
+  })
+}
+
 // Fetch scores from Firestore and merge into localStorage
 export async function loadScoresFromCloud() {
   const cloudScores = await fetchScoresFromCloud()
@@ -84,8 +110,11 @@ export async function loadScoresFromCloud() {
     if (!exists) merged.push(local)
   }
 
-  sortScores(merged)
-  const trimmed = merged.slice(0, MAX_SCORES)
+  // Migrate existing scores: add 4 minutes
+  const migrated = migrateScores(merged)
+
+  sortScores(migrated)
+  const trimmed = migrated.slice(0, MAX_SCORES)
 
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed))
@@ -115,8 +144,8 @@ export function formatScoreBoard(scores) {
   const lines = []
   lines.push({ text: '', type: 'normal' })
   lines.push({ text: '--------- TOP ADVENTURERS WHO UNLOCKED THE SECRET ---------', type: 'system' })
-  lines.push({ text: '  #   PLAYER           STEPS   TIME      MODE        DATE', type: 'system' })
-  lines.push({ text: '  --  --------         -----   -------   ---------   ----', type: 'system' })
+  lines.push({ text: '  #   PLAYER           STEPS   ELAPSED TIME   MODE        DATE', type: 'system' })
+  lines.push({ text: '  --  --------         -----   ------------   ---------   ----', type: 'system' })
 
   for (let i = 0; i < scores.length; i++) {
     const s = scores[i]
@@ -125,7 +154,7 @@ export function formatScoreBoard(scores) {
       String(i + 1).padEnd(4) +
       s.name.slice(0, 15).padEnd(18) +
       String(s.steps).padEnd(7) +
-      (s.time || '').padEnd(9) +
+      (s.time || '').padEnd(14) +
       (s.mode || 'standard').padEnd(11) +
       formatDate(s.date)
     lines.push({ text: line, type: 'system' })

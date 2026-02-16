@@ -28,6 +28,22 @@ function addOutputLines(state, lines) {
   }
 }
 
+function addSound(state, sound) {
+  return {
+    ...state,
+    output: [...state.output, { type: 'sound', sound }],
+  }
+}
+
+function getRoomSound(targetRoomId, fromRoomId) {
+  if (targetRoomId === 'basement') return 'creak_door'
+  if (targetRoomId === 'mountain_peak' && fromRoomId === 'ski_lift_top') return 'lift_motor'
+  if (targetRoomId === 'hidden_cave') return 'cave_echo'
+  if (targetRoomId === 'underground_vault') return 'vault_rumble'
+  if (['frozen_waterfall', 'mountain_peak', 'ski_lift_top'].includes(targetRoomId)) return 'wind'
+  return 'footstep'
+}
+
 export function isCaveDark(state) {
   return state.currentRoomId === 'hidden_cave' && !state.inventory.includes('torch')
 }
@@ -107,6 +123,7 @@ export function handleMove(state, { direction }) {
         s = addOutput(s, `You use the ${state.items[locked.keyId].name} to unlock the way ${direction}.`, 'normal')
       }
       s = addOutput(s, '', 'normal')
+      s = addSound(s, getRoomSound(targetRoomId, state.currentRoomId))
       s = { ...s, currentRoomId: targetRoomId, previousRoomId: state.currentRoomId }
       s = describeRoom(s, targetRoomId)
       s = { ...s, rooms: { ...s.rooms, [targetRoomId]: { ...s.rooms[targetRoomId], visited: true } } }
@@ -131,7 +148,8 @@ export function handleMove(state, { direction }) {
     return addOutput(state, "The bitter mountain wind cuts right through you! It's far too cold to continue without a warm coat. You turn back, shivering.", 'error')
   }
 
-  let s = { ...state, currentRoomId: targetRoomId, previousRoomId: state.currentRoomId }
+  let s = addSound(state, getRoomSound(targetRoomId, state.currentRoomId))
+  s = { ...s, currentRoomId: targetRoomId, previousRoomId: state.currentRoomId }
   s = addOutput(s, '', 'normal')
   s = describeRoom(s, targetRoomId)
   s = { ...s, rooms: { ...s.rooms, [targetRoomId]: { ...s.rooms[targetRoomId], visited: true } } }
@@ -320,6 +338,16 @@ export function handleTalk(state, { npcId }) {
   }
 
   let s = addOutput(state, chosen.text, 'npc')
+
+  // Show Coach Joe's image and play whistle on first interaction only
+  if (npcId === 'coach_joe' && !state.puzzles.coach_joe_image_shown) {
+    s = addSound(s, 'whistle')
+    s = {
+      ...s,
+      output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}coach.jpg`, text: 'Coach Joe' }],
+      puzzles: { ...s.puzzles, coach_joe_image_shown: true },
+    }
+  }
 
   // Apply effects
   if (chosen.effects) {
@@ -560,6 +588,7 @@ export function handleRead(state, { itemId }) {
       output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}victory.svg`, text: 'The Golden Ski Trophy' }],
     }
 
+    s = addSound(s, 'victory')
     s = { ...s, gameOver: true, puzzles: { ...s.puzzles, victory: true } }
     return s
   }

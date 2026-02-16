@@ -207,6 +207,12 @@ body {
   outline: none;
 }
 
+.choice-button-wildcard {
+  color: var(--dim-green);
+  border-style: dashed;
+  font-style: italic;
+}
+
 .welcome-art {
   color: #44ddff;
   text-shadow: 0 0 8px rgba(68, 221, 255, 0.4);

@@ -2,18 +2,21 @@ import { useState, useEffect, useRef } from 'react'
 import Terminal from './components/Terminal'
 import NameEntry from './components/NameEntry'
 import { useGame } from './hooks/useGame'
-import { playVictoryFanfare } from './engine/sounds'
+import { playSound } from './engine/sounds'
 
 function Game({ playerInfo }) {
   const { gameState, processCommand } = useGame(playerInfo.name, playerInfo.mode)
-  const fanfarePlayed = useRef(false)
+  const lastOutputLen = useRef(0)
 
   useEffect(() => {
-    if (gameState.gameOver && !fanfarePlayed.current) {
-      fanfarePlayed.current = true
-      playVictoryFanfare()
+    const newEntries = gameState.output.slice(lastOutputLen.current)
+    lastOutputLen.current = gameState.output.length
+    for (const entry of newEntries) {
+      if (entry.type === 'sound') {
+        playSound(entry.sound)
+      }
     }
-  }, [gameState.gameOver])
+  }, [gameState.output])
 
   return (
     <div className="terminal">
