@@ -1,8 +1,20 @@
+import { isCaveDark } from './commands'
+
 const MAX_CHOICES = 7
 
 export function generateChoices(state) {
   const room = state.rooms[state.currentRoomId]
   const choices = []
+
+  // Dark cave — limited choices
+  if (isCaveDark(state)) {
+    choices.push({ label: 'Go west (Frozen Waterfall)', command: 'west' })
+    if (room.items.includes('torch')) {
+      choices.push({ label: 'Take torch', command: 'take torch' })
+    }
+    choices.push({ label: 'Look around', command: 'look' })
+    return choices
+  }
 
   // 1. ALL movement options (prioritize unvisited rooms)
   const allExits = { ...room.exits, ...room.hiddenExits }

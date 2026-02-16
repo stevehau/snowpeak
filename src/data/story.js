@@ -1,9 +1,9 @@
 export const introText = [
   { text: '', type: 'normal' },
-  { text: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', type: 'title' },
-  { text: '|      THE SECRET OF SNOWPEAK RESORT:      |', type: 'title' },
-  { text: '|      A Zork-Style Text Adventure.        |', type: 'title' },
-  { text: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', type: 'title' },
+  { text: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', type: 'title' },
+  { text: '|       THE SECRET OF SNOWPEAK RESORT:       |', type: 'title' },
+  { text: '|       A Zork-Style Text Adventure.         |', type: 'title' },
+  { text: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', type: 'title' },
   { text: '', type: 'normal' },
   { text: 'You arrive at Snowpeak Resort on a cold winter morning, ready for your first ski vacation. The brochure promised "world-class slopes and luxury accommodations." The reality... is somewhat different.', type: 'normal' },
   { text: '', type: 'normal' },

@@ -15,9 +15,21 @@ function addOutputLines(state, lines) {
   }
 }
 
+export function isCaveDark(state) {
+  return state.currentRoomId === 'hidden_cave' && !state.inventory.includes('torch')
+}
+
 function describeRoom(state, roomId) {
   const room = state.rooms[roomId]
   let s = state
+
+  // Hidden cave is pitch black without the torch
+  if (roomId === 'hidden_cave' && !s.inventory.includes('torch')) {
+    s = addOutput(s, 'Hidden Cave', 'title')
+    s = addOutput(s, 'You squeeze through the narrow opening into total darkness. The air is frigid and still. You can\'t see a thing, but you can feel the rough cave walls around you. Near the entrance, your hand brushes against something wooden mounted on the wall -- it feels like a torch.', 'normal')
+    s = addOutput(s, '\nExits: west', 'system')
+    return s
+  }
 
   if (room.ascii) {
     s = addOutput(s, room.ascii, 'ascii')
@@ -103,6 +115,11 @@ export function handleMove(state, { direction }) {
 }
 
 export function handleLook(state, payload = {}) {
+  // Dark cave — can only look around (re-describe dark room)
+  if (isCaveDark(state) && (payload.itemId || payload.npcId || payload.target)) {
+    return addOutput(state, "It's pitch black! You can't see a thing.", 'error')
+  }
+
   // Look at NPC
   if (payload.npcId) {
     const npc = state.npcs[payload.npcId]
@@ -152,6 +169,11 @@ export function handleLook(state, payload = {}) {
 export function handleTake(state, { itemId }) {
   const room = state.rooms[state.currentRoomId]
 
+  // In the dark cave, you can only take the torch
+  if (isCaveDark(state) && itemId !== 'torch') {
+    return addOutput(state, "It's pitch black! You can't see anything to take. You can feel something wooden on the wall near the entrance though...", 'error')
+  }
+
   // Check item is in room
   if (!room.items.includes(itemId)) {
     if (state.inventory.includes(itemId)) {
@@ -176,6 +198,14 @@ export function handleTake(state, { itemId }) {
     inventory: [...state.inventory, itemId],
   }
   s = addOutput(s, `You pick up the ${item.name}.`, 'normal')
+
+  // Taking the torch in the cave lights it up — show the full room
+  if (itemId === 'torch' && state.currentRoomId === 'hidden_cave') {
+    s = addOutput(s, '\nThe torch sputters to life, casting a warm flickering glow across the cave walls!', 'normal')
+    s = addOutput(s, '', 'normal')
+    s = describeRoom(s, 'hidden_cave')
+  }
+
   return s
 }
 
@@ -353,6 +383,11 @@ export function handleTalk(state, { npcId }) {
 export function handleUse(state, { itemId }) {
   if (!state.inventory.includes(itemId)) {
     return addOutput(state, "You're not carrying that.", 'error')
+  }
+
+  // Can't use items in the dark (except the torch would already light the cave via take)
+  if (isCaveDark(state)) {
+    return addOutput(state, "It's too dark to see what you're doing!", 'error')
   }
 
   const item = state.items[itemId]
