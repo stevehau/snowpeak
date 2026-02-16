@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(npm install:*)",
+      "Bash(npx vite build:*)",
+      "Bash(npx vite:*)",
+      "Bash(curl:*)",
+      "Bash(git init:*)",
+      "Bash(git -C /Users/stevehau/my-first-project add -A)",
+      "Bash(git -C:*)"
+    ]
+  }
+}

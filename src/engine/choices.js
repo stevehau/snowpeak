@@ -1,0 +1,184 @@
+const MAX_CHOICES = 7
+
+export function generateChoices(state) {
+  const room = state.rooms[state.currentRoomId]
+  const choices = []
+
+  // 1. ALL movement options (prioritize unvisited rooms)
+  const allExits = { ...room.exits, ...room.hiddenExits }
+  const lockedExitDirs = Object.keys(room.lockedExits || {})
+  const allDirs = [...Object.keys(allExits), ...lockedExitDirs]
+
+  const dirLabels = {
+    north: 'Go north',
+    south: 'Go south',
+    east: 'Go east',
+    west: 'Go west',
+    up: 'Go up',
+    down: 'Go down',
+  }
+
+  const unvisitedDirs = allDirs.filter(d => {
+    const targetId = allExits[d] || room.lockedExits?.[d]?.roomId
+    return targetId && !state.rooms[targetId]?.visited
+  })
+  const visitedDirs = allDirs.filter(d => {
+    const targetId = allExits[d] || room.lockedExits?.[d]?.roomId
+    return !targetId || state.rooms[targetId]?.visited
+  })
+
+  const priorityDirs = [...unvisitedDirs, ...visitedDirs]
+
+  function makeDirChoice(dir) {
+    const targetId = allExits[dir] || room.lockedExits?.[dir]?.roomId
+    const targetName = targetId ? state.rooms[targetId]?.name : null
+    const label = targetName
+      ? `${dirLabels[dir] || `Go ${dir}`} (${targetName})`
+      : `${dirLabels[dir] || `Go ${dir}`}`
+    return { label, command: dir }
+  }
+
+  // Show ALL directions
+  for (const dir of priorityDirs) {
+    if (choices.length >= MAX_CHOICES) break
+    choices.push(makeDirChoice(dir))
+  }
+
+  // 2. NPC interaction - show "Give X to Y" if player has an item the NPC wants
+  for (const npcId of room.npcs) {
+    if (choices.length >= MAX_CHOICES) break
+    const npc = state.npcs[npcId]
+    const giveItem = getGiveableItem(state, npcId)
+    if (giveItem) {
+      const item = state.items[giveItem]
+      choices.push({ label: `Give ${item.name} to ${npc.name}`, command: `give ${item.name} to ${npc.name.toLowerCase()}` })
+    } else {
+      choices.push({ label: `Talk to ${npc.name}`, command: `talk to ${npc.name.toLowerCase()}` })
+    }
+  }
+
+  // 3. ALL visible room items (take or look at)
+  const visibleItems = room.items.filter(id => {
+    const item = state.items[id]
+    return item && !item.hidden
+  })
+
+  for (const itemId of visibleItems) {
+    if (choices.length >= MAX_CHOICES) break
+    const item = state.items[itemId]
+    if (item.takeable) {
+      choices.push({ label: `Take ${item.name}`, command: `take ${item.name}` })
+    } else {
+      choices.push({ label: `Look at ${item.name}`, command: `look at ${item.name}` })
+    }
+  }
+
+  // 4. Context-sensitive room feature examination
+  const roomExamine = getRoomExamineAction(state)
+  if (roomExamine && choices.length < MAX_CHOICES) {
+    choices.push(roomExamine)
+  }
+
+  // 5. Use an inventory item (context-sensitive)
+  const useableHere = getUsableItem(state)
+  if (useableHere && choices.length < MAX_CHOICES) {
+    const item = state.items[useableHere]
+    choices.push({ label: `Use ${item.name}`, command: `use ${item.name}` })
+  }
+
+  // 6. Read items in inventory or room (victory item prioritized)
+  const readableItem = findReadableItem(state)
+  if (readableItem && choices.length < MAX_CHOICES) {
+    const item = state.items[readableItem]
+    choices.push({ label: `Read ${item.name}`, command: `read ${item.name}` })
+  }
+
+  // Fill remaining slots
+  if (choices.length < MAX_CHOICES && state.inventory.length > 0) {
+    choices.push({ label: 'Check inventory', command: 'inventory' })
+  }
+
+  if (choices.length < MAX_CHOICES) {
+    choices.push({ label: 'Look around', command: 'look' })
+  }
+
+  if (choices.length < MAX_CHOICES) {
+    choices.push({ label: 'Help', command: 'help' })
+  }
+
+  return choices.slice(0, MAX_CHOICES)
+}
+
+function getGiveableItem(state, npcId) {
+  const npc = state.npcs[npcId]
+  if (!npc || npc.dialogueState === 0) return null
+
+  const npcWants = {
+    angry_boss: 'whiskey_bottle',
+    mr_smiles: 'ski_poles',
+    dill_pickle: 'broken_radio',
+  }
+
+  const wantedItem = npcWants[npcId]
+  if (wantedItem && state.inventory.includes(wantedItem)) {
+    return wantedItem
+  }
+  return null
+}
+
+function getRoomExamineAction(state) {
+  const roomId = state.currentRoomId
+
+  if (roomId === 'frozen_waterfall' && !state.rooms.frozen_waterfall.hiddenExits?.east) {
+    if (!state.inventory.includes('binoculars')) {
+      return { label: 'Examine the frozen waterfall closely', command: 'look at waterfall' }
+    }
+  }
+
+  return null
+}
+
+function getUsableItem(state) {
+  const roomId = state.currentRoomId
+
+  for (const itemId of state.inventory) {
+    if (itemId === 'fuse' && roomId === 'ski_lift_top') return itemId
+    if (itemId === 'strange_medallion' && roomId === 'hidden_cave') return itemId
+    if (itemId === 'binoculars' && roomId === 'lodge_balcony') return itemId
+    if (itemId === 'binoculars' && roomId === 'frozen_waterfall' && !state.rooms.frozen_waterfall.hiddenExits?.east) return itemId
+
+    const room = state.rooms[roomId]
+    if (itemId === 'whiskey_bottle' && room.npcs.includes('angry_boss')) return null
+    if (itemId === 'ski_poles' && room.npcs.includes('mr_smiles')) return null
+    if (itemId === 'broken_radio' && room.npcs.includes('dill_pickle')) return null
+  }
+
+  for (const itemId of state.inventory) {
+    if (itemId === 'torch' && roomId === 'hidden_cave') return itemId
+  }
+
+  return null
+}
+
+function findReadableItem(state) {
+  const room = state.rooms[state.currentRoomId]
+
+  // Victory item always takes top priority
+  if (state.inventory.includes('founders_letter') || room.items.includes('founders_letter')) {
+    return 'founders_letter'
+  }
+
+  // Check inventory for other readable items
+  for (const itemId of state.inventory) {
+    if (['old_map', 'dusty_journal', 'note_from_founder'].includes(itemId)) {
+      return itemId
+    }
+  }
+  // Check room items
+  for (const itemId of room.items) {
+    if (['old_map'].includes(itemId)) {
+      return itemId
+    }
+  }
+  return null
+}

@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700"/>
+      <stop offset="50%" style="stop-color:#FFA500"/>
+      <stop offset="100%" style="stop-color:#FFD700"/>
+    </linearGradient>
+    <linearGradient id="darkgold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#B8860B"/>
+      <stop offset="100%" style="stop-color:#8B6914"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a3e"/>
+      <stop offset="100%" style="stop-color:#2d2d6b"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="star-glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="500" fill="url(#sky)" rx="12"/>
+
+  <!-- Border frame -->
+  <rect x="10" y="10" width="580" height="480" fill="none" stroke="url(#gold)" stroke-width="3" rx="8"/>
+  <rect x="18" y="18" width="564" height="464" fill="none" stroke="#FFD700" stroke-width="1" rx="6" opacity="0.5"/>
+
+  <!-- Stars -->
+  <g fill="#FFD700" filter="url(#star-glow)" opacity="0.8">
+    <circle cx="80" cy="50" r="2"/><circle cx="520" cy="45" r="2"/>
+    <circle cx="150" cy="35" r="1.5"/><circle cx="450" cy="55" r="1.5"/>
+    <circle cx="250" cy="42" r="1"/><circle cx="350" cy="38" r="1"/>
+    <circle cx="100" cy="70" r="1"/><circle cx="500" cy="72" r="1"/>
+  </g>
+
+  <!-- Mountain silhouette -->
+  <g fill="#3a3a6e" opacity="0.6">
+    <polygon points="0,380 100,280 180,340 260,260 340,310 420,240 500,300 600,250 600,380"/>
+  </g>
+  <g fill="#2d2d5a" opacity="0.4">
+    <polygon points="0,380 150,300 250,340 350,280 450,320 550,270 600,290 600,380"/>
+  </g>
+
+  <!-- Snow on peaks -->
+  <g fill="white" opacity="0.3">
+    <polygon points="255,260 260,258 270,265 250,265"/>
+    <polygon points="415,240 420,238 430,248 410,248"/>
+  </g>
+
+  <!-- Trophy -->
+  <g transform="translate(300,200)" filter="url(#glow)">
+    <!-- Trophy cup -->
+    <path d="M-40,-60 L-50,-60 Q-60,-60 -55,-35 L-40,-10 L40,-10 L55,-35 Q60,-60 50,-60 L40,-60 Z" fill="url(#gold)" stroke="#B8860B" stroke-width="1.5"/>
+    <!-- Trophy shine -->
+    <path d="M-30,-55 L-35,-55 Q-42,-55 -38,-35 L-28,-15" fill="none" stroke="white" stroke-width="2" opacity="0.4"/>
+    <!-- Left handle -->
+    <path d="M-50,-50 Q-75,-45 -70,-25 Q-65,-5 -42,-12" fill="none" stroke="url(#gold)" stroke-width="5"/>
+    <path d="M-50,-50 Q-75,-45 -70,-25 Q-65,-5 -42,-12" fill="none" stroke="#FFE44D" stroke-width="2" opacity="0.5"/>
+    <!-- Right handle -->
+    <path d="M50,-50 Q75,-45 70,-25 Q65,-5 42,-12" fill="none" stroke="url(#gold)" stroke-width="5"/>
+    <path d="M50,-50 Q75,-45 70,-25 Q65,-5 42,-12" fill="none" stroke="#FFE44D" stroke-width="2" opacity="0.5"/>
+    <!-- Trophy stem -->
+    <rect x="-8" y="-10" width="16" height="30" fill="url(#darkgold)" stroke="#B8860B" stroke-width="1"/>
+    <!-- Trophy base -->
+    <rect x="-30" y="20" width="60" height="10" rx="3" fill="url(#gold)" stroke="#B8860B" stroke-width="1"/>
+    <rect x="-22" y="30" width="44" height="6" rx="2" fill="url(#darkgold)" stroke="#8B6914" stroke-width="1"/>
+    <!-- Ski symbol on trophy -->
+    <line x1="-15" y1="-45" x2="15" y2="-25" stroke="#B8860B" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="-10" y1="-45" x2="20" y2="-25" stroke="#FFE44D" stroke-width="1" opacity="0.6" stroke-linecap="round"/>
+    <!-- Snowflake on trophy -->
+    <g transform="translate(0,-35)" stroke="#B8860B" stroke-width="1" opacity="0.6">
+      <line x1="0" y1="-5" x2="0" y2="5"/>
+      <line x1="-4" y1="-3" x2="4" y2="3"/>
+      <line x1="-4" y1="3" x2="4" y2="-3"/>
+    </g>
+  </g>
+
+  <!-- Title text -->
+  <text x="300" y="110" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#FFD700" filter="url(#glow)" letter-spacing="4">THE SECRET OF</text>
+  <text x="300" y="145" text-anchor="middle" font-family="Georgia, serif" font-size="32" fill="#FFD700" filter="url(#glow)" font-weight="bold" letter-spacing="6">SNOWPEAK RESORT</text>
+
+  <!-- Trophy label -->
+  <text x="300" y="295" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#FFD700" font-style="italic">The Golden Ski Trophy</text>
+
+  <!-- Congratulations -->
+  <text x="300" y="340" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="white" opacity="0.9">Congratulations, Adventurer!</text>
+
+  <!-- Quote -->
+  <text x="300" y="380" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#C0C0FF" font-style="italic" opacity="0.8">"Every expert was once a beginner,</text>
+  <text x="300" y="400" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#C0C0FF" font-style="italic" opacity="0.8">and every mountain is climbed one step at a time."</text>
+
+  <!-- Signature -->
+  <text x="300" y="440" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#B8860B">-- Tobias Snowpeak, 1978</text>
+
+  <!-- Corner ornaments -->
+  <g stroke="#FFD700" stroke-width="1.5" fill="none" opacity="0.6">
+    <path d="M30,30 L30,50 M30,30 L50,30"/>
+    <path d="M570,30 L570,50 M570,30 L550,30"/>
+    <path d="M30,470 L30,450 M30,470 L50,470"/>
+    <path d="M570,470 L570,450 M570,470 L550,470"/>
+  </g>
+</svg>
