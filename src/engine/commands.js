@@ -339,6 +339,16 @@ export function handleTalk(state, { npcId }) {
 
   let s = addOutput(state, chosen.text, 'npc')
 
+  // Show Angry Boss image on first interaction
+  if (npcId === 'angry_boss' && !state.puzzles.angry_boss_image_shown) {
+    s = addSound(s, 'angry_grunt')
+    s = {
+      ...s,
+      output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}boss.jpg`, text: 'Angry Boss' }],
+      puzzles: { ...s.puzzles, angry_boss_image_shown: true },
+    }
+  }
+
   // Show Mr Smiles image on first interaction
   if (npcId === 'mr_smiles' && !state.puzzles.mr_smiles_image_shown) {
     s = addSound(s, 'kid_laugh')

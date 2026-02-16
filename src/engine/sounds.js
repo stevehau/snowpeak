@@ -337,6 +337,47 @@ function playArcadeStart() {
   }
 }
 
+// Angry grunt — short grumpy low-pitched burst
+function playAngryGrunt() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // Low growl oscillator
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = 'sawtooth'
+    osc.frequency.setValueAtTime(120, ctx.currentTime)
+    osc.frequency.linearRampToValueAtTime(80, ctx.currentTime + 0.25)
+    gain.gain.setValueAtTime(0.15, ctx.currentTime)
+    gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.15)
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3)
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.35)
+
+    // Noise burst for gritty texture
+    const bufferSize = ctx.sampleRate * 0.15
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
+    const data = buffer.getChannelData(0)
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * 0.3
+    }
+    const noise = ctx.createBufferSource()
+    const noiseGain = ctx.createGain()
+    noise.buffer = buffer
+    noiseGain.gain.setValueAtTime(0.06, ctx.currentTime)
+    noiseGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15)
+    noise.connect(noiseGain)
+    noiseGain.connect(ctx.destination)
+    noise.start(ctx.currentTime)
+
+    setTimeout(() => ctx.close(), 600)
+  } catch {
+    // Audio not available
+  }
+}
+
 // Dispatcher — play a sound by name
 export function playSound(name) {
   const sounds = {
@@ -350,6 +391,7 @@ export function playSound(name) {
     kid_laugh: playKidLaugh,
     victory: playVictoryFanfare,
     arcade_start: playArcadeStart,
+    angry_grunt: playAngryGrunt,
   }
   const fn = sounds[name]
   if (fn) fn()
