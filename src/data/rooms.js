@@ -34,13 +34,13 @@ export const rooms = {
     |  ~~  ~~  ~~   taxidermy heads  |
     |________________________________|
     |          ____                  |
-    |   ___   |    |  _  _  _       |
-    |  |   |  |    | |_||_||_|      |
-    |  | ~ |  |    | |  |  |       |
-    |  |/\\.|  |____|_|__|__|__      |
-    |__|____|_|________________|_____|
-    |====BAR COUNTER================|
-    |_______________________________|`,
+    |   ___   |    |  _  _  _        |
+    |  |   |  |    | |_||_||_|       |
+    |  | ~ |  |    | |  |  |         |
+    |  |/\\.| |____|_|__|__|__       |
+    |__|____|_|_______________|____ _|
+    |====BAR COUNTER=================|
+    |________________________________|`,
     description: 'A dimly lit bar with a crackling fireplace that provides the only warmth in the whole resort. Taxidermied animal heads line the walls, all wearing tiny ski goggles. The shelves behind the bar are mostly empty, save for a few dusty bottles. The air smells of old wood and stale pretzels.',
     exits: { west: 'lodge_lobby' },
     hiddenExits: {},
@@ -55,12 +55,12 @@ export const rooms = {
                /\\
               /  \\        *
              /    \\      *
-            / /\\/\\ \\    *  <-- glint!
-           / /    \\ \\
-          /  \\    /  \\
-         /____\\  /____\\
-        /   MOUNTAIN    \\
-    ~~~~/~~~~~~~~~~~~~~~~\\~~~~
+            //\\/\\\\    *  <-- glint!
+           //    \\ \\
+          / \\    /  \\
+         /___\\  /____\\
+        /   MOUNTAIN   \\
+    ~~~~/~~~~~~~~~~~~~~~\\~~~~
        |                  |
     ===|====BALCONY=======|===
     |  |  []          []  |  |
@@ -78,17 +78,17 @@ export const rooms = {
     name: 'Mysterious Basement',
     ascii: `
     ___________________________________
-    |  ~  ~  ~  COBWEBS  ~  ~  ~      |
+    |  ~  ~  ~  COBWEBS  ~  ~  ~       |
     |    _______                       |
     |   |       |   ____  ____         |
     |   | TOBIAS|  |    ||    |        |
     |   | SNOW- |  | __ || __ |        |
     |   | PEAK  |  ||__|||__| |        |
-    |   |  /__\\ |  |WORKBENCH |        |
+    |   | /__\\ |  |WORKBENCH |        |
     |   |_______|  |__________|        |
     |                                  |
-    |  ///  ///   old ski equipment     |
-    |  ///  ///                         |
+    |  ///  ///   old ski equipment    |
+    |  ///  ///                        |
     |__________________________________|`,
     description: 'A damp stone basement beneath the lodge. Old ski equipment rusts in the corners. Cobwebs hang from exposed wooden beams. Against the far wall, a workbench is covered in old papers and tools. A portrait of a distinguished-looking man in vintage ski attire hangs crooked on the wall -- the resort\'s founder, Tobias Snowpeak.',
     exits: { up: 'lodge_lobby' },
@@ -153,16 +153,16 @@ export const rooms = {
     ascii: `
           /\\           /\\
          /  \\   ^^^   /  \\
-        / /\\ \\ ^^^   / /\\ \\
-       / /  \\ \\     / /  \\ \\
-      /  \\  /  \\   /  \\  /  \\
-     /____\\/____\\ /____\\/____\\
+        / /\\ \\ ^^^  //\\ \\
+       / /  \\ \\    //  \\ \\
+      /  \\  /  \\  / \\  /  \\
+     /____\\/____\\/___\\/____\\
       A-FRAMES     VILLAGE
             _____
-           | /_\\ |
+           | /_\\|
            ||   ||    TOBIAS
            || O ||    SNOWPEAK
-           ||/_\\||    statue
+           ||/\\||    statue
            |_____|
         "He who seeks the
        still water finds
@@ -178,15 +178,15 @@ export const rooms = {
     id: 'ski_slopes',
     name: 'Ski Slopes',
     ascii: `
-                          /\\
-                         /  \\
+                           /\\
+                          /  \\
                    /\\   / -- \\  lift
                   /  \\ /______\\ station
                  /    \\\\
                 / ---- \\\\   ___
                / SLOPES \\\\  |:|
-              /  ~~~~~~~~ \\ |:| <--lift
-             / ~~~~~~~~~~~~\\|:|
+              /  ~~~~~~~~ \\  |:| <--lift
+             / ~~~~~~~~~~~~\\ |:|
     ______  / ~~~~~~~~~~~~~~\\
    | :)  :)|~~~~~~~~~~~~~~~~|
    |BEGINR |~~~~~~~~~~~~~~~~|
@@ -232,7 +232,7 @@ export const rooms = {
       *    icicles    *
         . \\ | / . \\ | / .
          \\\\|//   \\\\|//
-    ______\\|/______\\|/______
+    ______\\|/______\\|/____
     |  ~~~ FROZEN ~~~      |
     | |  WATERFALL  |      |
     | | icicicicic | ????  |
@@ -256,16 +256,16 @@ export const rooms = {
     ascii: `
     _/\\_/\\___/\\_____/\\_/\\_
    /                       \\
-  /  /\\ /\\   strange   /\\   \\
- |  /  Y  \\  markings /  \\   |
+  /  /\\/\\   strange  /\\  \\
+ |  /  Y  \\  markings /  \\ |
  | |  ~~~  | on walls |****| |
  | | ~~~ ~ |  <> <>   |****| |
  | |  ~~~  |  <> <>   |****| |
- |  \\ ~~~ /   _____   | ** | |
- |   \\   /   |     |  |    | |
- |    \\ /    | (O) |  steps| |
-  \\    V     |medal|  down /
-   \\________|_____|_______/`,
+ |  \\ ~~~ /   _____  | ** | |
+ |   \\   /   |     | |    | |
+ |    \\ /    | (O) | steps| |
+  \\    V     |medal| down /
+   \\_______ _|_____|_____/`,
     description: 'A narrow cave behind the waterfall, its walls glistening with frost. The passage winds deeper into the mountain. Strange markings are scratched into the stone walls -- they look like a mix of ski trail markers and something much older. The air is cold and still. At the back of the cave, rough stone steps lead downward into darkness. A circular indentation in the wall beside the steps looks like something should fit into it.',
     exits: { west: 'frozen_waterfall' },
     hiddenExits: {},
@@ -283,14 +283,14 @@ export const rooms = {
   |      ~~~~VAULT~~~~         |
   | *     ___________      *   |
   |      |           |         |
-  |  /-\\ |  __/\\__   | /-\\     |
-  | |SKI||  \\    /   ||SKI|    |
-  | |___|   \\\\  //   ||___|    |
+  |  /-\\|  __/\\__  |/-\\     |
+  | |SKI||  \\    /  ||SKI|    |
+  | |___|   \\\\  // ||___|    |
   |      |  TROPHY   |         |
   |      |___________|         |
   |  *     [======]        *   |
   |        [letter]            |
-  |_____________________________|`,
+  |____________________________|`,
     description: 'You descend into a hidden chamber carved from the living rock of the mountain. Torchlight dances across the walls, revealing intricate carvings of skiers, mountains, and snowflakes. In the center of the vault, on a pedestal of polished stone, sits a magnificent golden trophy shaped like a ski. Beside it lies a sealed envelope. This is it -- the legendary secret of Snowpeak Resort.',
     exits: { up: 'hidden_cave' },
     hiddenExits: {},
@@ -304,16 +304,16 @@ export const rooms = {
     ascii: `
               YOU
              \\o/
-              |        * . * . *
-         ____/\\____  .  *  .  *  .
-        /  SUMMIT  \\   *  .  *
-       / ~~~~~~~~~~~ \\
+              |         * . * . *
+         ____/\\______  .  *  .  *  .
+        /     SUMMIT  \\   *  .  *
+       / ~~~~~~~~~~~~~ \\
       / /\\  /\\  /\\  /\\ \\
      / /  \\/  \\/  \\/  \\ \\
     / /    \\   \\   \\   \\ \\
    /_/______\\_  \\_  \\_  \\_\\
-  /     SNOWPEAK     MOUNTAIN \\
- /  PANORAMIC VIEW OF WORLD    \\
+  /     SNOWPEAK     MOUNTAIN  \\
+ /  PANORAMIC VIEW OF WORLD     \\
 /________________________________\\`,
     description: 'You stand at the summit of Snowpeak Mountain. The wind howls around you but the view is breathtaking -- an endless panorama of snow-covered peaks stretching to the horizon. Far below, the resort looks like a toy village. You can see everything from here: the frozen waterfall, the village, the winding slopes. The ski lift can carry you back down.',
     exits: { down: 'ski_lift_top' },

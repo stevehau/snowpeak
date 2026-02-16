@@ -2,7 +2,7 @@ export const npcs = {
   angry_boss: {
     id: 'angry_boss',
     name: 'Angry Boss',
-    description: 'A heavyset woman with a permanently red face, squeezed into a ski suit two sizes too small. She\'s gripping the bar counter like she\'s trying to strangle it, muttering furiously about "incompetent resort staff."',
+    description: 'A young woman with a permanently mad face, squeezed into a ski suit two sizes too big. She\'s gripping the bar counter like she\'s trying to strangle it, muttering furiously about "incompetent resort staff."',
     currentRoomId: 'lodge_bar',
     dialogueState: 0,
     dialogue: [
@@ -29,7 +29,7 @@ export const npcs = {
   mr_smiles: {
     id: 'mr_smiles',
     name: 'Mr Smiles',
-    description: 'A lanky man with an impossibly wide grin, wearing a neon yellow ski jacket so bright it practically glows. Despite looking like he\'s never seen snow before, his enthusiasm is absolutely unshakeable.',
+    description: 'A happy boy with an impossibly wide grin, wearing a neon yellow ski jacket so bright it practically glows. Despite looking like he\'s never seen snow before, his enthusiasm is absolutely unshakeable.',
     currentRoomId: 'lodge_lobby',
     dialogueState: 0,
     dialogue: [
@@ -56,7 +56,7 @@ export const npcs = {
   dill_pickle: {
     id: 'dill_pickle',
     name: 'Dill Pickle',
-    description: 'A wiry person wearing completely mismatched ski gear -- one red boot, one blue boot, goggles on their forehead, and a ski jacket worn inside-out. They\'re examining a ski boot with the intensity of an archaeologist studying an ancient artifact.',
+    description: 'A cute boy with mischevious smile and wearing completely mismatched ski gear -- one red boot, one blue boot, goggles on their forehead, and a ski jacket worn inside-out. They\'re examining a ski boot with the intensity of an archaeologist studying an ancient artifact.',
     currentRoomId: 'ski_rental',
     dialogueState: 0,
     dialogue: [
@@ -84,7 +84,7 @@ export const npcs = {
   coach_joe: {
     id: 'coach_joe',
     name: 'Coach Joe',
-    description: 'A stocky man in a whistle and tracksuit, somehow wearing sneakers in the snow. He keeps blowing his whistle at nobody in particular and shouting motivational phrases at the mountain.',
+    description: 'A muscular man in a whistle and tracksuit, somehow wearing sneakers in the snow. He keeps blowing his whistle at nobody in particular and shouting motivational phrases at the mountain.',
     currentRoomId: 'ski_slopes',
     dialogueState: 0,
     dialogue: [
@@ -126,7 +126,7 @@ export const npcs = {
   henrys_mom: {
     id: 'henrys_mom',
     name: "Henry's Mom",
-    description: 'A frazzled woman bundled in seventeen layers of clothing, clutching a massive tote bag overflowing with snacks, hand warmers, and emergency supplies. She keeps calling out for someone named Henry, who is nowhere to be seen.',
+    description: 'A glamorous woman bundled in seventeen layers of clothing, clutching a massive tote bag overflowing with snacks, hand warmers, and emergency supplies. She keeps calling out for someone named Henry, who is nowhere to be seen.',
     currentRoomId: 'main_street',
     dialogueState: 0,
     dialogue: [
@@ -140,7 +140,7 @@ export const npcs = {
       },
       {
         state: 2,
-        text: '"Henry just texted. He\'s been in the lodge bar this whole time. THE BAR! He\'s TWELVE! He says he\'s been having a \'philosophical debate\' with some angry woman about resort management. I don\'t even... want a juice box? I have nine."',
+        text: '"Henry just texted. He\'s been in the lodge bar this whole time. THE BAR! He\'s TEN YEARS OLD! He says he\'s been having a \'philosophical debate\' with some angry woman about resort management. I don\'t even... want a juice box? I have nine."',
       },
     ],
   },

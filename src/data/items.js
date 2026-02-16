@@ -13,7 +13,7 @@ export const items = {
                         |
                   [Ski Lift Top]
                         |
-                  [Ski Slopes]  [Frozen Waterfall]
+                  [Ski Slopes]---[Frozen Waterfall]
                         |
    [Ski Rental]---[Main Street]---[Village]
                         |
@@ -42,8 +42,8 @@ still." -- T.S.`,
   },
   whiskey_bottle: {
     id: 'whiskey_bottle',
-    name: 'bottle of whiskey',
-    description: 'A half-full bottle of "Mountain Bear" whiskey. The label features a bear on skis. It looks like decent stuff -- aged 12 years, according to the label.',
+    name: 'bottle of juice',
+    description: 'A half-full bottle of "Mountain Bear" juice. The label features a bear on skis. It looks like decent stuff -- aged 12 years, according to the label.',
     takeable: true,
   },
   basement_key: {
