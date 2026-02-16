@@ -10,7 +10,7 @@ import {
 } from './commands'
 import { helpText } from '../data/story'
 import { checkPuzzleTriggers } from '../data/puzzles'
-import { getHighScores, formatScoreBoard } from './scores'
+import { getHighScores, formatScoreBoard, clearAllScores } from './scores'
 
 export function gameReducer(state, action) {
   if (state.gameOver && action.type !== 'ADD_OUTPUT') {
@@ -65,6 +65,13 @@ export function gameReducer(state, action) {
       }
       break
     }
+    case 'ERASE_SCORES':
+      clearAllScores()
+      newState = {
+        ...state,
+        output: [...state.output, { text: 'High score table has been erased.', type: 'system' }],
+      }
+      break
     case 'ADD_OUTPUT':
       return {
         ...state,

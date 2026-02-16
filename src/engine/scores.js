@@ -1,4 +1,4 @@
-import { fetchScoresFromCloud, saveScoreToCloud } from './firebase'
+import { fetchScoresFromCloud, saveScoreToCloud, clearScoresFromCloud } from './firebase'
 
 const STORAGE_KEY = 'snowpeak_high_scores_v4'
 const MAX_SCORES = 10
@@ -99,9 +99,10 @@ export async function loadScoresFromCloud() {
   const cloudScores = await fetchScoresFromCloud()
   if (!cloudScores || cloudScores.length === 0) return getHighScores()
 
-  // Merge cloud scores with any local scores
+  // Migrate cloud scores FIRST so elapsedMs matches local (already migrated)
+  const migratedCloud = migrateScores(cloudScores)
   const localScores = getHighScores()
-  const merged = [...cloudScores]
+  const merged = [...migratedCloud]
 
   for (const local of localScores) {
     const exists = merged.some(
@@ -110,11 +111,8 @@ export async function loadScoresFromCloud() {
     if (!exists) merged.push(local)
   }
 
-  // Migrate existing scores: add 4 minutes
-  const migrated = migrateScores(merged)
-
-  sortScores(migrated)
-  const trimmed = migrated.slice(0, MAX_SCORES)
+  sortScores(merged)
+  const trimmed = merged.slice(0, MAX_SCORES)
 
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed))
@@ -123,6 +121,21 @@ export async function loadScoresFromCloud() {
   }
 
   return trimmed
+}
+
+// Clear all scores from localStorage and Firestore
+export async function clearAllScores() {
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem('snowpeak_high_scores_v3')
+  } catch {
+    // localStorage unavailable
+  }
+  try {
+    await clearScoresFromCloud()
+  } catch {
+    // Cloud clear failed
+  }
 }
 
 export function formatTime(ms) {

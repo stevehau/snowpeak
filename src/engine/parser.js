@@ -75,6 +75,11 @@ export function parse(input, state) {
 
   const tokens = raw.split(/\s+/)
 
+  // Hidden admin command
+  if (raw === 'erase table') {
+    return { type: 'ERASE_SCORES' }
+  }
+
   // Check for bare direction input
   if (tokens.length === 1 && DIRECTION_MAP[tokens[0]]) {
     return { type: 'MOVE', payload: { direction: DIRECTION_MAP[tokens[0]] } }

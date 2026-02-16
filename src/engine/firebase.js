@@ -4,6 +4,7 @@ import {
   collection,
   addDoc,
   getDocs,
+  deleteDoc,
   query,
   orderBy,
   limit,
@@ -43,5 +44,15 @@ export async function saveScoreToCloud(scoreData) {
     await addDoc(collection(db, SCORES_COLLECTION), scoreData)
   } catch (e) {
     console.warn('Failed to save score to cloud:', e)
+  }
+}
+
+export async function clearScoresFromCloud() {
+  try {
+    const snapshot = await getDocs(collection(db, SCORES_COLLECTION))
+    const deletes = snapshot.docs.map(doc => deleteDoc(doc.ref))
+    await Promise.all(deletes)
+  } catch (e) {
+    console.warn('Failed to clear scores from cloud:', e)
   }
 }
