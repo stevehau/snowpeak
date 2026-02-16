@@ -173,22 +173,15 @@ function getUsableItem(state) {
 }
 
 function findReadableItem(state) {
-  const room = state.rooms[state.currentRoomId]
+  // Only show "Read" for items in inventory (must take them first)
 
   // Victory item always takes top priority
-  if (state.inventory.includes('founders_letter') || room.items.includes('founders_letter')) {
+  if (state.inventory.includes('founders_letter')) {
     return 'founders_letter'
   }
 
-  // Check inventory for other readable items
   for (const itemId of state.inventory) {
     if (['old_map', 'dusty_journal', 'note_from_founder'].includes(itemId)) {
-      return itemId
-    }
-  }
-  // Check room items
-  for (const itemId of room.items) {
-    if (['old_map'].includes(itemId)) {
       return itemId
     }
   }

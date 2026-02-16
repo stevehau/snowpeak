@@ -142,7 +142,7 @@ function NameEntry({ onSubmit }) {
             onClick={() => handleModeSelect('easy')}
           >
             [2] EASY (CHEAT) MODE
-            <span className="mode-desc">Choose from 5 options each turn, beginner friendly</span>
+            <span className="mode-desc">Choose from multiple choice options each turn, beginner friendly</span>
           </button>
         </div>
       )}

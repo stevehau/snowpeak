@@ -509,10 +509,7 @@ export function handleUse(state, { itemId }) {
 
 export function handleRead(state, { itemId }) {
   if (!state.inventory.includes(itemId)) {
-    const room = state.rooms[state.currentRoomId]
-    if (!room.items.includes(itemId)) {
-      return addOutput(state, "You don't have that.", 'error')
-    }
+    return addOutput(state, "You need to pick that up first before you can read it.", 'error')
   }
 
   const item = state.items[itemId]
