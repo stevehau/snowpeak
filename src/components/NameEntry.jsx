@@ -95,7 +95,7 @@ function NameEntry({ onSubmit }) {
         {phase === 'mode' && (
           <>
             <div className="output-line output-normal">
-              Welcome, {name.trim()}! Choose your difficulty:
+              Welcome, {name.trim()}! Choose a mode:
             </div>
             <div className="output-line output-normal">&nbsp;</div>
           </>

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import SlalomGame from '../slalom/SlalomGame'
 
-function BonusContent() {
+function BonusContent({ onBack }) {
   const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'notes'
 
   const handleSlalomGameOver = useCallback(() => {
@@ -11,7 +11,7 @@ function BonusContent() {
   if (phase === 'slalom') {
     return (
       <SlalomGame
-        standalone={true}
+        standalone={false}
         onGameOver={handleSlalomGameOver}
       />
     )
@@ -132,6 +132,13 @@ function BonusContent() {
         >
           [2] RELEASE NOTES
           <span className="mode-desc">View version history and changelog</span>
+        </button>
+        <button
+          className="mode-button"
+          onClick={onBack}
+        >
+          [3] BACK
+          <span className="mode-desc">Return to the start screen</span>
         </button>
       </div>
     </div>

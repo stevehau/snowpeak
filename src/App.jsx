@@ -71,7 +71,7 @@ function App() {
   }
 
   if (playerInfo.mode === 'bonus') {
-    return <BonusContent />
+    return <BonusContent onBack={() => setPlayerInfo(null)} />
   }
 
   return <Game playerInfo={playerInfo} />
