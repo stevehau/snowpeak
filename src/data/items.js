@@ -9,20 +9,20 @@ export const items = {
 
     ~~~ SNOWPEAK RESORT MAP ~~~
 
-                   [Mountain Peak]
-                        |
-                  [Ski Lift Top]
-                        |
-                  [Ski Slopes]---[Frozen Waterfall]
-                        |
-   [Ski Rental]---[Main Street]---[Village]
-                        |
+                        [Mountain Peak]
+                              |
+                        [Ski Lift Top]
+                              |
+                        [Ski Slopes]---[Frozen Waterfall]
+                              |
+         [Ski Rental]---[Main Street]---[Village]
+                              |
    [Game Room]---[Lodge Bar]---[Lodge Lobby]---[Balcony]
-                        |
-                   [Basement??]
+                                     |
+                                [Basement]
+                           (locked door, need key)
 
    --- = paths     | = trails
-   Basement?? = arrow drawn to a locked door
 
 In the margin, hasty handwriting reads:
 "The path begins where water stands

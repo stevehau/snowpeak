@@ -926,44 +926,38 @@ export function handleRead(state, { itemId }) {
   // Special handling for old_map - color-code rooms on the map
   if (itemId === 'old_map' && item.readText) {
     // Map room IDs to their display names on the map
-    const roomMapNames = {
-      lodge_lobby: 'Lodge Lobby',
-      lodge_bar: 'Bar',
-      lodge_balcony: 'Balcony',
-      game_room: 'Game Room',
-      basement: 'Basement',
-      main_street: 'Main Street',
-      ski_rental: 'Ski Rental',
-      village: 'Village',
-      ski_slopes: 'Ski Slopes',
-      frozen_waterfall: 'Frozen Waterfall',
-      ski_lift_top: 'Ski Lift Top',
-      mountain_peak: 'Mountain Peak',
-      // Expert mode rooms (for larger map)
-      staff_hallway: 'Staff',
-      staff_quarters: 'Staff Quarters',
-      kitchen: 'Kitchen',
-      pantry: 'Pantry',
-      storage_room: 'Storage',
-      general_store: 'General Store',
-      chapel: 'Chapel',
-      old_cabin: 'Old Cabin',
-      underground_tunnel: 'Underground Tunnel',
-      hidden_observatory: 'Observatory',
-      ice_caves: 'Ice Caves',
-      avalanche_zone: 'Avalanche Zone',
-      ridge_trail: 'Ridge Trail',
-      summit_shelter: 'Summit Shelter',
+    // Map display names that appear in [brackets] on the map → room IDs
+    // Some rooms have different names on standard vs expert maps
+    const nameToRoomId = {
+      'Lodge Lobby': 'lodge_lobby',
+      'Lodge Bar': 'lodge_bar',
+      'Bar': 'lodge_bar',
+      'Balcony': 'lodge_balcony',
+      'Game Room': 'game_room',
+      'Basement': 'basement',
+      'Main Street': 'main_street',
+      'Ski Rental': 'ski_rental',
+      'Village': 'village',
+      'Ski Slopes': 'ski_slopes',
+      'Frozen Waterfall': 'frozen_waterfall',
+      'Ski Lift Top': 'ski_lift_top',
+      'Mountain Peak': 'mountain_peak',
+      // Expert mode rooms
+      'Staff': 'staff_hallway',
+      'Staff Quarters': 'staff_quarters',
+      'Kitchen': 'kitchen',
+      'Pantry': 'pantry',
+      'Storage': 'storage_room',
+      'General Store': 'general_store',
+      'Chapel': 'chapel',
+      'Old Cabin': 'old_cabin',
+      'Underground Tunnel': 'underground_tunnel',
+      'Observatory': 'hidden_observatory',
+      'Ice Caves': 'ice_caves',
+      'Avalanche Zone': 'avalanche_zone',
+      'Ridge Trail': 'ridge_trail',
+      'Summit Shelter': 'summit_shelter',
     }
-
-    // Build a reverse lookup: display name → room ID
-    const nameToRoomId = {}
-    for (const [roomId, displayName] of Object.entries(roomMapNames)) {
-      nameToRoomId[displayName] = roomId
-    }
-
-    // Build set of visited room display names and current room display name
-    const currentDisplayName = roomMapNames[state.currentRoomId]
 
     const lines = item.readText.split('\n')
     let s = state

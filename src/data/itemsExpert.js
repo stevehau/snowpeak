@@ -19,14 +19,15 @@ export const itemsExpert = {
    [Storage]---[Ski Rental]---[Main Street]---[Village]---[General Store]
                                     |              |
                               [Lodge Lobby]    [Chapel]
-                                /   |   \\        |
-                       [Balcony] [Bar] [Staff]  [Old Cabin]
-                                    |      |
-      [Game Room]--------[Kitchen]  |  [Staff Quarters]
-                            |        |
-                        [Pantry] [Basement]
+                              / |  |    \\        |
+                    [Balcony]   | [Bar] [Staff]  [Old Cabin]
+                         [Basement]  |      |
+      [Game Room]----------[Kitchen]   [Staff Quarters]
+                              |
+                          [Pantry]
 
    --- = paths     | = trails
+   [Basement] requires a key to access
 
    ADDITIONAL NOTES (in red ink):
    - Staff areas require special key
