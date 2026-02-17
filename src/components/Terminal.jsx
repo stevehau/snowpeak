@@ -83,6 +83,12 @@ function Terminal({ output, onCommand, gameOver, mode, gameState }) {
                 }
               }} />
             </div>
+          ) : line.segments ? (
+            <div key={i} className={`output-line output-${line.type || 'normal'}`}>
+              {line.segments.map((seg, j) => (
+                <span key={j} className={seg.type ? `output-${seg.type}` : undefined}>{seg.text}</span>
+              ))}
+            </div>
           ) : (
             <div key={i} className={`output-line output-${line.type || 'normal'}`}>
               {line.text}

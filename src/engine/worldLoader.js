@@ -93,6 +93,9 @@ export function createInitialState(playerName, mode) {
     initialOutput.push({ text: `\nExits: ${exitList.join(', ')}`, type: 'system' })
   }
 
+  // Mark starting room as visited
+  roomsCopy[startRoomId].visited = true
+
   return {
     currentRoomId: startRoomId,
     previousRoomId: null,

@@ -89,6 +89,14 @@ body {
   color: var(--dim-green);
 }
 
+.output-visited {
+  color: #44aaff;
+}
+
+.output-current {
+  color: #ffcc00;
+}
+
 .output-title {
   color: var(--green);
   font-size: 1.3em;

@@ -923,15 +923,15 @@ export function handleRead(state, { itemId }) {
     return s
   }
 
-  // Special handling for old_map - highlight current room in yellow
+  // Special handling for old_map - color-code rooms on the map
   if (itemId === 'old_map' && item.readText) {
     // Map room IDs to their display names on the map
     const roomMapNames = {
       lodge_lobby: 'Lodge Lobby',
-      lodge_bar: 'Lodge Bar',
+      lodge_bar: 'Bar',
       lodge_balcony: 'Balcony',
       game_room: 'Game Room',
-      basement: 'Basement??',
+      basement: 'Basement',
       main_street: 'Main Street',
       ski_rental: 'Ski Rental',
       village: 'Village',
@@ -956,19 +956,68 @@ export function handleRead(state, { itemId }) {
       summit_shelter: 'Summit Shelter',
     }
 
-    const mapDisplayName = roomMapNames[state.currentRoomId]
+    // Build a reverse lookup: display name → room ID
+    const nameToRoomId = {}
+    for (const [roomId, displayName] of Object.entries(roomMapNames)) {
+      nameToRoomId[displayName] = roomId
+    }
 
-    // Split the map text into lines and highlight current room line in yellow
+    // Build set of visited room display names and current room display name
+    const currentDisplayName = roomMapNames[state.currentRoomId]
+
     const lines = item.readText.split('\n')
     let s = state
 
     for (const line of lines) {
-      // Check if this line contains the current room's map name in brackets
-      if (mapDisplayName && line.includes(`[${mapDisplayName}]`)) {
-        // Highlight entire line in yellow (preserves ASCII art)
-        s = addOutput(s, line, 'npc')
-      } else {
+      // Find all [Room Name] patterns in this line
+      const bracketPattern = /\[([^\]]+)\]/g
+      const matches = []
+      let match
+      while ((match = bracketPattern.exec(line)) !== null) {
+        const displayName = match[1]
+        const roomId = nameToRoomId[displayName]
+        if (roomId) {
+          matches.push({
+            start: match.index,
+            end: match.index + match[0].length,
+            text: match[0],
+            displayName,
+            roomId,
+          })
+        }
+      }
+
+      if (matches.length === 0) {
+        // No room names on this line - render as normal green
         s = addOutput(s, line, 'normal')
+      } else {
+        // Build segments with color-coded room names
+        const segments = []
+        let pos = 0
+        for (const m of matches) {
+          // Add text before this match (green)
+          if (m.start > pos) {
+            segments.push({ text: line.slice(pos, m.start) })
+          }
+          // Add the room name with appropriate color
+          if (m.roomId === state.currentRoomId) {
+            segments.push({ text: m.text, type: 'current' })
+          } else if (state.rooms[m.roomId]?.visited) {
+            segments.push({ text: m.text, type: 'visited' })
+          } else {
+            segments.push({ text: m.text })
+          }
+          pos = m.end
+        }
+        // Add remaining text after last match
+        if (pos < line.length) {
+          segments.push({ text: line.slice(pos) })
+        }
+        // Add as segmented output line
+        s = {
+          ...s,
+          output: [...s.output, { text: '', type: 'normal', segments }],
+        }
       }
     }
 
