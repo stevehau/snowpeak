@@ -182,7 +182,19 @@ export function formatScoreBoard(scores, showAll = false) {
 
   if (!showAll && scores.length > 10) {
     lines.push({ text: '', type: 'normal' })
-    lines.push({ text: `  Showing top 10 of ${scores.length}. Type "scores all" to see more.`, type: 'normal' })
+    lines.push({
+      text: `  Showing top 10 of ${scores.length}.`,
+      type: 'normal',
+      action: { label: '[Show all]', command: 'scores all' },
+    })
+  }
+  if (showAll && scores.length > 10) {
+    lines.push({ text: '', type: 'normal' })
+    lines.push({
+      text: `  Showing all ${Math.min(scores.length, 50)} scores.`,
+      type: 'normal',
+      action: { label: '[Show less]', command: 'scores' },
+    })
   }
 
   lines.push({ text: '', type: 'normal' })

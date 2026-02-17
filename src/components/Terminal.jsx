@@ -92,6 +92,17 @@ function Terminal({ output, onCommand, gameOver, mode, gameState }) {
           ) : (
             <div key={i} className={`output-line output-${line.type || 'normal'}`}>
               {line.text}
+              {line.action && (
+                <>
+                  {' '}
+                  <span
+                    className="scores-expand-link"
+                    onClick={(e) => { e.stopPropagation(); onCommand(line.action.command) }}
+                  >
+                    {line.action.label}
+                  </span>
+                </>
+              )}
             </div>
           )
         ))}

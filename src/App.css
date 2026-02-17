@@ -97,6 +97,16 @@ body {
   color: #ffcc00;
 }
 
+.scores-expand-link {
+  color: #44aaff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.scores-expand-link:hover {
+  color: #66ccff;
+}
+
 .output-title {
   color: var(--green);
   font-size: 1.3em;

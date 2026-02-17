@@ -7,6 +7,7 @@ function NameEntry({ onSubmit }) {
   const [phase, setPhase] = useState('name') // 'name' -> 'mode'
   const [nameError, setNameError] = useState('')
   const [scores, setScores] = useState(getHighScores())
+  const [showAllScores, setShowAllScores] = useState(false)
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -93,7 +94,7 @@ function NameEntry({ onSubmit }) {
             <div className="output-line output-system">
               {'  -   ------           -----  ------------  ----       ----'}
             </div>
-            {scores.map((s, i) => (
+            {scores.slice(0, showAllScores ? 50 : 10).map((s, i) => (
               <div key={i} className="output-line output-system">
                 {'  '}
                 {String(i + 1).padEnd(4)}
@@ -104,6 +105,22 @@ function NameEntry({ onSubmit }) {
                 {formatDate(s.date)}
               </div>
             ))}
+            {!showAllScores && scores.length > 10 && (
+              <div className="output-line output-normal">
+                {'  '}Showing top 10 of {scores.length}.{' '}
+                <span className="scores-expand-link" onClick={() => setShowAllScores(true)}>
+                  [Show all]
+                </span>
+              </div>
+            )}
+            {showAllScores && scores.length > 10 && (
+              <div className="output-line output-normal">
+                {'  '}Showing all {Math.min(scores.length, 50)} scores.{' '}
+                <span className="scores-expand-link" onClick={() => setShowAllScores(false)}>
+                  [Show less]
+                </span>
+              </div>
+            )}
             <div className="output-line output-normal">&nbsp;</div>
           </>
         )}
