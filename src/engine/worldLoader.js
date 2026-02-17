@@ -1,12 +1,20 @@
 import { rooms } from '../data/rooms'
+import { roomsExpert } from '../data/roomsExpert'
 import { items } from '../data/items'
+import { itemsExpert } from '../data/itemsExpert'
 import { npcs } from '../data/npcs'
+import { npcsExpert } from '../data/npcsExpert'
 import { introText } from '../data/story'
 
 export function createInitialState(playerName, mode) {
+  // Choose room, item, and NPC sets based on mode
+  const roomData = mode === 'expert' ? roomsExpert : rooms
+  const itemData = mode === 'expert' ? itemsExpert : items
+  const npcData = mode === 'expert' ? npcsExpert : npcs
+
   // Deep clone the data so we don't mutate the originals
   const roomsCopy = {}
-  for (const [id, room] of Object.entries(rooms)) {
+  for (const [id, room] of Object.entries(roomData)) {
     roomsCopy[id] = {
       ...room,
       items: [...room.items],
@@ -18,12 +26,12 @@ export function createInitialState(playerName, mode) {
   }
 
   const itemsCopy = {}
-  for (const [id, item] of Object.entries(items)) {
+  for (const [id, item] of Object.entries(itemData)) {
     itemsCopy[id] = { ...item }
   }
 
   const npcsCopy = {}
-  for (const [id, npc] of Object.entries(npcs)) {
+  for (const [id, npc] of Object.entries(npcData)) {
     npcsCopy[id] = {
       ...npc,
       dialogue: [...npc.dialogue],
@@ -60,12 +68,29 @@ export function createInitialState(playerName, mode) {
     initialOutput.push({ text: `${npcNames.join(' and ')} ${startRoom.npcs.length === 1 ? 'is' : 'are'} here.`, type: 'normal' })
   }
 
-  // Add exits
+  // Add exits with room names: "direction (Room Name)"
   const allExits = { ...startRoom.exits, ...startRoom.hiddenExits }
-  const lockedExitDirs = Object.keys(startRoom.lockedExits || {})
-  const exitDirs = [...Object.keys(allExits), ...lockedExitDirs]
-  if (exitDirs.length > 0) {
-    initialOutput.push({ text: `\nExits: ${exitDirs.join(', ')}`, type: 'system' })
+  const lockedExitsObj = startRoom.lockedExits || {}
+  const exitList = []
+  for (const dir of Object.keys(allExits)) {
+    const targetRoom = roomsCopy[allExits[dir]]
+    if (targetRoom) {
+      exitList.push(`${dir} (${targetRoom.name})`)
+    } else {
+      exitList.push(dir)
+    }
+  }
+  for (const dir of Object.keys(lockedExitsObj)) {
+    // lockedExits values are objects: { roomId, keyId, message }
+    const targetRoom = roomsCopy[lockedExitsObj[dir].roomId]
+    if (targetRoom) {
+      exitList.push(`${dir} (${targetRoom.name})`)
+    } else {
+      exitList.push(dir)
+    }
+  }
+  if (exitList.length > 0) {
+    initialOutput.push({ text: `\nExits: ${exitList.join(', ')}`, type: 'system' })
   }
 
   return {

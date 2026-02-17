@@ -379,6 +379,31 @@ function playAngryGrunt() {
 }
 
 // Dispatcher — play a sound by name
+// Service bell — bright ding
+function playBell() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(1200, ctx.currentTime)
+    osc.frequency.exponentialRampToValueAtTime(1000, ctx.currentTime + 0.1)
+
+    gain.gain.setValueAtTime(0.3, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6)
+
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start()
+    osc.stop(ctx.currentTime + 0.65)
+
+    setTimeout(() => ctx.close(), 1000)
+  } catch {
+    // Audio not available
+  }
+}
+
 export function playSound(name) {
   const sounds = {
     whistle: playWhistle,
@@ -392,6 +417,7 @@ export function playSound(name) {
     victory: playVictoryFanfare,
     arcade_start: playArcadeStart,
     angry_grunt: playAngryGrunt,
+    bell: playBell,
   }
   const fn = sounds[name]
   if (fn) fn()

@@ -5,10 +5,16 @@ import BonusContent from './components/BonusContent'
 import { useGame } from './hooks/useGame'
 import { playSound } from './engine/sounds'
 import SlalomGame from './slalom/SlalomGame'
+import { syncSlalomScoresFromCloud } from './slalom/slalomScores'
 
-function Game({ playerInfo }) {
+function Game({ playerInfo, onRestart }) {
   const { gameState, processCommand, dispatch } = useGame(playerInfo.name, playerInfo.mode)
   const lastOutputLen = useRef(0)
+
+  // Sync slalom scores from Firebase on game load
+  useEffect(() => {
+    syncSlalomScoresFromCloud()
+  }, [])
 
   useEffect(() => {
     const newEntries = gameState.output.slice(lastOutputLen.current)
@@ -23,6 +29,17 @@ function Game({ playerInfo }) {
   const handleSlalomGameOver = useCallback((result) => {
     dispatch({ type: 'SLALOM_RESULT', payload: result })
   }, [dispatch])
+
+  // Check for restart flag
+  useEffect(() => {
+    if (gameState.gameRestart) {
+      // Small delay so user can see the restart message
+      const timer = setTimeout(() => {
+        onRestart()
+      }, 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [gameState.gameRestart, onRestart])
 
   // Show slalom game when launched from arcade machine
   if (gameState.launchSlalom) {
@@ -74,7 +91,7 @@ function App() {
     return <BonusContent onBack={() => setPlayerInfo(null)} />
   }
 
-  return <Game playerInfo={playerInfo} />
+  return <Game playerInfo={playerInfo} onRestart={() => setPlayerInfo(null)} />
 }
 
 export default App

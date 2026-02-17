@@ -1,32 +1,41 @@
-export const items = {
+// Expert Mode Items - Updated map showing expanded 24-room layout
+export const itemsExpert = {
   old_map: {
     id: 'old_map',
     name: 'old map',
-    description: 'A faded resort map printed on yellowed paper. Most of it shows standard ski trails and facilities, but someone has drawn a large red X near the north peak, right where the frozen waterfall would be. In the margin, hasty handwriting reads: "T.S. hid it where water stands still." Try "read old map" to study it.',
+    description: 'A faded resort map printed on yellowed paper, heavily marked with additions and notes. Parts of the map are worn and illegible -- some areas may be missing entirely. Someone has drawn a large red X near the north peak, right where the frozen waterfall would be. In the margin, hasty handwriting reads: "T.S. hid it where water stands still." Try "read old map" to study it.',
     takeable: true,
     readable: true,
     readText: `You unfold the old map and study it carefully:
 
     ~~~ SNOWPEAK RESORT MAP ~~~
 
-                   [Mountain Peak]
-                        |
-                  [Ski Lift Top]
-                        |
-                  [Ski Slopes]---[Frozen Waterfall]
-                        |
-   [Ski Rental]---[Main Street]---[Village]
-                        |
-   [Game Room]---[Lodge Bar]---[Lodge Lobby]---[Balcony]
-                        |
-                   [Basement??]
+                [Summit Shelter]---[Mountain Peak]
+                                        |
+            [Ridge Trail]--------[Ski Lift Top]---[Ice Caves]
+                |                       |              |
+         [Avalanche Zone]----[Ski Slopes]---[Frozen Waterfall]
+                                    |
+   [Storage]---[Ski Rental]---[Main Street]---[Village]---[General Store]
+                                    |              |
+                              [Lodge Lobby]    [Chapel]
+                                /   |   \\        |
+                       [Balcony] [Bar] [Staff]  [Old Cabin]
+                                    |      |
+      [Game Room]--------[Kitchen]  |  [Staff Quarters]
+                            |        |
+                        [Pantry] [Basement]
 
    --- = paths     | = trails
-   Basement?? = arrow drawn to a locked door
+
+   ADDITIONAL NOTES (in red ink):
+   - Staff areas require special key
+   - Ridge trail is DANGEROUS - proceed with caution
+   - Map is faded and incomplete -- some areas not shown
 
 In the margin, hasty handwriting reads:
-"The path begins where water stands
-still." -- T.S.`,
+"The path begins where water stands still.
+Explore thoroughly - all areas matter now." -- T.S.`,
   },
   binoculars: {
     id: 'binoculars',
@@ -51,7 +60,6 @@ still." -- T.S.`,
     name: 'small brass key',
     description: 'A small brass key with an ornate handle shaped like a snowflake. It looks old but well-made. There\'s a tiny tag attached that reads "B" -- probably for "basement."',
     takeable: true,
-    hidden: true,
   },
   dusty_journal: {
     id: 'dusty_journal',
@@ -199,7 +207,7 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
   matches: {
     id: 'matches',
     name: 'waterproof matches',
-    description: 'A box of waterproof matches -- essential for mountain survival. The box is nearly full.',
+    description: 'A box of waterproof matches -- essential for mountain survival. The box is nearly full. Perfect for lighting candles or creating temporary light, though a single match won\'t last long in the mountain wind.',
     takeable: true,
   },
   postcard: {
@@ -211,7 +219,7 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
   candles: {
     id: 'candles',
     name: 'prayer candles',
-    description: 'Several tall white candles used for prayer or meditation. They smell faintly of beeswax.',
+    description: 'Several tall white candles used for prayer or meditation. They smell faintly of beeswax. Unlit, but they could provide a comforting light if you had matches. The wax is thick and sturdy -- they might hold a flame better than matches alone, though strong winds would still snuff them out.',
     takeable: true,
   },
   guest_book: {
@@ -306,5 +314,11 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
     description: 'A brass key labeled "STAFF QUARTERS." It looks like it opens the locked staff area in the lodge.',
     takeable: true,
     hidden: false,
+  },
+  store_bell: {
+    id: 'store_bell',
+    name: 'bell',
+    description: 'A brass service bell sitting on the counter. A small sign next to it reads "RING FOR SERVICE" though there\'s clearly nobody here to answer.',
+    takeable: false,
   },
 }

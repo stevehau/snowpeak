@@ -35,6 +35,22 @@ function NameEntry({ onSubmit }) {
     onSubmit({ name: name.trim(), mode })
   }, [name, onSubmit])
 
+  // Handle keyboard shortcuts for mode selection
+  useEffect(() => {
+    if (phase !== 'mode') return
+
+    const handleKeyPress = (e) => {
+      const key = e.key
+      if (key === '1') handleModeSelect('standard')
+      else if (key === '2') handleModeSelect('easy')
+      else if (key === '3') handleModeSelect('expert')
+      else if (key === '4') handleModeSelect('bonus')
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [phase, handleModeSelect])
+
   return (
     <>
       <div className="terminal-output">
@@ -149,9 +165,16 @@ function NameEntry({ onSubmit }) {
           </button>
           <button
             className="mode-button"
+            onClick={() => handleModeSelect('expert')}
+          >
+            [3] EXPERT MODE (BETA)
+            <span className="mode-desc">Double-size map with more locations to explore, for experienced adventurers</span>
+          </button>
+          <button
+            className="mode-button"
             onClick={() => handleModeSelect('bonus')}
           >
-            [3] BONUS CONTENT
+            [4] BONUS CONTENT
             <span className="mode-desc">Play mini-games and view release notes</span>
           </button>
         </div>

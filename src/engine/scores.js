@@ -25,9 +25,9 @@ export function getHighScores() {
 
 function sortScores(scores) {
   return scores.sort((a, b) => {
-    // 1. Standard mode before easy mode
-    const modeOrder = { standard: 0, easy: 1 }
-    const modeDiff = (modeOrder[a.mode] || 0) - (modeOrder[b.mode] || 0)
+    // 1. Expert mode first (most impressive), then standard, then easy
+    const modeOrder = { expert: 0, standard: 1, easy: 2 }
+    const modeDiff = (modeOrder[a.mode] || 1) - (modeOrder[b.mode] || 1)
     if (modeDiff !== 0) return modeDiff
     // 2. Fewest steps first
     if (a.steps !== b.steps) return a.steps - b.steps

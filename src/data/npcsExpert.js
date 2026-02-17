@@ -1,4 +1,7 @@
-export const npcs = {
+// Expert Mode NPCs - Modified behavior for expert difficulty
+// Main change: Mr. Smiles no longer gives the fuse (must be found in pantry)
+
+export const npcsExpert = {
   angry_boss: {
     id: 'angry_boss',
     name: 'Angry Boss',
@@ -40,8 +43,10 @@ export const npcs = {
       {
         state: 1,
         condition: { hasItem: 'ski_poles' },
-        text: '"MY SKI POLES! You FOUND them! Oh you are just the BEST PERSON I have ever met, and I have met a LOT of people!"\n\nMr Smiles does a little dance of joy.\n\n"Here, take this -- I found it rattling around in the ski lift machinery when I was, uh, definitely NOT trying to ride the broken lift. It looked important!" He hands you an electrical fuse. "Now if you\'ll excuse me, I\'m going to CONQUER that bunny slope! WISH ME LUCK!"\n\nMr Smiles practically skips toward the door.',
-        effects: { removeItem: 'ski_poles', addItem: 'fuse', setFlag: ['mr_smiles', 'helped', true], moveNpc: ['mr_smiles', 'ski_slopes'] },
+        // EXPERT MODE CHANGE: Mr. Smiles no longer gives the fuse
+        // Players must find it in the pantry instead
+        text: '"MY SKI POLES! You FOUND them! Oh you are just the BEST PERSON I have ever met, and I have met a LOT of people!"\n\nMr Smiles does a little dance of joy.\n\n"Thank you SO MUCH! Now if you\'ll excuse me, I\'m going to CONQUER that bunny slope! WISH ME LUCK!"\n\nMr Smiles practically skips toward the door.',
+        effects: { removeItem: 'ski_poles', setFlag: ['mr_smiles', 'helped', true], moveNpc: ['mr_smiles', 'ski_slopes'] },
       },
       {
         state: 1,
@@ -62,8 +67,10 @@ export const npcs = {
     dialogue: [
       {
         state: 0,
-        text: '"Hmm, FASCINATING." Dill Pickle holds up a ski boot and peers inside it. "Did you know that ski boots were originally medieval torture devices repurposed for recreation? I read that on a bathroom wall once. Very reliable source."\n\nThey turn the boot upside down and shake it. A small brass key falls out and clatters to the floor.\n\n"Oh. That was in there. Huh. You know, I\'ve been shaking boots all morning hoping a sandwich would fall out, but a key is good too. Probably."',
-        effects: { revealItem: ['basement_key', 'ski_rental'] },
+        // EXPERT MODE CHANGE: No longer reveals basement_key
+        // Players must find it in the old_cabin instead
+        text: '"Hmm, FASCINATING." Dill Pickle holds up a ski boot and peers inside it. "Did you know that ski boots were originally medieval torture devices repurposed for recreation? I read that on a bathroom wall once. Very reliable source."\n\nThey turn the boot upside down and shake it vigorously.\n\n"Nothing. Not even a sandwich. Disappointing, but I respect the boot\'s commitment to being empty. Very zen."',
+        effects: {},
       },
       {
         state: 1,

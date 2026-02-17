@@ -7,10 +7,12 @@ import {
   handleTalk,
   handleUse,
   handleRead,
+  handleQuit,
 } from './commands'
 import { helpText } from '../data/story'
 import { checkPuzzleTriggers } from '../data/puzzles'
 import { getHighScores, formatScoreBoard, clearAllScores, formatTime } from './scores'
+import { saveSlalomScore, resetSlalomScores } from '../slalom/slalomScores'
 
 export function gameReducer(state, action) {
   if (state.gameOver && action.type !== 'ADD_OUTPUT') {
@@ -44,12 +46,19 @@ export function gameReducer(state, action) {
     case 'READ':
       newState = handleRead(state, action.payload)
       break
+    case 'QUIT':
+      newState = handleQuit(state)
+      break
     case 'HELP': {
       const elapsed = formatTime(Date.now() - (state.startTime || Date.now()))
       const statsLine = { text: `Current stats:  ${state.turnCount} steps  |  ${elapsed} elapsed`, type: 'system' }
+      const modeDisplay = state.mode === 'expert' ? 'Expert (BETA)' :
+                          state.mode === 'easy' ? 'Easy' :
+                          state.mode === 'standard' ? 'Standard' : state.mode || 'Standard'
+      const modeLine = { text: `Current mode:   ${modeDisplay}`, type: 'system' }
       newState = {
         ...state,
-        output: [...state.output, ...helpText, statsLine],
+        output: [...state.output, ...helpText, statsLine, modeLine],
       }
       break
     }
@@ -70,28 +79,47 @@ export function gameReducer(state, action) {
     }
     case 'ERASE_SCORES':
       clearAllScores()
+      resetSlalomScores()
       newState = {
         ...state,
-        output: [...state.output, { text: 'High score table has been erased.', type: 'system' }],
+        output: [
+          ...state.output,
+          { text: 'High score tables have been erased.', type: 'system' },
+          { text: 'Adventure scores reset to defaults.', type: 'system' },
+          { text: 'Slalom scores reset to Coach Joe (1000).', type: 'system' },
+        ],
       }
       break
     case 'SLALOM_RESULT': {
       const { score, gatesPassed, difficulty } = action.payload
+
+      // Save the score and get results
+      const scoreResult = saveSlalomScore(state.playerName || 'Player', score)
+
       const lines = [
         { text: '', type: 'normal' },
         { text: 'The arcade screen fades and you step back from the machine.', type: 'normal' },
         { text: `Final Score: ${score}  |  Gates: ${gatesPassed}  |  Difficulty: ${difficulty}`, type: 'system' },
       ]
-      if (score >= 2000) {
-        lines.push({ text: "You beat Coach Joe's high score! You are the Slalom Champion!", type: 'victory' })
-      } else {
-        lines.push({ text: 'Not bad! Coach Joe\'s high score is 2000. Think you can beat it?', type: 'normal' })
+
+      // Show high score achievements
+      if (scoreResult.newAllTimeRecord) {
+        lines.push({ text: 'NEW ALL-TIME HIGH SCORE!', type: 'victory' })
+      } else if (scoreResult.newDailyRecord) {
+        lines.push({ text: 'NEW DAILY HIGH SCORE!', type: 'victory' })
       }
+
+      if (scoreResult.beatCoachJoe) {
+        lines.push({ text: "You beat Coach Joe's high score of 1000! You are the Slalom Champion!", type: 'victory' })
+      } else {
+        lines.push({ text: `Coach Joe's high score is 1000. Think you can beat it?`, type: 'normal' })
+      }
+
       newState = {
         ...state,
         launchSlalom: false,
         output: [...state.output, ...lines],
-        puzzles: score >= 2000
+        puzzles: scoreResult.beatCoachJoe
           ? { ...state.puzzles, slalom_champion: true }
           : state.puzzles,
       }

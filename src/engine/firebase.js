@@ -23,6 +23,7 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
 const SCORES_COLLECTION = 'high_scores'
+const SLALOM_SCORES_COLLECTION = 'slalom_scores'
 
 export async function fetchScoresFromCloud() {
   try {
@@ -54,5 +55,39 @@ export async function clearScoresFromCloud() {
     await Promise.all(deletes)
   } catch (e) {
     console.warn('Failed to clear scores from cloud:', e)
+  }
+}
+
+// Slalom Scores Firebase Functions
+export async function fetchSlalomScoresFromCloud() {
+  try {
+    const q = query(
+      collection(db, SLALOM_SCORES_COLLECTION),
+      orderBy('score', 'desc'),
+      limit(100)
+    )
+    const snapshot = await getDocs(q)
+    return snapshot.docs.map(doc => doc.data())
+  } catch (e) {
+    console.warn('Failed to fetch slalom scores from cloud:', e)
+    return null
+  }
+}
+
+export async function saveSlalomScoreToCloud(scoreData) {
+  try {
+    await addDoc(collection(db, SLALOM_SCORES_COLLECTION), scoreData)
+  } catch (e) {
+    console.warn('Failed to save slalom score to cloud:', e)
+  }
+}
+
+export async function clearSlalomScoresFromCloud() {
+  try {
+    const snapshot = await getDocs(collection(db, SLALOM_SCORES_COLLECTION))
+    const deletes = snapshot.docs.map(doc => deleteDoc(doc.ref))
+    await Promise.all(deletes)
+  } catch (e) {
+    console.warn('Failed to clear slalom scores from cloud:', e)
   }
 }

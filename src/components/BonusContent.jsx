@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import SlalomGame from '../slalom/SlalomGame'
 
 function BonusContent({ onBack }) {
@@ -7,6 +7,27 @@ function BonusContent({ onBack }) {
   const handleSlalomGameOver = useCallback(() => {
     setPhase('menu')
   }, [])
+
+  // Handle keyboard shortcuts for menu navigation
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      const key = e.key
+
+      if (phase === 'menu') {
+        if (key === '1') setPhase('slalom')
+        else if (key === '2') setPhase('notes')
+        else if (key === '3') onBack()
+      } else if (phase === 'notes') {
+        // Any key or Escape to go back from notes
+        if (key === 'Escape' || key === 'b' || key === 'B') {
+          setPhase('menu')
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [phase, onBack])
 
   if (phase === 'slalom') {
     return (
@@ -44,6 +65,14 @@ function BonusContent({ onBack }) {
           <div className="welcome-title">RELEASE NOTES</div>
           <div className="output-line output-normal">&nbsp;</div>
           <div className="output-line output-system">{'='.repeat(40)}</div>
+          <div className="output-line output-normal">&nbsp;</div>
+
+          <div className="output-line output-title">v1.6 -- Expert Mode (BETA)</div>
+          <div className="output-line output-normal">  - New Expert Mode with double-size map (24 rooms vs 12)</div>
+          <div className="output-line output-normal">  - 12 new locations: Staff areas, village expansion, mountain zones</div>
+          <div className="output-line output-normal">  - Modified item discovery: explore to find critical items</div>
+          <div className="output-line output-normal">  - Expert mode winners prioritized on leaderboard</div>
+          <div className="output-line output-normal">  - Quit/restart command added to all modes</div>
           <div className="output-line output-normal">&nbsp;</div>
 
           <div className="output-line output-title">v1.5 -- Mobile & Responsive</div>

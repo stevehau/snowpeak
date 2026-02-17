@@ -19,6 +19,7 @@ const VERB_PATTERNS = [
   { verbs: ['inventory', 'inv', 'i'], action: 'INVENTORY' },
   { verbs: ['help', 'h', '?', 'commands'], action: 'HELP' },
   { verbs: ['scores', 'score', 'highscores', 'leaderboard'], action: 'SCORES' },
+  { verbs: ['quit', 'exit', 'restart', 'reset'], action: 'QUIT' },
 ]
 
 function stripArticles(words) {
@@ -120,7 +121,7 @@ export function parse(input, state) {
   const action = pattern.action
 
   // No-argument commands
-  if (action === 'INVENTORY' || action === 'HELP' || action === 'SCORES') {
+  if (action === 'INVENTORY' || action === 'HELP' || action === 'SCORES' || action === 'QUIT') {
     return { type: action }
   }
 

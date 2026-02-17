@@ -30,15 +30,8 @@ export default function SlalomGame({ standalone = false, onGameOver }) {
       render(ctx, next)
     }
 
-    // Check for game over transition
-    if (prev.phase === 'playing' && next.phase === 'gameover') {
-      // In integrated mode, notify parent after a delay
-      if (!standalone && onGameOver) {
-        setTimeout(() => {
-          onGameOver({ score: next.score, gatesPassed: next.gatesPassed, difficulty: next.difficulty })
-        }, 3000)
-      }
-    }
+    // Game over transition happens, but we wait for user input
+    // (Space key or tap) before calling onGameOver callback
 
     rafRef.current = requestAnimationFrame(loop)
   }, [standalone, onGameOver])
@@ -71,8 +64,10 @@ export default function SlalomGame({ standalone = false, onGameOver }) {
           if (standalone) {
             // Restart in standalone mode
             stateRef.current = { ...createSlalomState(), phase: 'ready' }
+          } else if (onGameOver) {
+            // In integrated mode, exit back to adventure game
+            onGameOver({ score: state.score, gatesPassed: state.gatesPassed, difficulty: state.difficulty })
           }
-          // In integrated mode, Space does nothing (parent handles exit)
         }
         return
       }

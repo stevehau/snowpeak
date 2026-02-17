@@ -4,6 +4,7 @@ import {
   CANVAS, COLORS, SKIER, GATE, OBSTACLE, FONTS, GAME, CROWD, RIVAL,
 } from './slalomConfig.js'
 import { worldToScreen } from './slalomEngine.js'
+import { getSlalomScores } from './slalomScores.js'
 
 export function render(ctx, state) {
   // Clear
@@ -41,11 +42,14 @@ export function render(ctx, state) {
 
 function drawSnowBands(ctx, state) {
   const bandHeight = 40
-  const offset = (state.worldY * 0.5) % (bandHeight * 2)
+  const patternHeight = bandHeight * 4 // 3 white + 1 grey = 4 bands total
+  const offset = (state.worldY * 0.5) % patternHeight
 
   ctx.fillStyle = COLORS.SNOW_DARK
-  for (let y = -bandHeight * 2 + offset; y < CANVAS.HEIGHT; y += bandHeight * 2) {
-    ctx.fillRect(0, y, CANVAS.WIDTH, bandHeight)
+  // Draw 1 grey band for every 3 white bands (pattern: white, white, white, grey)
+  for (let y = -patternHeight + offset; y < CANVAS.HEIGHT; y += patternHeight) {
+    // Grey band appears on the 4th position (after 3 white bands)
+    ctx.fillRect(0, y + bandHeight * 3, CANVAS.WIDTH, bandHeight)
   }
 }
 
@@ -246,16 +250,23 @@ function drawHUD(ctx, state) {
   ctx.font = FONTS.HUD
   ctx.textBaseline = 'top'
 
-  // Score
+  // Score (left side)
   ctx.fillStyle = COLORS.HUD_GREEN
   ctx.textAlign = 'left'
   ctx.fillText(`SCORE: ${state.score}`, 10, 8)
 
-  // Gates
+  // Level (left side, below score)
+  ctx.font = FONTS.SMALL
+  ctx.fillStyle = COLORS.TEXT_DIM
+  ctx.fillText(`LVL ${state.difficulty}`, 10, 22)
+
+  // Gates (center)
+  ctx.font = FONTS.HUD
+  ctx.fillStyle = COLORS.HUD_GREEN
   ctx.textAlign = 'center'
   ctx.fillText(`GATES: ${state.gatesPassed}`, CANVAS.WIDTH / 2, 8)
 
-  // Miss indicators (X marks)
+  // Miss indicators (X marks, right side)
   ctx.textAlign = 'right'
   let missText = ''
   for (let i = 0; i < state.maxMisses; i++) {
@@ -267,12 +278,6 @@ function drawHUD(ctx, state) {
   }
   ctx.fillStyle = state.gatesMissed > 0 ? COLORS.MISS_RED : COLORS.HUD_GREEN
   ctx.fillText(missText.trim(), CANVAS.WIDTH - 10, 8)
-
-  // Difficulty level (small, bottom left)
-  ctx.fillStyle = COLORS.TEXT_DIM
-  ctx.font = FONTS.SMALL
-  ctx.textAlign = 'left'
-  ctx.fillText(`LVL ${state.difficulty}`, 10, CANVAS.HEIGHT - 24)
 
   ctx.textBaseline = 'alphabetic'
 }
@@ -330,23 +335,35 @@ function drawGameOverOverlay(ctx, state) {
   // Game Over title
   ctx.fillStyle = COLORS.MISS_RED
   ctx.font = FONTS.TITLE
-  ctx.fillText('GAME OVER', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 - 100)
+  ctx.fillText('GAME OVER', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 - 140)
 
   // Score summary
   ctx.fillStyle = COLORS.HUD_GREEN
   ctx.font = FONTS.OVERLAY
-  ctx.fillText(`FINAL SCORE: ${state.score}`, CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 - 40)
+  ctx.fillText(`FINAL SCORE: ${state.score}`, CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 - 80)
 
   ctx.fillStyle = COLORS.TEXT_WHITE
   ctx.font = FONTS.SUBTITLE
-  ctx.fillText(`Gates Passed: ${state.gatesPassed}`, CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 10)
-  ctx.fillText(`Difficulty Reached: ${state.difficulty}`, CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 40)
+  ctx.fillText(`Gates Passed: ${state.gatesPassed}`, CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 - 50)
+  ctx.fillText(`Difficulty Reached: ${state.difficulty}`, CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 - 20)
+
+  // High Scores Section
+  const scores = getSlalomScores()
+
+  ctx.fillStyle = '#ffcc00'
+  ctx.font = FONTS.SUBTITLE
+  ctx.fillText('--- HIGH SCORES ---', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 20)
+
+  ctx.fillStyle = COLORS.TEXT_WHITE
+  ctx.font = FONTS.SMALL
+  ctx.fillText(`TODAY: ${scores.daily.record.score} by ${scores.daily.record.name}`, CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 50)
+  ctx.fillText(`ALL-TIME: ${scores.allTime.score} by ${scores.allTime.name}`, CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 75)
 
   // Champion message
   if (state.score >= GAME.CHAMPION_SCORE) {
     ctx.fillStyle = '#ffcc00'
     ctx.font = FONTS.OVERLAY
-    ctx.fillText('CHAMPION RUN!', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 90)
+    ctx.fillText('CHAMPION RUN!', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 110)
   }
 
   // Restart prompt
@@ -354,7 +371,7 @@ function drawGameOverOverlay(ctx, state) {
   ctx.font = FONTS.SUBTITLE
   const blink = Math.floor(Date.now() / 500) % 2
   if (blink) {
-    ctx.fillText('PRESS SPACE TO PLAY AGAIN', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 150)
+    ctx.fillText('PRESS SPACE TO PLAY AGAIN', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 170)
   }
 
   ctx.textBaseline = 'alphabetic'

@@ -85,10 +85,33 @@ function describeRoom(state, roomId) {
   // List exits (hide locked exits in hidden_cave until medallion unlocks them)
   const allExits = { ...room.exits, ...room.hiddenExits }
   const showLockedExits = roomId !== 'hidden_cave'
-  const lockedExitDirs = showLockedExits ? Object.keys(room.lockedExits || {}) : []
-  const exitDirs = [...Object.keys(allExits), ...lockedExitDirs]
-  if (exitDirs.length > 0) {
-    s = addOutput(s, `\nExits: ${exitDirs.join(', ')}`, 'system')
+  const lockedExits = showLockedExits ? (room.lockedExits || {}) : {}
+
+  // Format exits with room names: "direction (Room Name)"
+  const exitList = []
+  for (const dir of Object.keys(allExits)) {
+    const targetRoomId = allExits[dir]
+    const targetRoom = s.rooms[targetRoomId]
+    if (targetRoom) {
+      exitList.push(`${dir} (${targetRoom.name})`)
+    } else {
+      exitList.push(dir)
+    }
+  }
+  for (const dir of Object.keys(lockedExits)) {
+    // lockedExits values are objects: { roomId, keyId, message }
+    const lockedExit = lockedExits[dir]
+    const targetRoomId = lockedExit.roomId
+    const targetRoom = s.rooms[targetRoomId]
+    if (targetRoom) {
+      exitList.push(`${dir} (${targetRoom.name})`)
+    } else {
+      exitList.push(dir)
+    }
+  }
+
+  if (exitList.length > 0) {
+    s = addOutput(s, `\nExits: ${exitList.join(', ')}`, 'system')
   }
 
   return s
@@ -174,6 +197,22 @@ export function handleMove(state, { direction }) {
         puzzles: { ...s.puzzles, finger_given: true },
       }
       s = addOutput(s, '\n[Frozen finger added to inventory]', 'system')
+    }
+  }
+
+  // Candle blows out in windy outdoor areas (expert mode only)
+  if (s.mode === 'expert' && s.puzzles.candle_lit) {
+    const windyRooms = [
+      'ski_slopes', 'frozen_waterfall', 'ski_lift_top', 'mountain_peak',
+      'ridge_trail', 'avalanche_zone', 'summit_shelter', 'ice_caves'
+    ]
+    if (windyRooms.includes(targetRoomId)) {
+      s = addOutput(s, '', 'normal')
+      s = addOutput(s, 'The fierce mountain wind blows out your candle! The flame flickers and dies, leaving you in darkness once more.', 'normal')
+      s = {
+        ...s,
+        puzzles: { ...s.puzzles, candle_lit: false },
+      }
     }
   }
 
@@ -324,6 +363,10 @@ export function handleTalk(state, { npcId }) {
   for (const entry of dialogueEntries) {
     if (entry.condition) {
       if (entry.condition.hasItem && state.inventory.includes(entry.condition.hasItem)) {
+        chosen = entry
+        break
+      }
+      if (entry.condition.hasFlag && state.puzzles[entry.condition.hasFlag]) {
         chosen = entry
         break
       }
@@ -510,6 +553,36 @@ export function handleUse(state, { itemId }) {
     return s
   }
 
+  // Store bell is a room item in general_store (expert mode only)
+  if (itemId === 'store_bell') {
+    const room = state.rooms[state.currentRoomId]
+    if (!room.items.includes('store_bell')) {
+      return addOutput(state, "There's no bell here.", 'error')
+    }
+    let s = addOutput(state, 'You ring the brass bell. *DING!* The sound echoes through the empty store.', 'normal')
+    s = addSound(s, 'bell')
+
+    // 50% chance of Husky encounter
+    if (Math.random() < 0.5) {
+      const huskyText = huskyEncounters[Math.floor(Math.random() * huskyEncounters.length)]
+      s = addOutput(s, '', 'normal')
+      s = addOutput(s, huskyText, 'normal')
+
+      // Check if it's the frozen finger encounter
+      if (huskyText.includes('frozen finger')) {
+        s = {
+          ...s,
+          inventory: [...s.inventory, 'frozen_finger'],
+        }
+      }
+    } else {
+      s = addOutput(s, '', 'normal')
+      s = addOutput(s, 'Nobody comes. The store remains silent and empty.', 'normal')
+    }
+
+    return s
+  }
+
   if (!state.inventory.includes(itemId)) {
     return addOutput(state, "You're not carrying that.", 'error')
   }
@@ -522,25 +595,64 @@ export function handleUse(state, { itemId }) {
   const item = state.items[itemId]
   const roomId = state.currentRoomId
 
+  // Frozen finger - comical use
+  if (itemId === 'frozen_finger') {
+    return addOutput(state, "You use the frozen finger to pick your nose. It's a strangely refreshing feeling.", 'normal')
+  }
+
   // Fuse at ski lift
   if (itemId === 'fuse' && roomId === 'ski_lift_top') {
-    let s = addOutput(state, 'You slot the electrical fuse into the empty socket on the control panel. There\'s a satisfying CLUNK, followed by a low hum. The ski lift machinery groans to life! The chairs begin moving along the cable. The lift is working! You can now ride it up to the mountain peak.', 'normal')
-    const room = s.rooms.ski_lift_top
-    s = {
-      ...s,
-      inventory: s.inventory.filter(id => id !== 'fuse'),
-      puzzles: { ...s.puzzles, ski_lift_fixed: true },
-      rooms: {
-        ...s.rooms,
-        ski_lift_top: {
-          ...room,
-          description: 'The upper ski lift station hums with power. The lift chairs glide smoothly along the cable, ready to carry riders to the peak. The electrical panel on the side of the station house is closed, the fuse securely in place.',
-          exits: { ...room.exits, up: 'mountain_peak' },
+    const hasFuse = state.inventory.includes('fuse')
+    const hasScrewdriver = state.inventory.includes('screwdriver')
+
+    // In expert mode, both fuse and screwdriver are required
+    if (state.mode === 'expert') {
+      if (!hasScrewdriver) {
+        return addOutput(state, 'You try to install the fuse in the electrical panel. The fuse looks like it would fit perfectly, but you can\'t open the panel cover -- it\'s held shut by several screws. You need a tool... maybe a screwdriver to complete the job.', 'error')
+      }
+      // Has both - proceed with fix
+      let s = addOutput(state, 'You use the screwdriver to open the electrical panel cover, then carefully slot the fuse into the empty socket. There\'s a satisfying CLUNK, followed by a low hum. The ski lift machinery groans to life! The chairs begin moving along the cable. The lift is working! You can now ride it up to the mountain peak.', 'normal')
+      const room = s.rooms.ski_lift_top
+      s = {
+        ...s,
+        inventory: s.inventory.filter(id => id !== 'fuse' && id !== 'screwdriver'),
+        puzzles: { ...s.puzzles, ski_lift_fixed: true },
+        rooms: {
+          ...s.rooms,
+          ski_lift_top: {
+            ...room,
+            description: 'The upper ski lift station hums with power. The lift chairs glide smoothly along the cable, ready to carry riders to the peak. The electrical panel on the side of the station house is closed, the fuse and screwdriver both used in the repair.',
+            exits: { ...room.exits, up: 'mountain_peak' },
+          },
         },
-      },
+      }
+      s = addOutput(s, '\n[The ski lift is now operational! You can go up to the mountain peak.]', 'system')
+      return s
+    } else {
+      // Standard/Easy mode - only fuse required (original behavior)
+      let s = addOutput(state, 'You slot the electrical fuse into the empty socket on the control panel. There\'s a satisfying CLUNK, followed by a low hum. The ski lift machinery groans to life! The chairs begin moving along the cable. The lift is working! You can now ride it up to the mountain peak.', 'normal')
+      const room = s.rooms.ski_lift_top
+      s = {
+        ...s,
+        inventory: s.inventory.filter(id => id !== 'fuse'),
+        puzzles: { ...s.puzzles, ski_lift_fixed: true },
+        rooms: {
+          ...s.rooms,
+          ski_lift_top: {
+            ...room,
+            description: 'The upper ski lift station hums with power. The lift chairs glide smoothly along the cable, ready to carry riders to the peak. The electrical panel on the side of the station house is closed, the fuse securely in place.',
+            exits: { ...room.exits, up: 'mountain_peak' },
+          },
+        },
+      }
+      s = addOutput(s, '\n[The ski lift is now operational! You can go up to the mountain peak.]', 'system')
+      return s
     }
-    s = addOutput(s, '\n[The ski lift is now operational! You can go up to the mountain peak.]', 'system')
-    return s
+  }
+
+  // Screwdriver alone at ski lift - hint about needing fuse
+  if (itemId === 'screwdriver' && roomId === 'ski_lift_top' && state.mode === 'expert') {
+    return addOutput(state, 'You use the screwdriver to open the electrical panel. Inside you can see an empty fuse socket -- the lift won\'t work without a fuse. You close the panel back up.', 'normal')
   }
 
   // Medallion at cave vault door
@@ -592,6 +704,37 @@ export function handleUse(state, { itemId }) {
   // Torch in the cave
   if (itemId === 'torch' && roomId === 'hidden_cave') {
     return addOutput(state, 'You hold the torch high. The flickering light reveals the cave walls in detail -- ancient markings, trail symbols, and an arrow pointing down toward the stone steps. The circular indentation beside the steps gleams in the torchlight.', 'normal')
+  }
+
+  // Matches (expert mode only) - light briefly then blow out
+  if (itemId === 'matches' && state.mode === 'expert') {
+    return addOutput(state, 'You strike a match. It flares to life with a warm, flickering glow... but the mountain wind quickly snuffs it out. The brief light was comforting, but not very useful. Perhaps a candle would hold a flame longer.', 'normal')
+  }
+
+  // Light candles with matches (expert mode only)
+  if (itemId === 'candles' && state.mode === 'expert') {
+    if (!state.inventory.includes('matches')) {
+      return addOutput(state, 'You hold the prayer candles, but you have no way to light them. You need matches or some other source of fire.', 'error')
+    }
+
+    // Light the candle
+    let s = addOutput(state, 'You strike a match and carefully light one of the prayer candles. The warm glow pushes back the shadows around you. The flame flickers but holds steady -- a comforting light in the cold mountain air.', 'normal')
+    s = {
+      ...s,
+      puzzles: { ...s.puzzles, candle_lit: true },
+    }
+    s = addOutput(s, '\n[The candle provides dim light, but beware of the wind!]', 'system')
+    return s
+  }
+
+  // Avalanche beacon - scold player for false alarm (expert mode only)
+  if (itemId === 'avalanche_beacon' && state.mode === 'expert') {
+    let s = addOutput(state, 'You press the activation button on the avalanche beacon. Nothing happens -- the battery is long dead.', 'normal')
+    s = addOutput(s, '', 'normal')
+    s = addOutput(s, 'Even if it worked, activating a beacon when there\'s no actual avalanche emergency is incredibly dangerous and irresponsible. False alarms put rescue teams at risk and waste critical resources.', 'normal')
+    s = addOutput(s, '', 'normal')
+    s = addOutput(s, 'Have you heard the story of "The Boy Who Cried Wolf"? When a real emergency happens, nobody will believe you if you\'ve raised false alarms. Out here in the mountains, that kind of mistake can cost lives.', 'normal')
+    return s
   }
 
   return addOutput(state, `You're not sure how to use the ${item.name} here.`, 'error')
@@ -646,6 +789,58 @@ export function handleRead(state, { itemId }) {
     return s
   }
 
+  // Special handling for old_map - highlight current room in yellow
+  if (itemId === 'old_map' && item.readText) {
+    // Map room IDs to their display names on the map
+    const roomMapNames = {
+      lodge_lobby: 'Lodge Lobby',
+      lodge_bar: 'Lodge Bar',
+      lodge_balcony: 'Balcony',
+      game_room: 'Game Room',
+      basement: 'Basement??',
+      main_street: 'Main Street',
+      ski_rental: 'Ski Rental',
+      village: 'Village',
+      ski_slopes: 'Ski Slopes',
+      frozen_waterfall: 'Frozen Waterfall',
+      ski_lift_top: 'Ski Lift Top',
+      mountain_peak: 'Mountain Peak',
+      // Expert mode rooms (for larger map)
+      staff_hallway: 'Staff',
+      staff_quarters: 'Staff Quarters',
+      kitchen: 'Kitchen',
+      pantry: 'Pantry',
+      storage_room: 'Storage',
+      general_store: 'General Store',
+      chapel: 'Chapel',
+      old_cabin: 'Old Cabin',
+      underground_tunnel: 'Underground Tunnel',
+      hidden_observatory: 'Observatory',
+      ice_caves: 'Ice Caves',
+      avalanche_zone: 'Avalanche Zone',
+      ridge_trail: 'Ridge Trail',
+      summit_shelter: 'Summit Shelter',
+    }
+
+    const mapDisplayName = roomMapNames[state.currentRoomId]
+
+    // Split the map text into lines and highlight current room line in yellow
+    const lines = item.readText.split('\n')
+    let s = state
+
+    for (const line of lines) {
+      // Check if this line contains the current room's map name in brackets
+      if (mapDisplayName && line.includes(`[${mapDisplayName}]`)) {
+        // Highlight entire line in yellow (preserves ASCII art)
+        s = addOutput(s, line, 'npc')
+      } else {
+        s = addOutput(s, line, 'normal')
+      }
+    }
+
+    return s
+  }
+
   // For items with readText
   if (item.readText) {
     return addOutput(state, item.readText, 'normal')
@@ -653,5 +848,18 @@ export function handleRead(state, { itemId }) {
 
   // Default: show description
   return addOutput(state, item.description, 'normal')
+}
+
+export function handleQuit(state) {
+  return {
+    ...state,
+    gameRestart: true,
+    output: [
+      ...state.output,
+      { text: '', type: 'normal' },
+      { text: 'Restarting game...', type: 'system' },
+      { text: 'Returning to mode selection...', type: 'system' },
+    ]
+  }
 }
 
