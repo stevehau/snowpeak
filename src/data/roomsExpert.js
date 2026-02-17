@@ -111,16 +111,16 @@ export const roomsExpert = {
     |   | SNOW- |  | __ || __ |        |
     |   | PEAK  |  ||__|||__| |        |
     |   | /__\\ |  |WORKBENCH |        |
-    |   |_______|  |__________|        |
-    |                                  |
-    |  ///  ///   old ski equipment    |
-    |  ///  ///                        |
+    |   |_______|  |__________|  ___   |
+    |                           |   |  |
+    |  ///  ///   old ski      |???|  |
+    |  ///  ///   equipment    |___|  |
     |__________________________________|`,
-    description: 'A damp stone basement beneath the lodge. Old ski equipment rusts in the corners. Cobwebs hang from exposed wooden beams. Against the far wall, a workbench is covered in old papers and tools. A portrait of a distinguished-looking man in vintage ski attire hangs crooked on the wall -- the resort\'s founder, Tobias Snowpeak. A dark tunnel entrance is barely visible in the corner.',
+    description: 'A damp stone basement beneath the lodge. Old ski equipment rusts in the corners. Cobwebs hang from exposed wooden beams. Against the far wall, a workbench is covered in old papers and tools. A portrait of a distinguished-looking man in vintage ski attire hangs crooked on the wall -- the resort\'s founder, Tobias Snowpeak. A dark tunnel entrance is barely visible in the corner. In a dark corner, half-buried under a dusty tarp, sits what appears to be an old arcade cabinet.',
     exits: { up: 'lodge_lobby', north: 'underground_tunnel' },
     hiddenExits: {},
     lockedExits: {},
-    items: ['dusty_journal'],
+    items: ['dusty_journal', 'basement_arcade'],
     npcs: [],
   },
   main_street: {

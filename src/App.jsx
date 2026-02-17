@@ -5,6 +5,7 @@ import BonusContent from './components/BonusContent'
 import { useGame } from './hooks/useGame'
 import { playSound } from './engine/sounds'
 import SlalomGame from './slalom/SlalomGame'
+import DefendGame from './defend/DefendGame'
 import { syncSlalomScoresFromCloud } from './slalom/slalomScores'
 
 function Game({ playerInfo, onRestart }) {
@@ -30,6 +31,10 @@ function Game({ playerInfo, onRestart }) {
     dispatch({ type: 'SLALOM_RESULT', payload: result })
   }, [dispatch])
 
+  const handleDefendGameOver = useCallback((result) => {
+    dispatch({ type: 'DEFEND_RESULT', payload: result })
+  }, [dispatch])
+
   // Check for restart flag
   useEffect(() => {
     if (gameState.gameRestart) {
@@ -47,6 +52,16 @@ function Game({ playerInfo, onRestart }) {
       <SlalomGame
         standalone={false}
         onGameOver={handleSlalomGameOver}
+      />
+    )
+  }
+
+  // Show defend game when launched from basement arcade
+  if (gameState.launchDefend) {
+    return (
+      <DefendGame
+        standalone={false}
+        onGameOver={handleDefendGameOver}
       />
     )
   }
@@ -77,6 +92,11 @@ function App() {
   // Standalone slalom mode via #slalom hash
   if (hash === '#slalom') {
     return <SlalomGame standalone={true} />
+  }
+
+  // Standalone defend mode via #defend hash
+  if (hash === '#defend') {
+    return <DefendGame standalone={true} />
   }
 
   if (!playerInfo) {

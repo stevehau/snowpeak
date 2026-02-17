@@ -104,6 +104,11 @@ export function generateChoices(state) {
     choices.push({ label: 'Play the arcade game', command: 'play arcade game' })
   }
 
+  // 5c. Play the basement defend game (room item, not inventory)
+  if (state.currentRoomId === 'basement' && room.items.includes('basement_arcade') && choices.length < MAX_CHOICES) {
+    choices.push({ label: 'Play the dusty arcade cabinet', command: 'play defend game' })
+  }
+
   // 6. Read items in inventory or room (victory item prioritized)
   const readableItem = findReadableItem(state)
   if (readableItem && choices.length < MAX_CHOICES) {

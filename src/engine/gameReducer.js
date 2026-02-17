@@ -130,6 +130,32 @@ export function gameReducer(state, action) {
       }
       break
     }
+    case 'DEFEND_RESULT': {
+      const { defeated, total, elapsedMs, won } = action.payload
+
+      const lines = [
+        { text: '', type: 'normal' },
+        { text: 'The old CRT fades to black and you step back from the dusty cabinet, blinking in the dim basement light.', type: 'normal' },
+      ]
+
+      if (won) {
+        lines.push({ text: `You defended the village! ${defeated} animals + BOSS defeated in ${Math.round(elapsedMs / 1000)}s!`, type: 'victory' })
+        lines.push({ text: 'The ancient machine plays a triumphant 8-bit fanfare. "VILLAGE CHAMPION" flashes across the screen.', type: 'normal' })
+      } else {
+        lines.push({ text: `The village fell... You deterred ${defeated} of ${total} animals before being overrun.`, type: 'system' })
+        lines.push({ text: 'The cabinet lets out a mournful beep. "GAME OVER - INSERT COIN" scrolls across the screen.', type: 'normal' })
+      }
+
+      newState = {
+        ...state,
+        launchDefend: false,
+        output: [...state.output, ...lines],
+        puzzles: won
+          ? { ...state.puzzles, village_champion: true }
+          : state.puzzles,
+      }
+      break
+    }
     case 'ADD_OUTPUT':
       return {
         ...state,

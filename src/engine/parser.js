@@ -47,6 +47,12 @@ function matchNpc(noun, state) {
 // Aliases that map alternative phrases to canonical item IDs
 const ITEM_ALIASES = {
   'arcade game': 'arcade_machine',
+  'defend game': 'basement_arcade',
+  'defend the village': 'basement_arcade',
+  'defend village': 'basement_arcade',
+  'dusty arcade': 'basement_arcade',
+  'old arcade': 'basement_arcade',
+  'basement arcade': 'basement_arcade',
 }
 
 function matchItem(noun, state) {

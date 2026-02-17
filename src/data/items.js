@@ -143,6 +143,13 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
     takeable: false,
   },
 
+  basement_arcade: {
+    id: 'basement_arcade',
+    name: 'dusty arcade cabinet',
+    description: 'An ancient arcade cabinet hidden under a tarp in the basement corner. Years of dust and cobwebs cover it, but when you wipe the grime away, the side art reveals a dramatic scene: wolves and bears charging through a moonlit forest toward a tiny village. The marquee reads "DEFEND THE VILLAGE" in faded red letters. Amazingly, a dim green power light still glows on the back panel. Someone must have left it plugged in decades ago. Try "play defend game" to play!',
+    takeable: false,
+  },
+
   // ===== EXPERT MODE ITEMS =====
   staff_uniform: {
     id: 'staff_uniform',

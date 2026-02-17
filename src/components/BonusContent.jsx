@@ -1,10 +1,15 @@
 import { useState, useCallback, useEffect } from 'react'
 import SlalomGame from '../slalom/SlalomGame'
+import DefendGame from '../defend/DefendGame'
 
 function BonusContent({ onBack }) {
-  const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'notes'
+  const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'defend' | 'notes'
 
   const handleSlalomGameOver = useCallback(() => {
+    setPhase('menu')
+  }, [])
+
+  const handleDefendGameOver = useCallback(() => {
     setPhase('menu')
   }, [])
 
@@ -15,8 +20,9 @@ function BonusContent({ onBack }) {
 
       if (phase === 'menu') {
         if (key === '1') setPhase('slalom')
-        else if (key === '2') setPhase('notes')
-        else if (key === '3') onBack()
+        else if (key === '2') setPhase('defend')
+        else if (key === '3') setPhase('notes')
+        else if (key === '4') onBack()
       } else if (phase === 'notes') {
         // Any key or Escape to go back from notes
         if (key === 'Escape' || key === 'b' || key === 'B') {
@@ -34,6 +40,15 @@ function BonusContent({ onBack }) {
       <SlalomGame
         standalone={false}
         onGameOver={handleSlalomGameOver}
+      />
+    )
+  }
+
+  if (phase === 'defend') {
+    return (
+      <DefendGame
+        standalone={false}
+        onGameOver={handleDefendGameOver}
       />
     )
   }
@@ -65,6 +80,14 @@ function BonusContent({ onBack }) {
           <div className="welcome-title">RELEASE NOTES</div>
           <div className="output-line output-normal">&nbsp;</div>
           <div className="output-line output-system">{'='.repeat(40)}</div>
+          <div className="output-line output-normal">&nbsp;</div>
+
+          <div className="output-line output-title">v1.7 -- Defend the Village</div>
+          <div className="output-line output-normal">  - New arcade mini-game: Defend the Village from wolves and bears!</div>
+          <div className="output-line output-normal">  - Hidden dusty arcade cabinet in the locked basement</div>
+          <div className="output-line output-normal">  - Boss bear finale after 20 animals defeated</div>
+          <div className="output-line output-normal">  - Ammo/reload system with 5-shot clips</div>
+          <div className="output-line output-normal">  - Available in Bonus Content menu and in-game</div>
           <div className="output-line output-normal">&nbsp;</div>
 
           <div className="output-line output-title">v1.6 -- Expert Mode (BETA)</div>
@@ -164,16 +187,23 @@ function BonusContent({ onBack }) {
         </button>
         <button
           className="mode-button"
+          onClick={() => setPhase('defend')}
+        >
+          [2] PLAY DEFEND THE VILLAGE
+          <span className="mode-desc">Protect the village from wolves and bears!</span>
+        </button>
+        <button
+          className="mode-button"
           onClick={() => setPhase('notes')}
         >
-          [2] RELEASE NOTES
+          [3] RELEASE NOTES
           <span className="mode-desc">View version history and changelog</span>
         </button>
         <button
           className="mode-button"
           onClick={onBack}
         >
-          [3] BACK
+          [4] BACK
           <span className="mode-desc">Return to the start screen</span>
         </button>
       </div>

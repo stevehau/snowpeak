@@ -589,6 +589,21 @@ export function handleUse(state, { itemId }) {
     return s
   }
 
+  // Basement arcade cabinet — Defend the Village
+  if (itemId === 'basement_arcade') {
+    const room = state.rooms[state.currentRoomId]
+    if (!room.items.includes('basement_arcade')) {
+      return addOutput(state, "There's no arcade cabinet here.", 'error')
+    }
+    let s = addOutput(state, 'You pull the dusty tarp aside and blow the cobwebs off the screen. The old CRT monitor crackles and hums to life, bathing the dark basement in an eerie green glow...', 'normal')
+    s = addOutput(s, '', 'normal')
+    s = addOutput(s, '* DEFEND THE VILLAGE *', 'title')
+    s = addOutput(s, 'The ancient cabinet shudders awake. Pixel wolves howl across the screen. Time to defend the village!', 'normal')
+    s = addSound(s, 'arcade_start')
+    s = { ...s, launchDefend: true }
+    return s
+  }
+
   // Store bell is a room item in general_store (expert mode only)
   if (itemId === 'store_bell') {
     const room = state.rooms[state.currentRoomId]
