@@ -121,8 +121,14 @@ export function parse(input, state) {
   const action = pattern.action
 
   // No-argument commands
-  if (action === 'INVENTORY' || action === 'HELP' || action === 'SCORES' || action === 'QUIT') {
+  if (action === 'INVENTORY' || action === 'HELP' || action === 'QUIT') {
     return { type: action }
+  }
+
+  // Scores with optional "all" argument
+  if (action === 'SCORES') {
+    const showAll = nounTokens.some(t => ['all', 'more', 'full', 'expand'].includes(t))
+    return { type: 'SCORES', payload: { showAll } }
   }
 
   // Look with no target = look at room

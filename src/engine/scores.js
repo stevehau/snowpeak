@@ -12,12 +12,16 @@ export function getHighScores() {
       data = localStorage.getItem('snowpeak_high_scores_v3')
       if (data) {
         const oldScores = migrateScores(JSON.parse(data))
+        sortScores(oldScores)
         localStorage.setItem(STORAGE_KEY, JSON.stringify(oldScores))
         localStorage.removeItem('snowpeak_high_scores_v3')
         return oldScores
       }
     }
-    return data ? JSON.parse(data) : []
+    const scores = data ? JSON.parse(data) : []
+    // Always re-sort to ensure correct ordering (expert > standard > easy)
+    if (scores.length > 0) sortScores(scores)
+    return scores
   } catch {
     return []
   }
@@ -153,15 +157,18 @@ export function formatDate(isoString) {
   return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`
 }
 
-export function formatScoreBoard(scores) {
+export function formatScoreBoard(scores, showAll = false) {
   const lines = []
+  const limit = showAll ? 50 : 10
+  const displayScores = scores.slice(0, limit)
+
   lines.push({ text: '', type: 'normal' })
   lines.push({ text: '--------- TOP ADVENTURERS WHO UNLOCKED THE SECRET ---------', type: 'system' })
   lines.push({ text: '  #   PLAYER           STEPS   ELAPSED TIME   MODE        DATE', type: 'system' })
   lines.push({ text: '  --  --------         -----   ------------   ---------   ----', type: 'system' })
 
-  for (let i = 0; i < scores.length; i++) {
-    const s = scores[i]
+  for (let i = 0; i < displayScores.length; i++) {
+    const s = displayScores[i]
     const line =
       '  ' +
       String(i + 1).padEnd(4) +
@@ -171,6 +178,11 @@ export function formatScoreBoard(scores) {
       (s.mode || 'standard').padEnd(11) +
       formatDate(s.date)
     lines.push({ text: line, type: 'system' })
+  }
+
+  if (!showAll && scores.length > 10) {
+    lines.push({ text: '', type: 'normal' })
+    lines.push({ text: `  Showing top 10 of ${scores.length}. Type "scores all" to see more.`, type: 'normal' })
   }
 
   lines.push({ text: '', type: 'normal' })

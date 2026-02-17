@@ -68,6 +68,7 @@ export function gameReducer(state, action) {
     }
     case 'SCORES': {
       const scores = getHighScores()
+      const showAll = action.payload?.showAll || false
       if (scores.length === 0) {
         newState = {
           ...state,
@@ -76,7 +77,7 @@ export function gameReducer(state, action) {
       } else {
         newState = {
           ...state,
-          output: [...state.output, ...formatScoreBoard(scores)],
+          output: [...state.output, ...formatScoreBoard(scores, showAll)],
         }
       }
       break
