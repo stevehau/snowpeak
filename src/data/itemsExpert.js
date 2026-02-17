@@ -8,23 +8,25 @@ export const itemsExpert = {
     readable: true,
     readText: `You unfold the old map and study it carefully:
 
-    ~~~ SNOWPEAK RESORT MAP ~~~
-
-                [Summit Shelter]---[Mountain Peak]
-                                        |
-            [Ridge Trail]--------[Ski Lift Top]---[Ice Caves]
-                |                       |
-         [Avalanche Zone]----[Ski Slopes]---[Frozen Waterfall]
-                                    |
-   [Storage]---[Ski Rental]---[Main Street]---[Village]---[General Store]
-                                    |              |
-                              [Lodge Lobby]    [Chapel]
-                              / |  |    \\        |
-                    [Balcony]   | [Bar] [Staff]  [Old Cabin]
-                         [Basement]  |      |
-      [Game Room]----------[Kitchen]   [Staff Quarters]
-                              |
-                          [Pantry]
+        [Summit Shelter]---[Mountain Peak]
+                                  |
+           [Ridge Trail]---[Ski Lift Top]---[Ice Caves]
+                 |                |
+         [Avalanche Zone]---[Ski Slopes]---[Frozen Waterfall]
+                                  |
+ [Storage]---[Ski Rental]---[Main Street]---[Village]---[General Store]
+                                  |             |
+                                  |         [Chapel]
+                                  |             |
+                                  |        [Old Cabin]
+                                  |
+                [Balcony]---[Lodge Lobby]---[Bar]---[Game Room]
+                                  |           |
+                               [Staff]    [Kitchen]
+                                  |           |
+                              [Staff Q]   [Pantry]
+                                  |
+                             [Basement]
 
    --- = paths     | = trails
    [Basement] requires a key to access

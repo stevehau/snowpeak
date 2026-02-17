@@ -948,6 +948,7 @@ export function handleRead(state, { itemId }) {
       // Expert mode rooms
       'Staff': 'staff_hallway',
       'Staff Quarters': 'staff_quarters',
+      'Staff Q': 'staff_quarters',
       'Kitchen': 'kitchen',
       'Pantry': 'pantry',
       'Storage': 'storage_room',
