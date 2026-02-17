@@ -141,7 +141,10 @@ export function handleMove(state, { direction }) {
         rooms: { ...state.rooms, [state.currentRoomId]: newRoom },
       }
       if (locked.roomId === 'basement') {
-        s = addOutput(s, `The rusty key fits perfectly in the lock. With a satisfying click, the heavy wooden door creaks open, revealing stone steps leading down into darkness.`, 'normal')
+        s = addOutput(s, `The old basement key fits perfectly in the lock. With a satisfying click, the heavy wooden door creaks open, revealing stone steps leading down into darkness.`, 'normal')
+      } else if (locked.roomId === 'staff_quarters') {
+        s = addOutput(s, `You slide the staff key into the lock. The mechanism turns with a heavy *CLUNK* and the door to the staff quarters swings open, revealing a dimly lit corridor beyond.`, 'normal')
+        s = addSound(s, 'unlock')
       } else {
         s = addOutput(s, `You use the ${state.items[locked.keyId].name} to unlock the way ${direction}.`, 'normal')
       }
@@ -153,7 +156,40 @@ export function handleMove(state, { direction }) {
       return s
     }
 
-    // Item requirement lock (like warm coat for peak)
+    // Multiple item requirement lock (like rope + pickaxe for ice caves)
+    if (locked.requireItems) {
+      const hasAll = locked.requireItems.every(id => state.inventory.includes(id))
+      if (hasAll) {
+        targetRoomId = locked.roomId
+        // Unlock permanently
+        const newRoom = {
+          ...room,
+          exits: { ...room.exits, [direction]: locked.roomId },
+          lockedExits: { ...room.lockedExits },
+        }
+        delete newRoom.lockedExits[direction]
+        let s = {
+          ...state,
+          rooms: { ...state.rooms, [state.currentRoomId]: newRoom },
+        }
+        if (locked.roomId === 'ice_caves') {
+          s = addOutput(s, 'You hammer the pickaxe into the ice wall and secure the climbing rope to a rock anchor. Carefully rappelling down the frozen passage, you descend into the mountain. The ice groans and cracks around you as you go deeper. Finally, you reach the bottom -- a vast cavern of glittering ice!', 'normal')
+          s = addSound(s, 'wind')
+        } else {
+          s = addOutput(s, `You use your equipment to unlock the way ${direction}.`, 'normal')
+        }
+        s = addOutput(s, '', 'normal')
+        s = addSound(s, getRoomSound(targetRoomId, state.currentRoomId))
+        s = { ...s, currentRoomId: targetRoomId, previousRoomId: state.currentRoomId }
+        s = describeRoom(s, targetRoomId)
+        s = { ...s, rooms: { ...s.rooms, [targetRoomId]: { ...s.rooms[targetRoomId], visited: true } } }
+        return s
+      } else {
+        return addOutput(state, locked.message, 'error')
+      }
+    }
+
+    // Single item requirement lock (like warm coat for peak)
     if (locked.requireItem && state.inventory.includes(locked.requireItem)) {
       targetRoomId = locked.roomId
     } else {
@@ -600,6 +636,72 @@ export function handleUse(state, { itemId }) {
     return addOutput(state, "You use the frozen finger to pick your nose. It's a strangely refreshing feeling.", 'normal')
   }
 
+  // Binoculars at frozen waterfall - reveals hidden cave (must be checked BEFORE scenic views)
+  if (itemId === 'binoculars' && roomId === 'frozen_waterfall') {
+    if (state.rooms.frozen_waterfall.hiddenExits?.east) {
+      return addOutput(state, 'You peer through the binoculars at the ice wall up close. You can already see the cave entrance to the east.', 'normal')
+    }
+    let s = addOutput(state, 'You hold the binoculars up to the frozen waterfall and scan the ice closely. Through the lenses, a narrow crack in the ice comes into sharp focus -- it\'s not just a crack, it\'s an opening! A hidden passage leads east, into a cave behind the waterfall!', 'normal')
+    s = {
+      ...s,
+      rooms: {
+        ...s.rooms,
+        frozen_waterfall: {
+          ...s.rooms.frozen_waterfall,
+          hiddenExits: { ...s.rooms.frozen_waterfall.hiddenExits, east: 'hidden_cave' },
+        },
+      },
+    }
+    s = addOutput(s, '\nA new exit has been revealed: east (Hidden Cave)', 'system')
+    return s
+  }
+
+  // Binoculars - scenic views from mountain/outdoor locations
+  if (itemId === 'binoculars') {
+    const binocularViews = {
+      ridge_trail: [
+        'You peer through the binoculars along the ridge. The trail winds like a white ribbon between jagged peaks. Far below, the resort looks like a toy village. You can see tiny figures on the slopes, carving turns through fresh powder.',
+        'Through the lenses, you spot a family of mountain goats picking their way along a rocky outcrop across the valley. They move with impossible grace on the near-vertical cliff face.',
+        'The binoculars reveal an endless panorama of snow-capped peaks stretching to the horizon. The late afternoon sun paints them in shades of gold and pink. This is why people climb mountains.',
+      ],
+      mountain_peak: [
+        'From the summit, the binoculars reveal the entire valley spread out below like a living map. You can trace every trail, every road, every frozen stream. The world feels impossibly vast and quiet up here.',
+        'You scan the horizon through the binoculars. Peak after peak stretches into the distance, each one catching the light differently. You can see three other ski resorts, tiny and distant, nestled in neighboring valleys.',
+        'Peering straight down with the binoculars is dizzying -- the slopes fall away dramatically. You can see the ski lift chairs swaying gently in the wind, and far below, the warm glow of the lodge windows.',
+      ],
+      ski_lift_top: [
+        'You train the binoculars on the lift line stretching down the mountain. The cables hum in the wind. Below, you can see the full run of the ski slopes -- every mogul, every turn, every tree line.',
+        'Through the binoculars, you spot a hawk circling on the thermals above the valley. It dips and soars effortlessly, riding invisible currents of air. You feel a pang of envy.',
+        'The binoculars reveal details on the distant frozen waterfall -- layers of blue and white ice, frozen in mid-cascade. It looks like time itself stopped flowing there.',
+      ],
+      ice_caves: [
+        'You raise the binoculars inside the ice cave and peer through a gap in the frozen wall. The ice acts like a lens, refracting the light into shimmering rainbows that dance across the ceiling.',
+        'Through the binoculars, you study the ice formations up close. The crystalline structures are breathtaking -- delicate spires and curtains of ice that look like they were sculpted by an artist.',
+      ],
+      avalanche_zone: [
+        'You nervously scan the slopes above with the binoculars. Fresh snow sits heavy on the ridgeline -- it could slide at any moment. You can see where previous avalanches have carved paths through the trees, snapping trunks like matchsticks.',
+        'The binoculars reveal cracks in the snowpack above. This area is genuinely dangerous. Through the lenses, you spot what looks like an old warning sign half-buried in snow.',
+        'Scanning the debris field with binoculars, you notice strange shapes under the snow. Could be buried trees... or something else entirely. Best not to linger here.',
+      ],
+      ski_slopes: [
+        'You watch the empty slopes through the binoculars. Without any skiers, the mountain feels hauntingly peaceful. Fresh tracks from some animal -- maybe a fox -- zigzag across the pristine powder.',
+        'Through the binoculars, you can see all the way up to the ski lift station at the top. The slope looks steeper from down here than it does up close. No wonder they call it a black diamond run.',
+        'Scanning the tree line with binoculars, you catch a flash of movement -- a deer bounding through the deep snow at the edge of the forest, kicking up little clouds of white behind it.',
+      ],
+      frozen_waterfall: [
+        'The binoculars bring the frozen waterfall into sharp detail. Thousands of icicles hang like crystal chandeliers, some as thick as your arm. Behind the curtain of ice, you can just make out a dark opening...',
+        'You study the ice formations through the binoculars. The waterfall froze in layers -- you can see bands of clear blue ice alternating with milky white. It must have frozen over the course of several cold nights.',
+      ],
+    }
+
+    const views = binocularViews[roomId]
+    if (views) {
+      const view = views[Math.floor(Math.random() * views.length)]
+      return addOutput(state, view, 'normal')
+    }
+    return addOutput(state, 'You peer through the binoculars, but there\'s nothing particularly interesting to see from here. Try using them somewhere with a view -- the mountain trails or slopes might be more rewarding.', 'normal')
+  }
+
   // Fuse at ski lift
   if (itemId === 'fuse' && roomId === 'ski_lift_top') {
     const hasFuse = state.inventory.includes('fuse')
@@ -681,26 +783,6 @@ export function handleUse(state, { itemId }) {
     return addOutput(state, 'You peer through the binoculars toward the mountain. The frozen waterfall comes into sharp focus. Behind the shimmering ice, you can make out what looks like... a cave entrance! The ice partially conceals a dark opening. Interesting.', 'normal')
   }
 
-  // Binoculars at frozen waterfall - reveals hidden cave
-  if (itemId === 'binoculars' && roomId === 'frozen_waterfall') {
-    if (state.rooms.frozen_waterfall.hiddenExits?.east) {
-      return addOutput(state, 'You peer through the binoculars at the ice wall up close. You can already see the cave entrance to the east.', 'normal')
-    }
-    let s = addOutput(state, 'You hold the binoculars up to the frozen waterfall and scan the ice closely. Through the lenses, a narrow crack in the ice comes into sharp focus -- it\'s not just a crack, it\'s an opening! A hidden passage leads east, into a cave behind the waterfall!', 'normal')
-    s = {
-      ...s,
-      rooms: {
-        ...s.rooms,
-        frozen_waterfall: {
-          ...s.rooms.frozen_waterfall,
-          hiddenExits: { ...s.rooms.frozen_waterfall.hiddenExits, east: 'hidden_cave' },
-        },
-      },
-    }
-    s = addOutput(s, '\nA new exit has been revealed: east', 'system')
-    return s
-  }
-
   // Torch in the cave
   if (itemId === 'torch' && roomId === 'hidden_cave') {
     return addOutput(state, 'You hold the torch high. The flickering light reveals the cave walls in detail -- ancient markings, trail symbols, and an arrow pointing down toward the stone steps. The circular indentation beside the steps gleams in the torchlight.', 'normal')
@@ -738,6 +820,58 @@ export function handleUse(state, { itemId }) {
   }
 
   return addOutput(state, `You're not sure how to use the ${item.name} here.`, 'error')
+}
+
+export function handleGive(state, { itemId, npcId }) {
+  if (!state.inventory.includes(itemId)) {
+    return addOutput(state, "You're not carrying that.", 'error')
+  }
+
+  const room = state.rooms[state.currentRoomId]
+  if (!room.npcs.includes(npcId)) {
+    return addOutput(state, `They're not here.`, 'error')
+  }
+
+  const item = state.items[itemId]
+  const npc = state.npcs[npcId]
+
+  // Frozen flower gift - one-time only, special responses per NPC
+  if (itemId === 'frozen_flower') {
+    if (state.puzzles.frozen_flower_given) {
+      return addOutput(state, "You've already given the frozen flower away.", 'error')
+    }
+
+    let s = state
+
+    if (npcId === 'angry_boss') {
+      s = addOutput(s, `You hold out the frozen flower to ${npc.name}.`, 'normal')
+      s = addOutput(s, '', 'normal')
+      s = addOutput(s, '"What is THIS?!" Angry Boss snatches the flower and holds it up to the light. Her scowl flickers for just a moment. "A frozen flower. Great. Just GREAT. You know what this reminds me of? My FEELINGS on this vacation -- FROZEN and DEAD."\n\nShe pauses, turning the delicate petals in her fingers.\n\n"...It\'s actually kind of beautiful though. Fine. FINE! I\'ll keep it. But DON\'T tell anyone I said that. My reputation as the angriest person in this resort is ALL I have left."', 'npc')
+    } else if (npcId === 'dance_mom') {
+      s = addOutput(s, `You hold out the frozen flower to ${npc.name}.`, 'normal')
+      s = addOutput(s, '', 'normal')
+      s = addOutput(s, '"Oh. My. GOD!" Dance Mom nearly drops her phone. "Is that a FROZEN FLOWER?! This is going STRAIGHT on my livestream! Hold on -- let me get the angle right --"\n\nShe grabs the flower and poses with it for approximately forty-seven selfies.\n\n"This is CONTENT GOLD, honey! \'Mountain adventurer gifts rare frozen botanical specimen to influencer\' -- my followers are going to LOSE IT! All four of them! You are now officially my favorite person at this resort. Don\'t let it go to your head."', 'npc')
+    } else if (npcId === 'henrys_mom') {
+      s = addOutput(s, `You hold out the frozen flower to ${npc.name}.`, 'normal')
+      s = addOutput(s, '', 'normal')
+      s = addOutput(s, '"Oh... oh my." Henry\'s Mom takes the frozen flower with trembling hands, her eyes glistening. "This is the most thoughtful thing anyone has done for me since... well, since Henry made me a macaroni necklace in kindergarten. That was five thermoses ago."\n\nShe carefully tucks the flower into her massive tote bag, between the granola bars and the emergency socks.\n\n"I\'m going to press this in a book and keep it FOREVER. You are such a sweet person. Do you want a juice box? A granola bar? I have fourteen. HENRY! HENRY, COME SEE WHAT THIS NICE PERSON GAVE ME! ...He\'s still in the bar, isn\'t he."', 'npc')
+    } else {
+      s = addOutput(s, `You offer the frozen flower to ${npc.name}, but they don't seem interested.`, 'normal')
+      return s
+    }
+
+    // Remove from inventory and mark as given
+    s = {
+      ...s,
+      inventory: s.inventory.filter(id => id !== 'frozen_flower'),
+      puzzles: { ...s.puzzles, frozen_flower_given: true },
+    }
+    s = addOutput(s, '\n[Frozen flower removed from inventory]', 'system')
+    return s
+  }
+
+  // For other items, fall back to talking (the dialogue system handles item-based interactions)
+  return handleTalk(state, { npcId })
 }
 
 export function handleRead(state, { itemId }) {

@@ -5,6 +5,7 @@ import {
   handleDrop,
   handleInventory,
   handleTalk,
+  handleGive,
   handleUse,
   handleRead,
   handleQuit,
@@ -39,6 +40,9 @@ export function gameReducer(state, action) {
       break
     case 'TALK':
       newState = handleTalk(state, action.payload)
+      break
+    case 'GIVE':
+      newState = handleGive(state, action.payload)
       break
     case 'USE':
       newState = handleUse(state, action.payload)

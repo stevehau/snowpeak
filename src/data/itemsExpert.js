@@ -13,7 +13,7 @@ export const itemsExpert = {
                 [Summit Shelter]---[Mountain Peak]
                                         |
             [Ridge Trail]--------[Ski Lift Top]---[Ice Caves]
-                |                       |              |
+                |                       |
          [Avalanche Zone]----[Ski Slopes]---[Frozen Waterfall]
                                     |
    [Storage]---[Ski Rental]---[Main Street]---[Village]---[General Store]
@@ -57,8 +57,8 @@ Explore thoroughly - all areas matter now." -- T.S.`,
   },
   basement_key: {
     id: 'basement_key',
-    name: 'small brass key',
-    description: 'A small brass key with an ornate handle shaped like a snowflake. It looks old but well-made. There\'s a tiny tag attached that reads "B" -- probably for "basement."',
+    name: 'old basement key',
+    description: 'An old brass key with an ornate handle shaped like a snowflake. A faded tag attached to the ring reads "BASEMENT" in block letters. It looks like it fits a heavy door.',
     takeable: true,
   },
   dusty_journal: {

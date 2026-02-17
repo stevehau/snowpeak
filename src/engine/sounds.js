@@ -404,6 +404,50 @@ function playBell() {
   }
 }
 
+// Mechanical lock unlock — heavy deadbolt clunk
+function playUnlock() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // Heavy metallic clunk
+    const bufferSize = ctx.sampleRate * 0.15
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
+    const data = buffer.getChannelData(0)
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.03))
+    }
+    const clunk = ctx.createBufferSource()
+    clunk.buffer = buffer
+    const clunkFilter = ctx.createBiquadFilter()
+    clunkFilter.type = 'lowpass'
+    clunkFilter.frequency.value = 600
+    const clunkGain = ctx.createGain()
+    clunkGain.gain.setValueAtTime(0.5, ctx.currentTime)
+    clunk.connect(clunkFilter)
+    clunkFilter.connect(clunkGain)
+    clunkGain.connect(ctx.destination)
+    clunk.start()
+
+    // Metallic sliding bolt sound (slightly delayed)
+    const osc = ctx.createOscillator()
+    osc.type = 'square'
+    osc.frequency.setValueAtTime(180, ctx.currentTime + 0.1)
+    osc.frequency.linearRampToValueAtTime(120, ctx.currentTime + 0.25)
+    const oscGain = ctx.createGain()
+    oscGain.gain.setValueAtTime(0, ctx.currentTime)
+    oscGain.gain.setValueAtTime(0.15, ctx.currentTime + 0.1)
+    oscGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3)
+    osc.connect(oscGain)
+    oscGain.connect(ctx.destination)
+    osc.start()
+    osc.stop(ctx.currentTime + 0.35)
+
+    setTimeout(() => ctx.close(), 800)
+  } catch {
+    // Audio not available
+  }
+}
+
 export function playSound(name) {
   const sounds = {
     whistle: playWhistle,
@@ -418,6 +462,7 @@ export function playSound(name) {
     arcade_start: playArcadeStart,
     angry_grunt: playAngryGrunt,
     bell: playBell,
+    unlock: playUnlock,
   }
   const fn = sounds[name]
   if (fn) fn()

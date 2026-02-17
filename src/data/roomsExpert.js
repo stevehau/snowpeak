@@ -243,10 +243,16 @@ export const roomsExpert = {
       ___/  |  |  \\___
      |__|   |__|   |__|
      chairs  on  cable`,
-    description: 'The upper ski lift station sits on a windswept platform. The lift chairs hang motionless on the cable -- the machinery is dead. An electrical panel on the side of the station house hangs open, revealing a conspicuously empty fuse socket. If the lift were working, it could carry you up to the mountain peak. A treacherous ridge trail leads west along the mountain face.',
+    description: 'The upper ski lift station sits on a windswept platform. The lift chairs hang motionless on the cable -- the machinery is dead. An electrical panel on the side of the station house hangs open, revealing a conspicuously empty fuse socket. If the lift were working, it could carry you up to the mountain peak. A treacherous ridge trail leads west along the mountain face. To the north, a narrow icy passage disappears into the mountain.',
     exits: { down: 'ski_slopes', east: 'frozen_waterfall', west: 'ridge_trail' },
     hiddenExits: {},
-    lockedExits: {},
+    lockedExits: {
+      north: {
+        roomId: 'ice_caves',
+        requireItems: ['rope', 'pickaxe'],
+        message: 'To the north, a narrow icy passage leads down into what looks like caves beneath the mountain. The walls are slick with ice and the descent is treacherous. You\'d need both climbing rope and a pickaxe to make it down safely.',
+      },
+    },
     items: [],
     npcs: [],
   },
@@ -269,16 +275,10 @@ export const roomsExpert = {
     |_|____________|_______|
     ~~~~~~~~~~~~~~~~~~~~~~~~
      water stands still...`,
-    description: 'A spectacular wall of ice rises before you -- a waterfall frozen mid-cascade. The ice is crystal blue and translucent, with strange shapes visible deep within. Icicles the size of swords hang from rocky outcrops above. The whole scene is eerily beautiful and perfectly, impossibly still. Water that stands still... To the north, you can see an opening that leads down into treacherous ice caves.',
+    description: 'A spectacular wall of ice rises before you -- a waterfall frozen mid-cascade. The ice is crystal blue and translucent, with strange shapes visible deep within. Icicles the size of swords hang from rocky outcrops above. The whole scene is eerily beautiful and perfectly, impossibly still. Water that stands still...',
     exits: { south: 'ski_slopes', west: 'ski_lift_top' },
     hiddenExits: {},
-    lockedExits: {
-      north: {
-        roomId: 'ice_caves',
-        requireItem: 'rope',
-        message: 'The entrance to the ice caves drops steeply down a slick, frozen slope. Without climbing rope, you\'d never make it down safely -- or more importantly, back up. You need proper climbing equipment to explore the ice caves.',
-      },
-    },
+    lockedExits: {},
     items: ['chewed_gum'],
     npcs: [],
   },
@@ -623,7 +623,7 @@ export const roomsExpert = {
     |  \\_____________/                |
     |________________________________|`,
     description: 'A vast network of caves carved from solid ice. The walls shimmer with blue and white crystalline formations. Icicles hang from the ceiling like chandeliers, and your breath forms clouds in the frigid air. A frozen underground lake dominates the cavern floor -- perfectly smooth and glassy. Mysterious ice formations create natural sculptures. The acoustics are strange here; sounds echo in unusual ways.',
-    exits: { south: 'frozen_waterfall' },
+    exits: { south: 'ski_lift_top' },
     hiddenExits: {},
     lockedExits: {},
     items: ['ice_crystal', 'frozen_flower'],

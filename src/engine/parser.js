@@ -142,18 +142,30 @@ export function parse(input, state) {
     return { type: 'MOVE', payload: { direction } }
   }
 
-  // Give command - resolves to TALK (item giving is handled through NPC dialogue)
+  // Give command - tries to match both item and NPC
   if (action === 'GIVE') {
     if (noun.length === 0) {
       return { error: 'Give what to whom? Try "give <item> to <character>".' }
     }
-    // Try to find an NPC in the noun phrase
+    const room = state.rooms[state.currentRoomId]
+    const itemId = matchItem(noun, state)
     const npcId = matchNpc(noun, state)
+    if (itemId && npcId) {
+      return { type: 'GIVE', payload: { itemId, npcId } }
+    }
+    if (itemId && !npcId) {
+      if (room.npcs.length === 1) {
+        return { type: 'GIVE', payload: { itemId, npcId: room.npcs[0] } }
+      }
+      if (room.npcs.length > 1) {
+        return { error: 'Give it to whom? There are multiple people here.' }
+      }
+      return { error: "There's nobody here to give that to." }
+    }
+    // No item matched - fall back to TALK (for dialogue-based giving like whiskey)
     if (npcId) {
       return { type: 'TALK', payload: { npcId } }
     }
-    // If no NPC found, check if there's anyone in the room to give to
-    const room = state.rooms[state.currentRoomId]
     if (room.npcs.length > 0) {
       return { type: 'TALK', payload: { npcId: room.npcs[0] } }
     }
