@@ -7,16 +7,14 @@ export const items = {
     readable: true,
     readText: `You unfold the old map and study it carefully:
 
-    ~~~ SNOWPEAK RESORT MAP ~~~
-
-                        [Mountain Peak]
-                              |
-                        [Ski Lift Top]
-                              |
-                        [Ski Slopes]---[Frozen Waterfall]
-                              |
-         [Ski Rental]---[Main Street]---[Village]
-                              |
+                               [Mountain Peak]
+                                     |
+                               [Ski Lift Top]
+                                     |
+                               [Ski Slopes]---[Frozen Waterfall]
+                                     |
+                [Ski Rental]---[Main Street]---[Village]
+                                     |
    [Game Room]---[Lodge Bar]---[Lodge Lobby]---[Balcony]
                                      |
                                 [Basement]
