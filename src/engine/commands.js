@@ -897,11 +897,14 @@ export function handleRead(state, { itemId }) {
     try {
       const elapsedMs = Date.now() - (state.startTime || Date.now())
       const steps = state.turnCount + 1
-      const { rank, scores } = saveHighScore(state.playerName || 'Adventurer', steps, elapsedMs, state.mode || 'standard')
+      const result = saveHighScore(state.playerName || 'Adventurer', steps, elapsedMs, state.mode || 'standard')
+      const { rank, scores, keptPrevious, previousMode, previousSteps } = result
 
       s = addOutput(s, '', 'normal')
       s = addOutput(s, `${state.playerName}'s stats:  ${steps} steps  |  ${formatTime(elapsedMs)}`, 'victory')
-      if (rank === 1) {
+      if (keptPrevious) {
+        s = addOutput(s, `Your earlier score remains (#${rank}) — ${previousSteps} steps in ${previousMode} mode was a better run!`, 'system')
+      } else if (rank === 1) {
         s = addOutput(s, 'NEW #1 HIGH SCORE!', 'victory')
       } else {
         s = addOutput(s, `Ranked #${rank} on the leaderboard!`, 'victory')

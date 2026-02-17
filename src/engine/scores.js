@@ -19,8 +19,12 @@ export function getHighScores() {
       }
     }
     const scores = data ? JSON.parse(data) : []
-    // Always re-sort to ensure correct ordering (expert > standard > easy)
-    if (scores.length > 0) sortScores(scores)
+    // Deduplicate and re-sort to ensure one entry per handle, correct ordering
+    if (scores.length > 0) {
+      const deduped = deduplicateByHandle(scores)
+      sortScores(deduped)
+      return deduped
+    }
     return scores
   } catch {
     return []
@@ -31,7 +35,7 @@ function sortScores(scores) {
   return scores.sort((a, b) => {
     // 1. Expert mode first (most impressive), then standard, then easy
     const modeOrder = { expert: 0, standard: 1, easy: 2 }
-    const modeDiff = (modeOrder[a.mode] || 1) - (modeOrder[b.mode] || 1)
+    const modeDiff = (modeOrder[a.mode] ?? 1) - (modeOrder[b.mode] ?? 1)
     if (modeDiff !== 0) return modeDiff
     // 2. Fewest steps first
     if (a.steps !== b.steps) return a.steps - b.steps
@@ -40,6 +44,31 @@ function sortScores(scores) {
     const dateB = b.date ? new Date(b.date).getTime() : 0
     return dateB - dateA
   })
+}
+
+// Keep only the best score per handle (case-insensitive)
+function deduplicateByHandle(scores) {
+  const modeOrder = { expert: 0, standard: 1, easy: 2 }
+  const bestByHandle = new Map()
+
+  for (const s of scores) {
+    const key = s.name.toLowerCase()
+    const existing = bestByHandle.get(key)
+    if (!existing) {
+      bestByHandle.set(key, s)
+    } else {
+      const existingModeRank = modeOrder[existing.mode] ?? 1
+      const newModeRank = modeOrder[s.mode] ?? 1
+      const newIsBetter =
+        newModeRank < existingModeRank ||
+        (newModeRank === existingModeRank && s.steps < existing.steps)
+      if (newIsBetter) {
+        bestByHandle.set(key, s)
+      }
+    }
+  }
+
+  return Array.from(bestByHandle.values())
 }
 
 export function saveHighScore(name, steps, elapsedMs, mode) {
@@ -56,13 +85,46 @@ export function saveHighScore(name, steps, elapsedMs, mode) {
     migrated_v4: true,
   }
 
-  // Prevent duplicate entries
-  const isDuplicate = scores.some(
-    s => s.name === name && s.steps === steps && s.elapsedMs === elapsedMs
+  // Check if this handle already has a score on the board
+  const existingIndex = scores.findIndex(
+    s => s.name.toLowerCase() === name.toLowerCase()
   )
-  if (!isDuplicate) {
+
+  if (existingIndex !== -1) {
+    const existing = scores[existingIndex]
+    // Compare: is the new score better than the existing one?
+    // Better = higher-tier mode, or same mode with fewer steps
+    const modeOrder = { expert: 0, standard: 1, easy: 2 }
+    const existingModeRank = modeOrder[existing.mode] ?? 1
+    const newModeRank = modeOrder[scoreEntry.mode] ?? 1
+
+    const newIsBetter =
+      newModeRank < existingModeRank ||
+      (newModeRank === existingModeRank && steps < existing.steps)
+
+    if (newIsBetter) {
+      // Replace the old entry with the new better one
+      scores.splice(existingIndex, 1)
+      scores.push(scoreEntry)
+      saveScoreToCloud(scoreEntry)
+    } else {
+      // Existing score is better or equal — keep it, inform player
+      sortScores(scores)
+      const trimmed = scores.slice(0, MAX_SCORES)
+      const existingRank = trimmed.findIndex(
+        s => s.name.toLowerCase() === name.toLowerCase()
+      )
+      return {
+        rank: existingRank + 1,
+        scores: trimmed,
+        keptPrevious: true,
+        previousMode: existing.mode,
+        previousSteps: existing.steps,
+      }
+    }
+  } else {
+    // No existing entry for this handle — add it
     scores.push(scoreEntry)
-    // Fire-and-forget save to cloud
     saveScoreToCloud(scoreEntry)
   }
 
@@ -79,9 +141,9 @@ export function saveHighScore(name, steps, elapsedMs, mode) {
 
   // Return the rank (1-indexed) of the new score
   const rank = trimmed.findIndex(
-    s => s.name === name && s.steps === steps && s.elapsedMs === elapsedMs
+    s => s.name.toLowerCase() === name.toLowerCase()
   )
-  return { rank: rank + 1, scores: trimmed }
+  return { rank: rank + 1, scores: trimmed, keptPrevious: false }
 }
 
 // Add 4 minutes to scores that haven't been migrated yet
@@ -106,14 +168,10 @@ export async function loadScoresFromCloud() {
   // Migrate cloud scores FIRST so elapsedMs matches local (already migrated)
   const migratedCloud = migrateScores(cloudScores)
   const localScores = getHighScores()
-  const merged = [...migratedCloud]
+  const allScores = [...migratedCloud, ...localScores]
 
-  for (const local of localScores) {
-    const exists = merged.some(
-      s => s.name === local.name && s.steps === local.steps && s.elapsedMs === local.elapsedMs
-    )
-    if (!exists) merged.push(local)
-  }
+  // Deduplicate: keep only the best score per handle (case-insensitive)
+  const merged = deduplicateByHandle(allScores)
 
   sortScores(merged)
   const trimmed = merged.slice(0, MAX_SCORES)
