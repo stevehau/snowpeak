@@ -1,8 +1,8 @@
 // Defend the Village — React component wrapper
-// Canvas, game loop, keyboard input, phase management
+// Canvas, game loop, keyboard + touch/mouse input, phase management
 
 import { useRef, useEffect, useCallback } from 'react'
-import { CANVAS } from './defendConfig.js'
+import { CANVAS, PERSPECTIVE } from './defendConfig.js'
 import { createDefendState, tick, handleShoot } from './defendEngine.js'
 import { render } from './defendRenderer.js'
 import { playDefendSound } from './defendSounds.js'
@@ -11,6 +11,19 @@ export default function DefendGame({ standalone = false, onGameOver }) {
   const canvasRef = useRef(null)
   const stateRef = useRef(createDefendState())
   const rafRef = useRef(null)
+
+  // Helper: convert a pointer/touch event to canvas-relative coords
+  const getCanvasPos = useCallback((clientX, clientY) => {
+    const canvas = canvasRef.current
+    if (!canvas) return null
+    const rect = canvas.getBoundingClientRect()
+    const scaleX = CANVAS.WIDTH / rect.width
+    const scaleY = CANVAS.HEIGHT / rect.height
+    return {
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY,
+    }
+  }, [])
 
   // Helper: play and clear events from state
   const playEvents = useCallback((state) => {
@@ -151,7 +164,57 @@ export default function DefendGame({ standalone = false, onGameOver }) {
     }
   }, [standalone, onGameOver])
 
-  // Touch/mouse controls
+  // ---- Canvas pointer / touch controls ----
+  // Tap/click on canvas: aim reticle there + fire (during play)
+  // During ready/gameover/victory: act as start/restart
+
+  const handleCanvasTap = useCallback((clientX, clientY) => {
+    const pos = getCanvasPos(clientX, clientY)
+    if (!pos) return
+
+    const state = stateRef.current
+
+    if (state.phase === 'ready') {
+      stateRef.current = { ...state, phase: 'playing', startTime: Date.now() }
+      return
+    }
+
+    if (state.phase === 'playing') {
+      // Clamp Y so reticle stays in playable area
+      const clampedY = Math.max(PERSPECTIVE.HORIZON_Y, Math.min(CANVAS.HEIGHT - 30, pos.y))
+      const clampedX = Math.max(10, Math.min(CANVAS.WIDTH - 10, pos.x))
+      // Move reticle to tap position and fire
+      const aimed = { ...state, reticle: { x: clampedX, y: clampedY } }
+      stateRef.current = handleShoot(aimed)
+      return
+    }
+
+    if (state.phase === 'gameover' || state.phase === 'victory') {
+      if (standalone) {
+        stateRef.current = { ...createDefendState(), phase: 'ready' }
+      } else if (onGameOver) {
+        onGameOver({
+          defeated: state.animalsDefeated,
+          total: state.totalAnimals,
+          elapsedMs: state.elapsedMs,
+          won: state.phase === 'victory',
+        })
+      }
+    }
+  }, [getCanvasPos, standalone, onGameOver])
+
+  // Mouse move on canvas: track reticle position (desktop hover aim)
+  const handleCanvasMouseMove = useCallback((e) => {
+    const state = stateRef.current
+    if (state.phase !== 'playing') return
+    const pos = getCanvasPos(e.clientX, e.clientY)
+    if (!pos) return
+    const clampedY = Math.max(PERSPECTIVE.HORIZON_Y, Math.min(CANVAS.HEIGHT - 30, pos.y))
+    const clampedX = Math.max(10, Math.min(CANVAS.WIDTH - 10, pos.x))
+    stateRef.current = { ...state, reticle: { x: clampedX, y: clampedY } }
+  }, [getCanvasPos])
+
+  // Touch/mouse controls for arcade buttons (fallback)
   const handleStart = useCallback(() => {
     const state = stateRef.current
     if (state.phase === 'ready') {
@@ -195,6 +258,26 @@ export default function DefendGame({ standalone = false, onGameOver }) {
             width={CANVAS.WIDTH}
             height={CANVAS.HEIGHT}
             className="slalom-canvas"
+            style={{ cursor: 'crosshair', touchAction: 'none' }}
+            onClick={(e) => handleCanvasTap(e.clientX, e.clientY)}
+            onMouseMove={handleCanvasMouseMove}
+            onTouchStart={(e) => {
+              e.preventDefault()
+              const touch = e.touches[0]
+              if (touch) handleCanvasTap(touch.clientX, touch.clientY)
+            }}
+            onTouchMove={(e) => {
+              e.preventDefault()
+              const touch = e.touches[0]
+              if (!touch) return
+              const state = stateRef.current
+              if (state.phase !== 'playing') return
+              const pos = getCanvasPos(touch.clientX, touch.clientY)
+              if (!pos) return
+              const clampedY = Math.max(PERSPECTIVE.HORIZON_Y, Math.min(CANVAS.HEIGHT - 30, pos.y))
+              const clampedX = Math.max(10, Math.min(CANVAS.WIDTH - 10, pos.x))
+              stateRef.current = { ...state, reticle: { x: clampedX, y: clampedY } }
+            }}
           />
         </div>
         <div className="arcade-controls">

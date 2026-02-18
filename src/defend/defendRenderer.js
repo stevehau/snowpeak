@@ -844,8 +844,8 @@ function drawReadyOverlay(ctx) {
   ctx.fillStyle = COLORS.TEXT_WHITE
   ctx.font = FONTS.OVERLAY
   const instructions = [
-    'Arrow keys to aim',
-    'SPACE to shoot your BB gun',
+    'Tap or click to aim & shoot!',
+    'Or: Arrow keys + SPACE',
     '5 shots per clip — auto-reloads!',
     'Wolves: 1 hit  |  Bears: 3 hits',
     "Don't let them reach the village!",
@@ -859,7 +859,7 @@ function drawReadyOverlay(ctx) {
   ctx.font = FONTS.SUBTITLE
   const blink = Math.floor(Date.now() / 500) % 2
   if (blink) {
-    ctx.fillText('PRESS SPACE TO START', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 220)
+    ctx.fillText('TAP or PRESS SPACE TO START', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 220)
   }
 
   ctx.textBaseline = 'alphabetic'
@@ -889,7 +889,7 @@ function drawGameOverOverlay(ctx, state) {
   ctx.font = FONTS.SUBTITLE
   const blink = Math.floor(Date.now() / 500) % 2
   if (blink) {
-    ctx.fillText('PRESS SPACE TO PLAY AGAIN', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 120)
+    ctx.fillText('TAP or PRESS SPACE TO CONTINUE', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 120)
   }
 
   ctx.textBaseline = 'alphabetic'
@@ -919,7 +919,7 @@ function drawVictoryOverlay(ctx, state) {
   ctx.font = FONTS.SUBTITLE
   const blink = Math.floor(Date.now() / 500) % 2
   if (blink) {
-    ctx.fillText('PRESS SPACE TO PLAY AGAIN', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 120)
+    ctx.fillText('TAP or PRESS SPACE TO CONTINUE', CANVAS.WIDTH / 2, CANVAS.HEIGHT / 2 + 120)
   }
 
   ctx.textBaseline = 'alphabetic'
