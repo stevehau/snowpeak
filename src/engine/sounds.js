@@ -538,6 +538,41 @@ function playCameraClick() {
   }
 }
 
+// Bag rummaging sound — crinkling and rustling through snacks
+function playBagRummage() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // Three quick bursts of filtered noise to simulate crinkling
+    for (let i = 0; i < 3; i++) {
+      const offset = i * 0.15
+      const bufLen = ctx.sampleRate * 0.12
+      const buffer = ctx.createBuffer(1, bufLen, ctx.sampleRate)
+      const data = buffer.getChannelData(0)
+      for (let j = 0; j < bufLen; j++) {
+        const t = j / bufLen
+        const env = Math.sin(t * Math.PI) // smooth rise and fall
+        data[j] = (Math.random() * 2 - 1) * env
+      }
+      const noise = ctx.createBufferSource()
+      noise.buffer = buffer
+      const filter = ctx.createBiquadFilter()
+      filter.type = 'highpass'
+      filter.frequency.value = 2000 + i * 800
+      const gain = ctx.createGain()
+      gain.gain.value = 0.08
+      noise.connect(filter)
+      filter.connect(gain)
+      gain.connect(ctx.destination)
+      noise.start(ctx.currentTime + offset)
+    }
+
+    setTimeout(() => ctx.close(), 1000)
+  } catch {
+    // Audio not available
+  }
+}
+
 export function playSound(name) {
   const sounds = {
     whistle: playWhistle,
@@ -555,6 +590,7 @@ export function playSound(name) {
     unlock: playUnlock,
     rocking_chair: playRockingChair,
     camera_click: playCameraClick,
+    bag_rummage: playBagRummage,
   }
   const fn = sounds[name]
   if (fn) fn()

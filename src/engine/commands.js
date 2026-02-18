@@ -474,7 +474,17 @@ export function handleTalk(state, { npcId }) {
     }
   }
 
-  // Show Dance Mom's image and play camera click on first interaction
+  // Show Henry's Mom's image and play bag rummage on first interaction
+  if (npcId === 'henrys_mom' && !state.puzzles.henrys_mom_image_shown) {
+    s = addSound(s, 'bag_rummage')
+    s = {
+      ...s,
+      output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}snackmom.jpg`, text: "Henry's Mom" }],
+      puzzles: { ...s.puzzles, henrys_mom_image_shown: true },
+    }
+  }
+
+  // Show Social Media Influencer's image and play camera click on first interaction
   if (npcId === 'dance_mom' && !state.puzzles.dance_mom_image_shown) {
     s = addSound(s, 'camera_click')
     s = {
