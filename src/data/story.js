@@ -26,7 +26,7 @@ export const victoryText = [
   { text: 'Thank you for playing!', type: 'victory' },
 ]
 
-export const GAME_VERSION = '1.7.0'
+export const GAME_VERSION = '1.8.0'
 
 export const helpText = [
   { text: '--- AVAILABLE COMMANDS ---', type: 'system' },

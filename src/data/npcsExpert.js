@@ -1,5 +1,6 @@
 // Expert Mode NPCs - Modified behavior for expert difficulty
-// Main change: Mr. Smiles no longer gives the fuse (must be found in pantry)
+// Main changes: Mr. Smiles no longer gives the fuse (must be found in basement)
+// Old Dad added as exclusive expert mode NPC in the abandoned cabin
 
 export const npcsExpert = {
   angry_boss: {
@@ -116,43 +117,64 @@ export const npcsExpert = {
   },
   dance_mom: {
     id: 'dance_mom',
-    name: 'Dance Mom',
-    description: 'A woman in a sequined ski jacket and full stage makeup, filming everything on her phone. She appears to be live-streaming her ski resort experience to an audience of possibly no one.',
+    name: 'Social Media Influencer',
+    description: 'A woman in a sequined ski jacket and full stage makeup, filming everything on her phone with a ring light clipped to the top. She appears to be live-streaming her ski resort experience to an audience of possibly no one.',
     currentRoomId: 'village',
     dialogueState: 0,
     dialogue: [
       {
         state: 0,
-        text: '"And THIS, followers, is what we call RUSTIC CHARM!" Dance Mom pans her phone across the village. "My daughter Brittney would have DOMINATED this mountain if her jazz hands instructor hadn\'t scheduled a recital the same weekend. PRIORITIES, people!"',
+        text: '"And THIS, followers, is what we call RUSTIC CHARM!" She pans her phone across the village with practiced flair. "My daughter Samantha would have LOVED this mountain — she\'s got the best ski aesthetic of anyone I know. But her dance recital is this weekend so she couldn\'t make it. Her loss is YOUR gain, followers. CONTENT waits for no one!"',
       },
       {
         state: 1,
-        text: '"Excuse me, can you hold this phone and film me doing a dramatic pose by that statue? No? FINE. I\'ll use the selfie stick. You know, in MY day, mountains were taller AND the hot chocolate was free. This resort is a THREE out of TEN. But the lighting is gorgeous."',
+        text: '"Excuse me, can you hold this phone and film me doing a dramatic pose by that statue? No? FINE. I\'ll use the selfie stick. You know, in MY day, mountains were taller AND the hot chocolate was free. This resort is a THREE out of TEN. But the lighting is GORGEOUS. Samantha is going to be SO jealous when she sees these stories."',
       },
       {
         state: 2,
-        text: '"My livestream just hit FOUR viewers! That\'s double from last time! One of them might be my mom, but engagement is engagement, honey. If you find any secret treasure in this dump, tag me. I need CONTENT."',
+        text: '"My livestream just hit FOUR viewers! That\'s double from last time! One of them might be my mom, but engagement is engagement, honey. Samantha says I should try TikTok but I told her — mommy is a MULTI-PLATFORM creator. If you find any secret treasure in this dump, tag me. I need CONTENT."',
       },
     ],
   },
   henrys_mom: {
     id: 'henrys_mom',
     name: "Henry's Mom",
-    description: 'A glamorous woman bundled in seventeen layers of clothing, clutching a massive tote bag overflowing with snacks, hand warmers, and emergency supplies. She keeps calling out for someone named Henry, who is nowhere to be seen.',
+    description: 'A warm, cheerful woman bundled in a cozy puffer jacket, surrounded by an impressive array of tote bags overflowing with snacks of every variety. Granola bars, fruit snacks, trail mix, string cheese, juice boxes — it\'s like a mobile convenience store. She has the kind smile of someone who\'s never met a stranger, though right now she keeps glancing around nervously for her son.',
     currentRoomId: 'main_street',
     dialogueState: 0,
     dialogue: [
       {
         state: 0,
-        text: '"HENRY? HENRYYYY?!" She rummages through her tote bag. "That boy... I told him to stay by the lamp post. I SPECIFICALLY said the lamp post! Do you want a granola bar? I have fourteen. Also a first aid kit, three pairs of extra socks, and a whistle. HENRY!!!"',
+        text: '"Oh, hello sweetie!" She beams at you and immediately starts rummaging through one of her tote bags. "Have you seen my Henry? That boy took off to \'explore the mountain\' about an hour ago and I just KNOW he didn\'t pack enough snacks. I gave him two granola bars but that\'s barely a warmup!"\n\nShe pulls out a fruit snack pouch and offers it to you. "Here, take this. You look like you could use a snack. I always say — you can never have too many snacks on an adventure. Do you want trail mix too? I have seven bags. SEVEN."',
       },
       {
         state: 1,
-        text: '"Oh, you again! Still no sign of Henry. He\'s probably fine. He\'s twelve. Or thirteen? Somewhere in there. Want some hot cocoa? I brought a thermos. Actually I brought FOUR thermoses. One is soup. I forget which. HENRY, IF YOU CAN HEAR ME, YOUR SOUP IS GETTING COLD!"',
+        text: '"Still no Henry!" She shakes her head but manages a warm laugh. "That kid — he\'s got his father\'s sense of adventure and absolutely NONE of his common sense about packing food. I bet he\'s out there right now, climbing something he shouldn\'t be, with nothing but an empty granola bar wrapper in his pocket."\n\nShe holds up a thermos. "Hot cocoa? I made it from scratch this morning. I also have chicken soup, apple cider, and something that might be tea? Oh, and string cheese! The good kind, not the weird rubbery kind. Please, take something. I brought enough snacks for the entire resort and it would make me feel SO much better knowing at least someone out there is well-fed."',
       },
       {
         state: 2,
-        text: '"Henry just texted. He\'s been in the lodge bar this whole time. THE BAR! He\'s TEN YEARS OLD! He says he\'s been having a \'philosophical debate\' with some angry woman about resort management. I don\'t even... want a juice box? I have nine."',
+        text: '"Henry just texted! He says he\'s been having the BEST time exploring the lodge. The LODGE! He was right here the whole time!" She laughs and wipes her eyes. "He says he made friends with some angry lady at the bar and they\'ve been debating whether this resort needs better snack machines. That\'s my boy."\n\nShe starts reorganizing her tote bags with visible relief. "I swear, being a mom is 10% parenting and 90% making sure everyone has enough to eat. Are you SURE you don\'t want a juice box? I have a whole case. Take two. Take three! You\'re an adventurer — you need your energy!"',
+      },
+    ],
+  },
+  old_dad: {
+    id: 'old_dad',
+    name: 'Old Dad',
+    description: 'A weathered, silver-haired man sitting in a creaky rocking chair by the cold fireplace. He\'s wrapped in a wool blanket with a thermos of coffee and a battered paperback novel. His eyes have the contented squint of someone who came here specifically to get away from everyone — and succeeded.',
+    currentRoomId: 'old_cabin',
+    dialogueState: 0,
+    dialogue: [
+      {
+        state: 0,
+        text: 'The old man looks up from his book with mild surprise — the kind that suggests he hasn\'t seen another human being in quite some time, and was perfectly fine with that.\n\n"Well, well. A visitor." He takes a long sip of coffee. "Name\'s Dad. Well — Old Dad, if you ask the kids. Been holed up in this cabin since... what month is it? Doesn\'t matter. Came up here for some peace and quiet after thirty years of youth hockey tournaments, school drop-offs, and assembling furniture with missing screws."\n\nHe gestures at the cozy mess around him. "Found this place abandoned. Moved right in. Best decision I ever made. Nobody asking me to fix the WiFi out here."',
+      },
+      {
+        state: 1,
+        text: '"Still here? Most people take the hint when a man\'s reading in an abandoned cabin in the middle of nowhere." He chuckles warmly. "I\'m kidding. It\'s nice to have company. For exactly five minutes."\n\nHe leans forward conspiratorially. "You know, I\'ve been hearing strange noises from under the lodge at night. Thumping. Buzzing. Like old machinery trying to wake up. The basement, I reckon. I tried the door once but it was locked tight. Found the key in that desk over there, but my knees aren\'t what they used to be. Too many stairs."\n\nHe glances at the leather pouch on the desk. "Oh, and take those game tokens while you\'re at it. Found \'em in a drawer. There\'s an old arcade cabinet in the general store over in the village — might still work if you feed it a token. Lord knows I have no use for \'em. Go play a game, stretch your legs, and let an old man read in peace."',
+      },
+      {
+        state: 2,
+        text: '"You\'re back AGAIN? What is this, a social club?" He pretends to be annoyed but can\'t hide a grin. "Fine, fine. Sit down. Want some coffee? It\'s three days old but it builds character."\n\nHe stares out the frosty window. "This mountain has secrets, you know. Old Tobias Snowpeak — the founder — he was a peculiar fellow. Built this whole resort and then just... vanished. Left behind riddles and locked doors everywhere. Like a man who couldn\'t stop playing games even after he was gone."\n\nHe picks his book back up. "Now shoo. This chapter isn\'t going to read itself. And if you haven\'t tried that arcade in the general store yet, you should. Might find more than you expect over there."',
       },
     ],
   },

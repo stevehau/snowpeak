@@ -6,6 +6,7 @@ import { useGame } from './hooks/useGame'
 import { playSound } from './engine/sounds'
 import SlalomGame from './slalom/SlalomGame'
 import DefendGame from './defend/DefendGame'
+import SnowballGame from './snowball/SnowballGame'
 import { syncSlalomScoresFromCloud } from './slalom/slalomScores'
 
 function Game({ playerInfo, onRestart }) {
@@ -35,6 +36,10 @@ function Game({ playerInfo, onRestart }) {
     dispatch({ type: 'DEFEND_RESULT', payload: result })
   }, [dispatch])
 
+  const handleSnowballGameOver = useCallback((result) => {
+    dispatch({ type: 'SNOWBALL_RESULT', payload: result })
+  }, [dispatch])
+
   // Check for restart flag
   useEffect(() => {
     if (gameState.gameRestart) {
@@ -62,6 +67,16 @@ function Game({ playerInfo, onRestart }) {
       <DefendGame
         standalone={false}
         onGameOver={handleDefendGameOver}
+      />
+    )
+  }
+
+  // Show snowball game when launched from store arcade
+  if (gameState.launchSnowball) {
+    return (
+      <SnowballGame
+        standalone={false}
+        onGameOver={handleSnowballGameOver}
       />
     )
   }
@@ -97,6 +112,11 @@ function App() {
   // Standalone defend mode via #defend hash
   if (hash === '#defend') {
     return <DefendGame standalone={true} />
+  }
+
+  // Standalone snowball mode via #snowball hash
+  if (hash === '#snowball') {
+    return <SnowballGame standalone={true} />
   }
 
   if (!playerInfo) {

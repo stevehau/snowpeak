@@ -300,6 +300,14 @@ export function handleLook(state, payload = {}) {
       }
       return addOutput(state, 'The frozen waterfall is mesmerizing -- a wall of ice frozen in mid-flow. It\'s beautiful but you feel like there might be more to it than meets the eye. Maybe someone at the resort knows something...', 'normal')
     }
+    // Basement: looking at the metallic thing behind the arcade cabinet (expert mode fuse)
+    if (state.currentRoomId === 'basement' && state.mode === 'expert' &&
+        (payload.target.includes('metal') || payload.target.includes('glint') || payload.target.includes('behind') || payload.target.includes('cabinet'))) {
+      if (!state.puzzles.fuse_dislodged) {
+        return addOutput(state, 'You crouch down and peer behind the old arcade cabinet. There\'s definitely something metallic wedged back there — looks like it could be some kind of heavy-duty electrical component. But it\'s jammed tight between the cabinet and the stone wall. No amount of reaching or prying is going to get it out. Maybe if the cabinet moved somehow...', 'normal')
+      }
+    }
+
     return addOutput(state, `You don't see anything special about that.`, 'normal')
   }
 
@@ -466,6 +474,26 @@ export function handleTalk(state, { npcId }) {
     }
   }
 
+  // Show Dance Mom's image and play camera click on first interaction
+  if (npcId === 'dance_mom' && !state.puzzles.dance_mom_image_shown) {
+    s = addSound(s, 'camera_click')
+    s = {
+      ...s,
+      output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}dancemom.jpg`, text: 'Social Media Influencer' }],
+      puzzles: { ...s.puzzles, dance_mom_image_shown: true },
+    }
+  }
+
+  // Show Old Dad's image and play rocking chair sound on first interaction
+  if (npcId === 'old_dad' && !state.puzzles.old_dad_image_shown) {
+    s = addSound(s, 'rocking_chair')
+    s = {
+      ...s,
+      output: [...s.output, { type: 'image', src: `${import.meta.env.BASE_URL}olddad.jpg`, text: 'Old Dad' }],
+      puzzles: { ...s.puzzles, old_dad_image_shown: true },
+    }
+  }
+
   // Apply effects
   if (chosen.effects) {
     const effects = chosen.effects
@@ -601,6 +629,25 @@ export function handleUse(state, { itemId }) {
     s = addOutput(s, 'The ancient cabinet shudders awake. Pixel wolves howl across the screen. Time to defend the village!', 'normal')
     s = addSound(s, 'arcade_start')
     s = { ...s, launchDefend: true }
+    return s
+  }
+
+  // Store arcade cabinet — Snowball Showdown (requires game tokens)
+  if (itemId === 'store_arcade') {
+    const room = state.rooms[state.currentRoomId]
+    if (!room.items.includes('store_arcade')) {
+      return addOutput(state, "There's no arcade cabinet here.", 'error')
+    }
+    if (!state.inventory.includes('game_tokens')) {
+      let s = addOutput(state, 'You squeeze past the shelves and find the old cabinet tucked in the corner. A slot on the front reads "INSERT TOKENS." You need game tokens to play this machine.', 'normal')
+      return s
+    }
+    let s = addOutput(state, 'You fish a token out of the bag and drop it into the slot. The old cabinet hums to life with a satisfying clunk. The monitor crackles through a burst of static, casting a cool blue glow across the empty store...', 'normal')
+    s = addOutput(s, '', 'normal')
+    s = addOutput(s, '* SNOWBALL SHOWDOWN *', 'title')
+    s = addOutput(s, 'Two pixel characters face off across a snowy field. The screen reads: "READY... FIGHT!" Time for a snowball fight!', 'normal')
+    s = addSound(s, 'arcade_start')
+    s = { ...s, launchSnowball: true }
     return s
   }
 
@@ -865,11 +912,11 @@ export function handleGive(state, { itemId, npcId }) {
     } else if (npcId === 'dance_mom') {
       s = addOutput(s, `You hold out the frozen flower to ${npc.name}.`, 'normal')
       s = addOutput(s, '', 'normal')
-      s = addOutput(s, '"Oh. My. GOD!" Dance Mom nearly drops her phone. "Is that a FROZEN FLOWER?! This is going STRAIGHT on my livestream! Hold on -- let me get the angle right --"\n\nShe grabs the flower and poses with it for approximately forty-seven selfies.\n\n"This is CONTENT GOLD, honey! \'Mountain adventurer gifts rare frozen botanical specimen to influencer\' -- my followers are going to LOSE IT! All four of them! You are now officially my favorite person at this resort. Don\'t let it go to your head."', 'npc')
+      s = addOutput(s, '"Oh. My. GOD!" She nearly drops her phone. "Is that a FROZEN FLOWER?! This is going STRAIGHT on my livestream! Hold on -- let me get the angle right --"\n\nShe grabs the flower and poses with it for approximately forty-seven selfies.\n\n"This is CONTENT GOLD, honey! \'Mountain adventurer gifts rare frozen botanical specimen to influencer\' -- my followers are going to LOSE IT! All four of them! Samantha is going to be SO jealous. You are now officially my favorite person at this resort. Don\'t let it go to your head."', 'npc')
     } else if (npcId === 'henrys_mom') {
       s = addOutput(s, `You hold out the frozen flower to ${npc.name}.`, 'normal')
       s = addOutput(s, '', 'normal')
-      s = addOutput(s, '"Oh... oh my." Henry\'s Mom takes the frozen flower with trembling hands, her eyes glistening. "This is the most thoughtful thing anyone has done for me since... well, since Henry made me a macaroni necklace in kindergarten. That was five thermoses ago."\n\nShe carefully tucks the flower into her massive tote bag, between the granola bars and the emergency socks.\n\n"I\'m going to press this in a book and keep it FOREVER. You are such a sweet person. Do you want a juice box? A granola bar? I have fourteen. HENRY! HENRY, COME SEE WHAT THIS NICE PERSON GAVE ME! ...He\'s still in the bar, isn\'t he."', 'npc')
+      s = addOutput(s, '"Oh... oh my goodness." Henry\'s Mom takes the frozen flower gently, her eyes lighting up with the warmest smile. "This is just the sweetest thing. You know, Henry used to pick me dandelions from the backyard every single day. He\'d line them up on the kitchen counter like little soldiers."\n\nShe carefully tucks the flower into her tote bag, nestled between the trail mix and a thermos of hot cocoa.\n\n"I\'m going to keep this forever. You are such a kind soul. Please — take some snacks. Take ALL the snacks. I insist. Granola bars, fruit snacks, string cheese — whatever you want. An adventurer with a good heart deserves a full stomach!"', 'npc')
     } else {
       s = addOutput(s, `You offer the frozen flower to ${npc.name}, but they don't seem interested.`, 'normal')
       return s

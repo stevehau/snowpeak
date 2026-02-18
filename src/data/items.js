@@ -197,8 +197,8 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
   },
   trail_map: {
     id: 'trail_map',
-    name: 'trail map',
-    description: 'A detailed trail map of the entire mountain, showing expert slopes, ridge trails, and danger zones marked in red. Much more comprehensive than the old map from the lobby.',
+    name: 'trail guide',
+    description: 'A detailed trail guide of the entire mountain, showing expert slopes, ridge trails, and danger zones marked in red. Much more comprehensive than the old map from the lobby.',
     takeable: true,
   },
   matches: {

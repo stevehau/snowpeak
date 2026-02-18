@@ -116,11 +116,11 @@ export const roomsExpert = {
     |  ///  ///   old ski      |???|  |
     |  ///  ///   equipment    |___|  |
     |__________________________________|`,
-    description: 'A damp stone basement beneath the lodge. Old ski equipment rusts in the corners. Cobwebs hang from exposed wooden beams. Against the far wall, a workbench is covered in old papers and tools. A portrait of a distinguished-looking man in vintage ski attire hangs crooked on the wall -- the resort\'s founder, Tobias Snowpeak. A dark tunnel entrance is barely visible in the corner. In a dark corner, half-buried under a dusty tarp, sits what appears to be an old arcade cabinet.',
+    description: 'A damp stone basement beneath the lodge. Old ski equipment rusts in the corners. Cobwebs hang from exposed wooden beams. Against the far wall, a workbench is covered in old papers and tools. A portrait of a distinguished-looking man in vintage ski attire hangs crooked on the wall -- the resort\'s founder, Tobias Snowpeak. A dark tunnel entrance is barely visible in the corner. In a dark corner, half-buried under a dusty tarp, sits what appears to be an old arcade cabinet. Something metallic glints behind it, wedged between the cabinet and the stone wall.',
     exits: { up: 'lodge_lobby', north: 'underground_tunnel' },
     hiddenExits: {},
     lockedExits: {},
-    items: ['dusty_journal', 'basement_arcade'],
+    items: ['dusty_journal', 'basement_arcade', 'fuse'],
     npcs: [],
   },
   main_street: {
@@ -443,14 +443,14 @@ export const roomsExpert = {
     |   |  [broken]     |            |
     |   |_______________|            |
     |                                |
-    |   Something glints behind      |
-    |   fallen crates...             |
+    |   Fallen crates and old         |
+    |   supplies litter the floor... |
     |________________________________|`,
-    description: 'A cold storage room lined with metal shelving. Hundreds of cans and jars sit gathering dust -- most decades past their expiration date. A broken freezer in the corner is frosted over. Behind some fallen crates in the corner, you notice something metallic gleaming in the shadows.',
+    description: 'A cold storage room lined with metal shelving. Hundreds of cans and jars sit gathering dust -- most decades past their expiration date. A broken freezer in the corner is frosted over. The shelves are mostly bare aside from some expired canned goods.',
     exits: { south: 'kitchen' },
     hiddenExits: {},
     lockedExits: {},
-    items: ['canned_beans', 'fuse'],
+    items: ['canned_beans'],
     npcs: [],
   },
 
@@ -489,17 +489,17 @@ export const roomsExpert = {
     | |FOOD||MAPS||GEAR||MISC|       |
     | |____||____||____||____|       |
     |   SHELVES  (mostly empty)      |
-    |                                |
-    |  #########################     |
-    |  #####  COUNTER  ########     |
-    |  #########################     |
-    |    [bell]  [register]          |
+    |                         ___    |
+    |  #########################|S|  |
+    |  #####  COUNTER  ########|N|  |
+    |  #########################|O|  |
+    |    [bell]  [register]   |W|  |
     |________________________________|`,
-    description: 'A quaint general store with wooden shelves and a friendly bell above the door. Most of the shelves are bare, but a few items remain: emergency supplies and old postcards. Behind the counter, an ancient cash register sits closed. A brass service bell sits on the counter with a small sign: "RING FOR SERVICE."',
+    description: 'A quaint general store with wooden shelves and a friendly bell above the door. Most of the shelves are bare, but a few items remain: emergency supplies and old postcards. Behind the counter, an ancient cash register sits closed. A brass service bell sits on the counter with a small sign: "RING FOR SERVICE." Wedged into the far corner beside the shelves, an old arcade cabinet sits gathering dust. The side art shows two kids pelting each other with snowballs.',
     exits: { west: 'village' },
     hiddenExits: {},
     lockedExits: {},
-    items: ['store_bell', 'matches', 'postcard'],
+    items: ['store_bell', 'matches', 'postcard', 'store_arcade'],
     npcs: [],
   },
 
@@ -546,12 +546,12 @@ export const roomsExpert = {
     |   | |___|  PLACE |___||        |
     |   |___________________|        |
     |________________________________|`,
-    description: 'An old log cabin hidden among snow-covered pines. The roof sags in places, and the windows are clouded with frost. Inside, a stone fireplace dominates one wall (cold and dark). Furniture is covered with dusty sheets. An old writing desk by the window holds yellowed papers and what looks like a personal journal.',
+    description: 'An old log cabin hidden among snow-covered pines. The roof sags in places, and the windows are clouded with frost. Inside, a stone fireplace dominates one wall (cold and dark). Furniture is covered with dusty sheets. An old writing desk by the window holds yellowed papers. A small leather pouch sits on the desk, jingling faintly. A silver-haired man sits in a rocking chair by the fireplace, wrapped in a wool blanket, reading a battered paperback. He looks like he\'s been here a while — and likes it that way.',
     exits: { north: 'village' },
     hiddenExits: {},
     lockedExits: {},
-    items: ['cabin_journal', 'basement_key'],
-    npcs: [],
+    items: ['game_tokens', 'basement_key'],
+    npcs: ['old_dad'],
   },
 
   underground_tunnel: {

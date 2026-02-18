@@ -495,6 +495,20 @@ body {
   box-shadow: 0 0 12px rgba(51, 255, 51, 0.5);
 }
 
+.arcade-touch-throw {
+  background-color: #0d1a4d;
+  color: #6699ff;
+  border-color: #4488ff;
+  font-size: 14px;
+  padding: 8px 16px;
+  letter-spacing: 1px;
+}
+
+.arcade-touch-throw:active {
+  background: rgba(68, 136, 255, 0.2);
+  box-shadow: 0 0 12px rgba(68, 136, 255, 0.5);
+}
+
 .arcade-touch-start {
   font-size: 14px;
   letter-spacing: 2px;
@@ -588,6 +602,18 @@ body {
     font-size: 18px;
     letter-spacing: 3px;
     padding: 20px 0;
+  }
+
+  .arcade-touch-throw {
+    background-color: #0d1a4d;
+    color: #6699ff;
+    border-color: rgba(68, 136, 255, 0.3);
+    font-size: 18px;
+    padding: 20px 0;
+  }
+
+  .arcade-touch-throw:active {
+    background: rgba(68, 136, 255, 0.2);
   }
 }
 

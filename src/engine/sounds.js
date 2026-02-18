@@ -448,6 +448,96 @@ function playUnlock() {
   }
 }
 
+// Rocking chair creak — Old Dad in the cabin
+function playRockingChair() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // First creak — chair rocking forward
+    const osc1 = ctx.createOscillator()
+    const gain1 = ctx.createGain()
+    osc1.type = 'sawtooth'
+    osc1.frequency.setValueAtTime(60, ctx.currentTime)
+    osc1.frequency.linearRampToValueAtTime(140, ctx.currentTime + 0.2)
+    osc1.frequency.linearRampToValueAtTime(80, ctx.currentTime + 0.35)
+    gain1.gain.setValueAtTime(0, ctx.currentTime)
+    gain1.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 0.05)
+    gain1.gain.setValueAtTime(0.05, ctx.currentTime + 0.3)
+    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45)
+    osc1.connect(gain1)
+    gain1.connect(ctx.destination)
+    osc1.start()
+    osc1.stop(ctx.currentTime + 0.5)
+
+    // Second creak — chair rocking back
+    const osc2 = ctx.createOscillator()
+    const gain2 = ctx.createGain()
+    osc2.type = 'sawtooth'
+    osc2.frequency.setValueAtTime(90, ctx.currentTime + 0.5)
+    osc2.frequency.linearRampToValueAtTime(180, ctx.currentTime + 0.65)
+    osc2.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.8)
+    gain2.gain.setValueAtTime(0, ctx.currentTime + 0.5)
+    gain2.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 0.55)
+    gain2.gain.setValueAtTime(0.04, ctx.currentTime + 0.75)
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9)
+    osc2.connect(gain2)
+    gain2.connect(ctx.destination)
+    osc2.start(ctx.currentTime + 0.5)
+    osc2.stop(ctx.currentTime + 0.95)
+
+    setTimeout(() => ctx.close(), 1500)
+  } catch {
+    // Audio not available
+  }
+}
+
+// Camera/selfie click sound — short mechanical snap
+function playCameraClick() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // Sharp click — short burst of noise
+    const bufferSize = ctx.sampleRate * 0.06
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
+    const data = buffer.getChannelData(0)
+    for (let i = 0; i < bufferSize; i++) {
+      const t = i / bufferSize
+      // Quick attack, fast decay with a sharp transient
+      const env = t < 0.05 ? t / 0.05 : Math.exp(-30 * (t - 0.05))
+      data[i] = (Math.random() * 2 - 1) * env
+    }
+    const noise = ctx.createBufferSource()
+    noise.buffer = buffer
+    const filter = ctx.createBiquadFilter()
+    filter.type = 'bandpass'
+    filter.frequency.value = 3000
+    filter.Q.value = 1.5
+    const gain = ctx.createGain()
+    gain.gain.value = 0.25
+    noise.connect(filter)
+    filter.connect(gain)
+    gain.connect(ctx.destination)
+    noise.start()
+
+    // Mechanical spring — short sine blip after the click
+    const osc = ctx.createOscillator()
+    const oscGain = ctx.createGain()
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(1200, ctx.currentTime + 0.03)
+    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.08)
+    oscGain.gain.setValueAtTime(0.08, ctx.currentTime + 0.03)
+    oscGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1)
+    osc.connect(oscGain)
+    oscGain.connect(ctx.destination)
+    osc.start(ctx.currentTime + 0.03)
+    osc.stop(ctx.currentTime + 0.12)
+
+    setTimeout(() => ctx.close(), 500)
+  } catch {
+    // Audio not available
+  }
+}
+
 export function playSound(name) {
   const sounds = {
     whistle: playWhistle,
@@ -463,6 +553,8 @@ export function playSound(name) {
     angry_grunt: playAngryGrunt,
     bell: playBell,
     unlock: playUnlock,
+    rocking_chair: playRockingChair,
+    camera_click: playCameraClick,
   }
   const fn = sounds[name]
   if (fn) fn()

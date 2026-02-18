@@ -146,12 +146,68 @@ export function gameReducer(state, action) {
         lines.push({ text: 'The cabinet lets out a mournful beep. "GAME OVER - INSERT COIN" scrolls across the screen.', type: 'normal' })
       }
 
-      newState = {
+      let defendState = {
         ...state,
         launchDefend: false,
         output: [...state.output, ...lines],
         puzzles: won
           ? { ...state.puzzles, village_champion: true }
+          : state.puzzles,
+      }
+
+      // Expert mode: the arcade cabinet shakes loose the fuse wedged behind it
+      if (state.mode === 'expert' && !state.puzzles.fuse_dislodged) {
+        const basementRoom = defendState.rooms.basement
+        const fuseItem = defendState.items.fuse
+        if (fuseItem && fuseItem.hidden && basementRoom) {
+          const fuseLines = [
+            { text: '', type: 'normal' },
+            { text: 'As the ancient cabinet powers down, it shudders violently — decades of built-up static discharge and rickety wiring sending one final THUNK through its frame. The whole machine lurches sideways an inch on the stone floor.', type: 'normal' },
+            { text: '', type: 'normal' },
+            { text: 'CLANG!', type: 'title' },
+            { text: '', type: 'normal' },
+            { text: 'Something heavy and metallic tumbles out from behind the cabinet, bouncing across the basement floor with a ringing clatter. It spins to a stop at your feet — a heavy-duty electrical fuse! It must have been wedged between the cabinet and the wall for years, completely unreachable until the old machine shook it loose.', type: 'normal' },
+            { text: '', type: 'normal' },
+            { text: '[An electrical fuse has appeared on the floor!]', type: 'system' },
+          ]
+
+          defendState = {
+            ...defendState,
+            output: [...defendState.output, ...fuseLines],
+            items: {
+              ...defendState.items,
+              fuse: { ...fuseItem, hidden: false },
+            },
+            puzzles: { ...defendState.puzzles, fuse_dislodged: true },
+          }
+        }
+      }
+
+      newState = defendState
+      break
+    }
+    case 'SNOWBALL_RESULT': {
+      const { playerHits, computerHits, won } = action.payload
+
+      const lines = [
+        { text: '', type: 'normal' },
+        { text: 'The old screen flickers off and you step back, brushing pixelated snow from your imagination.', type: 'normal' },
+      ]
+
+      if (won) {
+        lines.push({ text: `Snowball Champion! You landed ${playerHits} hits to their ${computerHits}!`, type: 'victory' })
+        lines.push({ text: 'The ancient cabinet buzzes triumphantly. "SNOWBALL CHAMPION" scrolls across the screen in icy blue letters.', type: 'normal' })
+      } else {
+        lines.push({ text: `Defeated... You only landed ${playerHits} hits while taking ${computerHits} snowballs to the face.`, type: 'system' })
+        lines.push({ text: 'The cabinet plays a sad little jingle. "BETTER LUCK NEXT TIME" blinks on screen.', type: 'normal' })
+      }
+
+      newState = {
+        ...state,
+        launchSnowball: false,
+        output: [...state.output, ...lines],
+        puzzles: won
+          ? { ...state.puzzles, snowball_champion: true }
           : state.puzzles,
       }
       break

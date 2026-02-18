@@ -109,43 +109,43 @@ export const npcs = {
   },
   dance_mom: {
     id: 'dance_mom',
-    name: 'Dance Mom',
-    description: 'A woman in a sequined ski jacket and full stage makeup, filming everything on her phone. She appears to be live-streaming her ski resort experience to an audience of possibly no one.',
+    name: 'Social Media Influencer',
+    description: 'A woman in a sequined ski jacket and full stage makeup, filming everything on her phone with a ring light clipped to the top. She appears to be live-streaming her ski resort experience to an audience of possibly no one.',
     currentRoomId: 'village',
     dialogueState: 0,
     dialogue: [
       {
         state: 0,
-        text: '"And THIS, followers, is what we call RUSTIC CHARM!" Dance Mom pans her phone across the village. "My daughter Brittney would have DOMINATED this mountain if her jazz hands instructor hadn\'t scheduled a recital the same weekend. PRIORITIES, people!"',
+        text: '"And THIS, followers, is what we call RUSTIC CHARM!" She pans her phone across the village with practiced flair. "My daughter Samantha would have LOVED this mountain — she\'s got the best ski aesthetic of anyone I know. But her dance recital is this weekend so she couldn\'t make it. Her loss is YOUR gain, followers. CONTENT waits for no one!"',
       },
       {
         state: 1,
-        text: '"Excuse me, can you hold this phone and film me doing a dramatic pose by that statue? No? FINE. I\'ll use the selfie stick. You know, in MY day, mountains were taller AND the hot chocolate was free. This resort is a THREE out of TEN. But the lighting is gorgeous."',
+        text: '"Excuse me, can you hold this phone and film me doing a dramatic pose by that statue? No? FINE. I\'ll use the selfie stick. You know, in MY day, mountains were taller AND the hot chocolate was free. This resort is a THREE out of TEN. But the lighting is GORGEOUS. Samantha is going to be SO jealous when she sees these stories."',
       },
       {
         state: 2,
-        text: '"My livestream just hit FOUR viewers! That\'s double from last time! One of them might be my mom, but engagement is engagement, honey. If you find any secret treasure in this dump, tag me. I need CONTENT."',
+        text: '"My livestream just hit FOUR viewers! That\'s double from last time! One of them might be my mom, but engagement is engagement, honey. Samantha says I should try TikTok but I told her — mommy is a MULTI-PLATFORM creator. If you find any secret treasure in this dump, tag me. I need CONTENT."',
       },
     ],
   },
   henrys_mom: {
     id: 'henrys_mom',
     name: "Henry's Mom",
-    description: 'A glamorous woman bundled in seventeen layers of clothing, clutching a massive tote bag overflowing with snacks, hand warmers, and emergency supplies. She keeps calling out for someone named Henry, who is nowhere to be seen.',
+    description: 'A warm, cheerful woman bundled in a cozy puffer jacket, surrounded by an impressive array of tote bags overflowing with snacks of every variety. Granola bars, fruit snacks, trail mix, string cheese, juice boxes — it\'s like a mobile convenience store. She has the kind smile of someone who\'s never met a stranger, though right now she keeps glancing around nervously for her son.',
     currentRoomId: 'main_street',
     dialogueState: 0,
     dialogue: [
       {
         state: 0,
-        text: '"HENRY? HENRYYYY?!" She rummages through her tote bag. "That boy... I told him to stay by the lamp post. I SPECIFICALLY said the lamp post! Do you want a granola bar? I have fourteen. Also a first aid kit, three pairs of extra socks, and a whistle. HENRY!!!"',
+        text: '"Oh, hello sweetie!" She beams at you and immediately starts rummaging through one of her tote bags. "Have you seen my Henry? That boy took off to \'explore the mountain\' about an hour ago and I just KNOW he didn\'t pack enough snacks. I gave him two granola bars but that\'s barely a warmup!"\n\nShe pulls out a fruit snack pouch and offers it to you. "Here, take this. You look like you could use a snack. I always say — you can never have too many snacks on an adventure. Do you want trail mix too? I have seven bags. SEVEN."',
       },
       {
         state: 1,
-        text: '"Oh, you again! Still no sign of Henry. He\'s probably fine. He\'s twelve. Or thirteen? Somewhere in there. Want some hot cocoa? I brought a thermos. Actually I brought FOUR thermoses. One is soup. I forget which. HENRY, IF YOU CAN HEAR ME, YOUR SOUP IS GETTING COLD!"',
+        text: '"Still no Henry!" She shakes her head but manages a warm laugh. "That kid — he\'s got his father\'s sense of adventure and absolutely NONE of his common sense about packing food. I bet he\'s out there right now, climbing something he shouldn\'t be, with nothing but an empty granola bar wrapper in his pocket."\n\nShe holds up a thermos. "Hot cocoa? I made it from scratch this morning. I also have chicken soup, apple cider, and something that might be tea? Oh, and string cheese! The good kind, not the weird rubbery kind. Please, take something. I brought enough snacks for the entire resort and it would make me feel SO much better knowing at least someone out there is well-fed."',
       },
       {
         state: 2,
-        text: '"Henry just texted. He\'s been in the lodge bar this whole time. THE BAR! He\'s TEN YEARS OLD! He says he\'s been having a \'philosophical debate\' with some angry woman about resort management. I don\'t even... want a juice box? I have nine."',
+        text: '"Henry just texted! He says he\'s been having the BEST time exploring the lodge. The LODGE! He was right here the whole time!" She laughs and wipes her eyes. "He says he made friends with some angry lady at the bar and they\'ve been debating whether this resort needs better snack machines. That\'s my boy."\n\nShe starts reorganizing her tote bags with visible relief. "I swear, being a mom is 10% parenting and 90% making sure everyone has enough to eat. Are you SURE you don\'t want a juice box? I have a whole case. Take two. Take three! You\'re an adventurer — you need your energy!"',
       },
     ],
   },

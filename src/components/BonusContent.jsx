@@ -1,15 +1,20 @@
 import { useState, useCallback, useEffect } from 'react'
 import SlalomGame from '../slalom/SlalomGame'
 import DefendGame from '../defend/DefendGame'
+import SnowballGame from '../snowball/SnowballGame'
 
 function BonusContent({ onBack }) {
-  const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'defend' | 'notes'
+  const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'defend' | 'snowball' | 'notes'
 
   const handleSlalomGameOver = useCallback(() => {
     setPhase('menu')
   }, [])
 
   const handleDefendGameOver = useCallback(() => {
+    setPhase('menu')
+  }, [])
+
+  const handleSnowballGameOver = useCallback(() => {
     setPhase('menu')
   }, [])
 
@@ -21,8 +26,9 @@ function BonusContent({ onBack }) {
       if (phase === 'menu') {
         if (key === '1') setPhase('slalom')
         else if (key === '2') setPhase('defend')
-        else if (key === '3') setPhase('notes')
-        else if (key === '4') onBack()
+        else if (key === '3') setPhase('snowball')
+        else if (key === '4') setPhase('notes')
+        else if (key === '5') onBack()
       } else if (phase === 'notes') {
         // Any key or Escape to go back from notes
         if (key === 'Escape' || key === 'b' || key === 'B') {
@@ -49,6 +55,15 @@ function BonusContent({ onBack }) {
       <DefendGame
         standalone={false}
         onGameOver={handleDefendGameOver}
+      />
+    )
+  }
+
+  if (phase === 'snowball') {
+    return (
+      <SnowballGame
+        standalone={false}
+        onGameOver={handleSnowballGameOver}
       />
     )
   }
@@ -80,6 +95,16 @@ function BonusContent({ onBack }) {
           <div className="welcome-title">RELEASE NOTES</div>
           <div className="output-line output-normal">&nbsp;</div>
           <div className="output-line output-system">{'='.repeat(40)}</div>
+          <div className="output-line output-normal">&nbsp;</div>
+
+          <div className="output-line output-title">v1.8 -- Snowball Showdown</div>
+          <div className="output-line output-normal">  - New arcade mini-game: Snowball Showdown!</div>
+          <div className="output-line output-normal">  - Turn-based snowball fight with AI opponent</div>
+          <div className="output-line output-normal">  - Hidden arcade cabinet in the general store (expert mode)</div>
+          <div className="output-line output-normal">  - Requires game tokens from the abandoned cabin to play</div>
+          <div className="output-line output-normal">  - Old Dad NPC hints at tokens and the arcade</div>
+          <div className="output-line output-normal">  - Touch/click controls for mobile play</div>
+          <div className="output-line output-normal">  - Available in Bonus Content menu and in-game</div>
           <div className="output-line output-normal">&nbsp;</div>
 
           <div className="output-line output-title">v1.7 -- Defend the Village</div>
@@ -194,16 +219,23 @@ function BonusContent({ onBack }) {
         </button>
         <button
           className="mode-button"
+          onClick={() => setPhase('snowball')}
+        >
+          [3] PLAY SNOWBALL SHOWDOWN
+          <span className="mode-desc">Turn-based snowball fight — dodge and throw!</span>
+        </button>
+        <button
+          className="mode-button"
           onClick={() => setPhase('notes')}
         >
-          [3] RELEASE NOTES
+          [4] RELEASE NOTES
           <span className="mode-desc">View version history and changelog</span>
         </button>
         <button
           className="mode-button"
           onClick={onBack}
         >
-          [4] BACK
+          [5] BACK
           <span className="mode-desc">Return to the start screen</span>
         </button>
       </div>

@@ -53,6 +53,15 @@ const ITEM_ALIASES = {
   'dusty arcade': 'basement_arcade',
   'old arcade': 'basement_arcade',
   'basement arcade': 'basement_arcade',
+  'snowball game': 'store_arcade',
+  'snowball fight': 'store_arcade',
+  'snowball showdown': 'store_arcade',
+  'store arcade': 'store_arcade',
+  'store cabinet': 'store_arcade',
+  'tokens': 'game_tokens',
+  'game tokens': 'game_tokens',
+  'bag of tokens': 'game_tokens',
+  'token bag': 'game_tokens',
 }
 
 function matchItem(noun, state) {

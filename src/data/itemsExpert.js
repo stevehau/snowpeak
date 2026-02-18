@@ -91,8 +91,9 @@ Explore thoroughly - all areas matter now." -- T.S.`,
   fuse: {
     id: 'fuse',
     name: 'electrical fuse',
-    description: 'A heavy-duty electrical fuse, the kind used in industrial machinery. It\'s rated for high amperage -- exactly what a ski lift motor would need.',
+    description: 'A heavy-duty electrical fuse, the kind used in industrial machinery. It\'s rated for high amperage -- exactly what a ski lift motor would need. It must have been wedged behind that old arcade cabinet for decades.',
     takeable: true,
+    hidden: true,
   },
   chewed_gum: {
     id: 'chewed_gum',
@@ -161,6 +162,12 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
     description: 'An ancient arcade cabinet hidden under a tarp in the basement corner. Years of dust and cobwebs cover it, but when you wipe the grime away, the side art reveals a dramatic scene: wolves and bears charging through a moonlit forest toward a tiny village. The marquee reads "DEFEND THE VILLAGE" in faded red letters. Amazingly, a dim green power light still glows on the back panel. Someone must have left it plugged in decades ago. Try "play defend game" to play!',
     takeable: false,
   },
+  store_arcade: {
+    id: 'store_arcade',
+    name: 'snowball arcade cabinet',
+    description: 'A beat-up arcade cabinet wedged into the corner of the general store. The side art shows two pixelated kids in winter gear hurling snowballs at each other across a snowy field. The marquee reads "SNOWBALL SHOWDOWN" in icy blue letters. A brass token slot on the front panel reads "INSERT TOKEN." Try "play snowball game" to play!',
+    takeable: false,
+  },
 
   // ===== EXPERT MODE ITEMS =====
   staff_uniform: {
@@ -209,8 +216,8 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
   },
   trail_map: {
     id: 'trail_map',
-    name: 'trail map',
-    description: 'A detailed trail map of the entire mountain, showing expert slopes, ridge trails, and danger zones marked in red. Much more comprehensive than the old map from the lobby.',
+    name: 'trail guide',
+    description: 'A detailed trail guide of the entire mountain, showing expert slopes, ridge trails, and danger zones marked in red. Much more comprehensive than the old map from the lobby.',
     takeable: true,
   },
   matches: {
@@ -239,13 +246,11 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
     readable: true,
     readText: 'You flip through the guest book. Most entries are standard tourist fare. The last entry, in elegant script, reads: "May the mountain protect all who ski here. The greatest treasure is not gold, but the journey we share. - T.S., February 12, 1976"',
   },
-  cabin_journal: {
-    id: 'cabin_journal',
-    name: 'cabin journal',
-    description: 'A personal journal found in the abandoned cabin. It appears to belong to Tobias Snowpeak himself. The entries describe his life at the resort and his secret project.',
+  game_tokens: {
+    id: 'game_tokens',
+    name: 'bag of game tokens',
+    description: 'A small drawstring pouch made of worn leather, jingling with brass tokens. Each token is stamped with the Snowpeak Resort logo — a tiny ski crossed with a snowflake. These must be for the old arcade machines around the resort.',
     takeable: true,
-    readable: true,
-    readText: 'You read the journal entries. Most describe daily resort operations, but later entries grow more mysterious: "I\'ve completed the vault. Only those who truly understand the mountain -- who help others and explore thoroughly -- will find it. I\'ve left clues throughout the resort. The medallion waits at the summit for the worthy."',
   },
   pickaxe: {
     id: 'pickaxe',
