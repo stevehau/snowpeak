@@ -1,19 +1,45 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { initTrailerAudio, startTrailerMusic, stopTrailerMusic, setTrailerVolume } from './trailerMusic.js'
 
 const GITHUB_PAGES_URL = 'https://stevehau.github.io/snowpeak/'
 
 function DriveInTrailer({ onBack, standalone = false }) {
   const [lightsOff, setLightsOff] = useState(false)
   const [showTrailer, setShowTrailer] = useState(false)
+  const [muted, setMuted] = useState(false)
+  const musicStarted = useRef(false)
 
-  // Dim lights then start the trailer
+  // Dim lights then start the trailer + music
   useEffect(() => {
+    // Unlock AudioContext immediately while user gesture is still active.
+    // The click/key that launched the trailer IS the gesture — we must
+    // create & resume the context NOW, not inside a setTimeout.
+    initTrailerAudio()
+
     const t1 = setTimeout(() => setLightsOff(true), 800)
-    const t2 = setTimeout(() => setShowTrailer(true), 1600)
-    return () => { clearTimeout(t1); clearTimeout(t2) }
+    const t2 = setTimeout(() => {
+      setShowTrailer(true)
+      // Audio context is already unlocked — safe to schedule music now
+      if (!musicStarted.current) {
+        musicStarted.current = true
+        startTrailerMusic()
+      }
+    }, 1600)
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+      stopTrailerMusic()
+      musicStarted.current = false
+    }
   }, [])
 
+  // Sync mute state to volume
+  useEffect(() => {
+    setTrailerVolume(muted ? 0 : 0.35)
+  }, [muted])
+
   const handleBack = useCallback(() => {
+    stopTrailerMusic()
     if (standalone) {
       window.location.hash = ''
       window.location.reload()
@@ -25,6 +51,7 @@ function DriveInTrailer({ onBack, standalone = false }) {
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === 'Escape' || e.key === 'b' || e.key === 'B') handleBack()
+      if (e.key === 'm' || e.key === 'M') setMuted(m => !m)
     }
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
@@ -255,6 +282,7 @@ function DriveInTrailer({ onBack, standalone = false }) {
         gap: 'clamp(8px, 2vw, 20px)',
         marginTop: 'clamp(6px, 1.2vh, 14px)',
         zIndex: 10,
+        alignItems: 'center',
       }}>
         <button
           onClick={() => window.open(GITHUB_PAGES_URL, '_blank')}
@@ -301,6 +329,28 @@ function DriveInTrailer({ onBack, standalone = false }) {
           onMouseLeave={e => { e.target.style.transform = 'scale(1)'; e.target.style.background = 'rgba(100,150,200,0.2)' }}
         >
           SHARE LINK
+        </button>
+
+        {/* Mute / Unmute button */}
+        <button
+          onClick={() => setMuted(m => !m)}
+          title={muted ? 'Unmute (M)' : 'Mute (M)'}
+          style={{
+            background: 'rgba(80,80,120,0.25)',
+            color: muted ? '#666' : '#AABBDD',
+            border: `1.5px solid ${muted ? '#555' : '#8899BB'}`,
+            padding: 'clamp(6px, 1vw, 12px) clamp(10px, 1.5vw, 18px)',
+            borderRadius: '24px',
+            fontSize: 'clamp(12px, 1.6vw, 20px)',
+            cursor: 'pointer',
+            fontFamily: 'system-ui, sans-serif',
+            transition: 'transform 0.2s, background 0.2s, color 0.3s',
+            lineHeight: 1,
+          }}
+          onMouseEnter={e => { e.target.style.transform = 'scale(1.1)'; e.target.style.background = 'rgba(80,80,120,0.4)' }}
+          onMouseLeave={e => { e.target.style.transform = 'scale(1)'; e.target.style.background = 'rgba(80,80,120,0.25)' }}
+        >
+          {muted ? '\u{1F507}' : '\u{1F50A}'}
         </button>
       </div>
 
