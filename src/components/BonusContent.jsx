@@ -2,9 +2,10 @@ import { useState, useCallback, useEffect } from 'react'
 import SlalomGame from '../slalom/SlalomGame'
 import DefendGame from '../defend/DefendGame'
 import SnowballGame from '../snowball/SnowballGame'
+import DriveInTrailer from './DriveInTrailer'
 
 function BonusContent({ onBack }) {
-  const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'defend' | 'snowball' | 'notes'
+  const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'defend' | 'snowball' | 'notes' | 'trailer'
 
   const handleSlalomGameOver = useCallback(() => {
     setPhase('menu')
@@ -27,8 +28,9 @@ function BonusContent({ onBack }) {
         if (key === '1') setPhase('slalom')
         else if (key === '2') setPhase('defend')
         else if (key === '3') setPhase('snowball')
-        else if (key === '4') setPhase('notes')
-        else if (key === '5') onBack()
+        else if (key === '4') setPhase('trailer')
+        else if (key === '5') setPhase('notes')
+        else if (key === '6') onBack()
       } else if (phase === 'notes') {
         // Any key or Escape to go back from notes
         if (key === 'Escape' || key === 'b' || key === 'B') {
@@ -66,6 +68,10 @@ function BonusContent({ onBack }) {
         onGameOver={handleSnowballGameOver}
       />
     )
+  }
+
+  if (phase === 'trailer') {
+    return <DriveInTrailer onBack={() => setPhase('menu')} />
   }
 
   if (phase === 'notes') {
@@ -226,16 +232,23 @@ function BonusContent({ onBack }) {
         </button>
         <button
           className="mode-button"
+          onClick={() => setPhase('trailer')}
+        >
+          [4] WATCH TRAILER
+          <span className="mode-desc">Drive-in movie theater experience</span>
+        </button>
+        <button
+          className="mode-button"
           onClick={() => setPhase('notes')}
         >
-          [4] RELEASE NOTES
+          [5] RELEASE NOTES
           <span className="mode-desc">View version history and changelog</span>
         </button>
         <button
           className="mode-button"
           onClick={onBack}
         >
-          [5] BACK
+          [6] BACK
           <span className="mode-desc">Return to the start screen</span>
         </button>
       </div>

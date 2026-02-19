@@ -8,6 +8,7 @@ import SlalomGame from './slalom/SlalomGame'
 import DefendGame from './defend/DefendGame'
 import SnowballGame from './snowball/SnowballGame'
 import { syncSlalomScoresFromCloud } from './slalom/slalomScores'
+import DriveInTrailer from './components/DriveInTrailer'
 
 function Game({ playerInfo, onRestart }) {
   const { gameState, processCommand, dispatch } = useGame(playerInfo.name, playerInfo.mode)
@@ -117,6 +118,11 @@ function App() {
   // Standalone snowball mode via #snowball hash
   if (hash === '#snowball') {
     return <SnowballGame standalone={true} />
+  }
+
+  // Standalone trailer via #trailer hash (shareable link)
+  if (hash === '#trailer') {
+    return <DriveInTrailer standalone={true} onBack={() => { window.location.hash = ''; setHash('') }} />
   }
 
   if (!playerInfo) {
