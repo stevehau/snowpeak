@@ -538,6 +538,230 @@ function playCameraClick() {
   }
 }
 
+// Snow crunch — outdoor snowy areas (ski slopes, village, main street)
+function playSnowCrunch() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // Two quick crunches to simulate boot steps in snow
+    for (let i = 0; i < 2; i++) {
+      const offset = i * 0.22
+      const bufLen = Math.floor(ctx.sampleRate * 0.15)
+      const buffer = ctx.createBuffer(1, bufLen, ctx.sampleRate)
+      const data = buffer.getChannelData(0)
+      for (let j = 0; j < bufLen; j++) {
+        const t = j / bufLen
+        const env = t < 0.1 ? t / 0.1 : Math.exp(-8 * (t - 0.1))
+        data[j] = (Math.random() * 2 - 1) * env
+      }
+      const noise = ctx.createBufferSource()
+      noise.buffer = buffer
+      const filter = ctx.createBiquadFilter()
+      filter.type = 'bandpass'
+      filter.frequency.value = 1800
+      filter.Q.value = 0.8
+      const gain = ctx.createGain()
+      gain.gain.value = 0.1
+      noise.connect(filter)
+      filter.connect(gain)
+      gain.connect(ctx.destination)
+      noise.start(ctx.currentTime + offset)
+    }
+
+    setTimeout(() => ctx.close(), 1000)
+  } catch {
+    // Audio not available
+  }
+}
+
+// Wood floor creak — indoor wooden areas (cabin, kitchen, pantry)
+function playWoodFloor() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+
+    osc.type = 'sawtooth'
+    osc.frequency.setValueAtTime(100, ctx.currentTime)
+    osc.frequency.linearRampToValueAtTime(160, ctx.currentTime + 0.15)
+    osc.frequency.linearRampToValueAtTime(90, ctx.currentTime + 0.25)
+
+    gain.gain.setValueAtTime(0, ctx.currentTime)
+    gain.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 0.03)
+    gain.gain.setValueAtTime(0.04, ctx.currentTime + 0.2)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3)
+
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start()
+    osc.stop(ctx.currentTime + 0.35)
+
+    setTimeout(() => ctx.close(), 700)
+  } catch {
+    // Audio not available
+  }
+}
+
+// Store bell chime — bright ding-a-ling for general store
+function playStoreBell() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    const notes = [
+      { freq: 2200, start: 0, dur: 0.3 },
+      { freq: 2600, start: 0.12, dur: 0.35 },
+    ]
+
+    for (const note of notes) {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = 'sine'
+      osc.frequency.value = note.freq
+
+      gain.gain.setValueAtTime(0.12, ctx.currentTime + note.start)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + note.start + note.dur)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start(ctx.currentTime + note.start)
+      osc.stop(ctx.currentTime + note.start + note.dur + 0.05)
+    }
+
+    setTimeout(() => ctx.close(), 1000)
+  } catch {
+    // Audio not available
+  }
+}
+
+// Chapel reverb — soft echoing tone with reverence
+function playChapelEcho() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // Soft low tone with reverb-like delay
+    const freqs = [220, 330]
+    const times = [0, 0.08]
+    for (let i = 0; i < freqs.length; i++) {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = 'sine'
+      osc.frequency.value = freqs[i]
+
+      gain.gain.setValueAtTime(0, ctx.currentTime + times[i])
+      gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + times[i] + 0.05)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + times[i] + 0.6)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start(ctx.currentTime + times[i])
+      osc.stop(ctx.currentTime + times[i] + 0.65)
+    }
+
+    setTimeout(() => ctx.close(), 1500)
+  } catch {
+    // Audio not available
+  }
+}
+
+// Tunnel drip — underground tunnel water dripping
+function playTunnelDrip() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // Two water drip sounds
+    const drips = [
+      { freq: 2400, start: 0, vol: 0.12 },
+      { freq: 1800, start: 0.25, vol: 0.08 },
+      { freq: 2100, start: 0.45, vol: 0.06 },
+    ]
+
+    for (const drip of drips) {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(drip.freq, ctx.currentTime + drip.start)
+      osc.frequency.exponentialRampToValueAtTime(drip.freq * 0.5, ctx.currentTime + drip.start + 0.08)
+
+      gain.gain.setValueAtTime(drip.vol, ctx.currentTime + drip.start)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + drip.start + 0.12)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start(ctx.currentTime + drip.start)
+      osc.stop(ctx.currentTime + drip.start + 0.15)
+    }
+
+    setTimeout(() => ctx.close(), 1200)
+  } catch {
+    // Audio not available
+  }
+}
+
+// Observatory hum — soft electronic hum for hidden observatory
+function playObservatoryHum() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(120, ctx.currentTime)
+    osc.frequency.linearRampToValueAtTime(180, ctx.currentTime + 0.4)
+    osc.frequency.linearRampToValueAtTime(140, ctx.currentTime + 0.7)
+
+    gain.gain.setValueAtTime(0, ctx.currentTime)
+    gain.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.1)
+    gain.gain.setValueAtTime(0.06, ctx.currentTime + 0.5)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.7)
+
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start()
+    osc.stop(ctx.currentTime + 0.75)
+
+    setTimeout(() => ctx.close(), 1200)
+  } catch {
+    // Audio not available
+  }
+}
+
+// Busy chatter — lodge lobby ambient murmur
+function playLobbyChatter() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+    // Low filtered noise to simulate distant conversation
+    const bufLen = Math.floor(ctx.sampleRate * 0.5)
+    const buffer = ctx.createBuffer(1, bufLen, ctx.sampleRate)
+    const data = buffer.getChannelData(0)
+    for (let i = 0; i < bufLen; i++) {
+      // Modulate noise to give it a voice-like rhythm
+      const t = i / ctx.sampleRate
+      const mod = 0.5 + 0.5 * Math.sin(t * 8 * Math.PI) * Math.sin(t * 3 * Math.PI)
+      data[i] = (Math.random() * 2 - 1) * mod
+    }
+    const noise = ctx.createBufferSource()
+    noise.buffer = buffer
+    const filter = ctx.createBiquadFilter()
+    filter.type = 'bandpass'
+    filter.frequency.value = 400
+    filter.Q.value = 2
+    const gain = ctx.createGain()
+    gain.gain.setValueAtTime(0, ctx.currentTime)
+    gain.gain.linearRampToValueAtTime(0.04, ctx.currentTime + 0.05)
+    gain.gain.setValueAtTime(0.04, ctx.currentTime + 0.35)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5)
+    noise.connect(filter)
+    filter.connect(gain)
+    gain.connect(ctx.destination)
+    noise.start()
+
+    setTimeout(() => ctx.close(), 1000)
+  } catch {
+    // Audio not available
+  }
+}
+
 // Bag rummaging sound — crinkling and rustling through snacks
 function playBagRummage() {
   try {
@@ -591,6 +815,13 @@ export function playSound(name) {
     rocking_chair: playRockingChair,
     camera_click: playCameraClick,
     bag_rummage: playBagRummage,
+    snow_crunch: playSnowCrunch,
+    wood_floor: playWoodFloor,
+    store_bell: playStoreBell,
+    chapel_echo: playChapelEcho,
+    tunnel_drip: playTunnelDrip,
+    observatory_hum: playObservatoryHum,
+    lobby_chatter: playLobbyChatter,
   }
   const fn = sounds[name]
   if (fn) fn()

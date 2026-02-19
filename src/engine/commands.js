@@ -36,12 +36,42 @@ function addSound(state, sound) {
 }
 
 function getRoomSound(targetRoomId, fromRoomId) {
-  if (targetRoomId === 'basement') return 'creak_door'
+  // Special combo: riding the lift up
   if (targetRoomId === 'mountain_peak' && fromRoomId === 'ski_lift_top') return 'lift_motor'
-  if (targetRoomId === 'hidden_cave') return 'cave_echo'
-  if (targetRoomId === 'underground_vault') return 'vault_rumble'
-  if (['frozen_waterfall', 'mountain_peak', 'ski_lift_top'].includes(targetRoomId)) return 'wind'
-  return 'footstep'
+
+  const roomSounds = {
+    // Standard rooms
+    lodge_lobby: 'lobby_chatter',
+    lodge_bar: 'lobby_chatter',
+    game_room: 'footstep',
+    lodge_balcony: 'wind',
+    basement: 'creak_door',
+    main_street: 'snow_crunch',
+    ski_rental: 'creak_door',
+    village: 'snow_crunch',
+    ski_slopes: 'snow_crunch',
+    ski_lift_top: 'wind',
+    frozen_waterfall: 'wind',
+    mountain_peak: 'wind',
+    hidden_cave: 'cave_echo',
+    underground_vault: 'vault_rumble',
+    // Expert-mode rooms
+    staff_hallway: 'footstep',
+    staff_quarters: 'creak_door',
+    kitchen: 'wood_floor',
+    pantry: 'wood_floor',
+    storage_room: 'creak_door',
+    general_store: 'store_bell',
+    chapel: 'chapel_echo',
+    old_cabin: 'wood_floor',
+    underground_tunnel: 'tunnel_drip',
+    hidden_observatory: 'observatory_hum',
+    ice_caves: 'wind',
+    avalanche_zone: 'wind',
+    ridge_trail: 'snow_crunch',
+    summit_shelter: 'wind',
+  }
+  return roomSounds[targetRoomId] || 'footstep'
 }
 
 export function isCaveDark(state) {
@@ -279,24 +309,18 @@ export function handleLook(state, payload = {}) {
     const room = state.rooms[state.currentRoomId]
     if (state.currentRoomId === 'frozen_waterfall' &&
         (payload.target.includes('waterfall') || payload.target.includes('ice') || payload.target.includes('water'))) {
+      // If cave already revealed, just describe it
+      if (room.hiddenExits?.east) {
+        return addOutput(state, 'You examine the frozen waterfall closely. You can see the narrow gap in the ice on the east side -- the hidden cave entrance you discovered with your binoculars.', 'normal')
+      }
+      // NPC hints guide you toward the binoculars, but don't reveal the cave
       const bossCalmed = state.npcs.angry_boss?.flags?.calmed
       const radioFixed = state.npcs.dill_pickle?.flags?.fixed_radio
       if (bossCalmed || radioFixed) {
-        let s = addOutput(state, 'You examine the frozen waterfall closely. Now that you know what to look for, you can see it -- a narrow gap in the ice on the east side, just wide enough to squeeze through. It leads to a hidden cave!', 'normal')
-        if (!room.hiddenExits.east) {
-          s = {
-            ...s,
-            rooms: {
-              ...s.rooms,
-              frozen_waterfall: {
-                ...room,
-                hiddenExits: { ...room.hiddenExits, east: 'hidden_cave' },
-              },
-            },
-          }
-          s = addOutput(s, '\nA new exit has been revealed: east', 'system')
+        if (state.inventory.includes('binoculars')) {
+          return addOutput(state, 'You examine the ice closely. You can tell something is behind it... try using your binoculars to get a better look!', 'normal')
         }
-        return s
+        return addOutput(state, 'You examine the frozen waterfall closely. Knowing there\'s supposed to be a cave here, you squint at the ice... but you can\'t quite make out where the entrance might be. Maybe you need something to help you see better -- like binoculars?', 'normal')
       }
       return addOutput(state, 'The frozen waterfall is mesmerizing -- a wall of ice frozen in mid-flow. It\'s beautiful but you feel like there might be more to it than meets the eye. Maybe someone at the resort knows something...', 'normal')
     }
