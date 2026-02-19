@@ -249,14 +249,11 @@ function DriveInTrailer({ onBack, standalone = false }) {
         </svg>
       </div>
 
-      {/* ===== CONTROL BUTTONS (bottom overlay) ===== */}
+      {/* ===== CONTROL BUTTONS (below screen, above cars) ===== */}
       <div style={{
-        position: 'absolute',
-        bottom: '22%',
-        left: '50%',
-        transform: 'translateX(-50%)',
         display: 'flex',
         gap: 'clamp(8px, 2vw, 20px)',
+        marginTop: 'clamp(6px, 1.2vh, 14px)',
         zIndex: 10,
       }}>
         <button
@@ -304,27 +301,6 @@ function DriveInTrailer({ onBack, standalone = false }) {
           onMouseLeave={e => { e.target.style.transform = 'scale(1)'; e.target.style.background = 'rgba(100,150,200,0.2)' }}
         >
           SHARE LINK
-        </button>
-
-        <button
-          onClick={handleBack}
-          style={{
-            background: 'rgba(255,255,255,0.08)',
-            color: '#aaa',
-            border: '1.5px solid #555',
-            padding: 'clamp(6px, 1vw, 12px) clamp(12px, 2vw, 28px)',
-            borderRadius: '24px',
-            fontSize: 'clamp(10px, 1.4vw, 16px)',
-            fontWeight: 'bold',
-            letterSpacing: '2px',
-            cursor: 'pointer',
-            fontFamily: "'Georgia', serif",
-            transition: 'transform 0.2s, background 0.2s',
-          }}
-          onMouseEnter={e => { e.target.style.transform = 'scale(1.05)'; e.target.style.background = 'rgba(255,255,255,0.15)' }}
-          onMouseLeave={e => { e.target.style.transform = 'scale(1)'; e.target.style.background = 'rgba(255,255,255,0.08)' }}
-        >
-          EXIT
         </button>
       </div>
 
