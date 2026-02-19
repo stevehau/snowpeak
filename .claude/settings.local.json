@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(npm install:*)",
+      "Bash(npx vite build:*)",
+      "Bash(npx vite:*)",
+      "Bash(curl:*)",
+      "Bash(git init:*)",
+      "Bash(git -C /Users/stevehau/my-first-project add -A)",
+      "Bash(git -C:*)",
+      "Bash(brew install:*)",
+      "Bash(gh auth status:*)",
+      "Bash(gh repo create:*)",
+      "Bash(npm run deploy:*)",
+      "Bash(gh api:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh repo rename:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx gh-pages:*)",
+      "Bash(python3:*)",
+      "Bash(qlmanage:*)"
+    ]
+  }
+}
