@@ -168,6 +168,12 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
     description: 'A beat-up arcade cabinet wedged into the corner of the general store. The side art shows two pixelated kids in winter gear hurling snowballs at each other across a snowy field. The marquee reads "SNOWBALL SHOWDOWN" in icy blue letters. A brass token slot on the front panel reads "INSERT TOKEN." Try "play snowball game" to play!',
     takeable: false,
   },
+  shelter_arcade: {
+    id: 'shelter_arcade',
+    name: 'frost-covered arcade cabinet',
+    description: 'An old arcade cabinet sits in the corner of the summit shelter, half-buried under frost and a dusty emergency blanket. The side art, barely visible under a layer of ice crystals, shows neon-colored bricks shattering as a glowing ball ricochets between walls. The marquee reads "WHITE OUT" in electric cyan letters. A brass token slot on the front panel is nearly frozen shut. Try "play white out" to play!',
+    takeable: false,
+  },
 
   // ===== EXPERT MODE ITEMS =====
   staff_uniform: {

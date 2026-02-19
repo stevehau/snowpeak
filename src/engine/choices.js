@@ -114,6 +114,11 @@ export function generateChoices(state) {
     choices.push({ label: 'Play the snowball arcade game', command: 'play snowball game' })
   }
 
+  // 5e. Play the shelter white out game (room item, not inventory)
+  if (state.currentRoomId === 'summit_shelter' && room.items.includes('shelter_arcade') && choices.length < MAX_CHOICES) {
+    choices.push({ label: 'Play the white out arcade game', command: 'play white out' })
+  }
+
   // 6. Read items in inventory or room (victory item prioritized)
   const readableItem = findReadableItem(state)
   if (readableItem && choices.length < MAX_CHOICES) {

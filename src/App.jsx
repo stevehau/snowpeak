@@ -9,6 +9,7 @@ import DefendGame from './defend/DefendGame'
 import SnowballGame from './snowball/SnowballGame'
 import { syncSlalomScoresFromCloud } from './slalom/slalomScores'
 import DriveInTrailer from './components/DriveInTrailer'
+import WhiteOutGame from './whiteout/WhiteOutGame'
 
 function Game({ playerInfo, onRestart }) {
   const { gameState, processCommand, dispatch } = useGame(playerInfo.name, playerInfo.mode)
@@ -39,6 +40,10 @@ function Game({ playerInfo, onRestart }) {
 
   const handleSnowballGameOver = useCallback((result) => {
     dispatch({ type: 'SNOWBALL_RESULT', payload: result })
+  }, [dispatch])
+
+  const handleWhiteoutGameOver = useCallback((result) => {
+    dispatch({ type: 'WHITEOUT_RESULT', payload: result })
   }, [dispatch])
 
   // Check for restart flag
@@ -82,6 +87,16 @@ function Game({ playerInfo, onRestart }) {
     )
   }
 
+  // Show brick out game when launched from summit shelter arcade
+  if (gameState.launchWhiteout) {
+    return (
+      <WhiteOutGame
+        standalone={false}
+        onGameOver={handleWhiteoutGameOver}
+      />
+    )
+  }
+
   return (
     <div className="terminal">
       <Terminal
@@ -118,6 +133,11 @@ function App() {
   // Standalone snowball mode via #snowball hash
   if (hash === '#snowball') {
     return <SnowballGame standalone={true} />
+  }
+
+  // Standalone brick out via #whiteout hash
+  if (hash === '#whiteout') {
+    return <WhiteOutGame standalone={true} />
   }
 
   // Standalone trailer via #trailer hash (shareable link)

@@ -700,11 +700,11 @@ export const roomsExpert = {
     |  |_______________|             |
     |   firewood, blankets, rations  |
     |________________________________|`,
-    description: 'A small stone shelter built at the summit for emergencies. The walls provide blessed protection from the wind. Inside, emergency supplies are neatly organized: firewood, blankets, rations, first aid. A logbook records summit visitors dating back to the 1950s. The last entry is from February 1976, written in an elegant hand: "The secret lies beneath the still water. The mountain holds its treasures close. - T.S."',
+    description: 'A small stone shelter built at the summit for emergencies. The walls provide blessed protection from the wind. Inside, emergency supplies are neatly organized: firewood, blankets, rations, first aid. In the corner, half-buried under frost and an emergency blanket, sits an old arcade cabinet — someone must have hauled it up here decades ago. A logbook records summit visitors dating back to the 1950s. The last entry is from February 1976, written in an elegant hand: "The secret lies beneath the still water. The mountain holds its treasures close. - T.S."',
     exits: { west: 'mountain_peak' },
     hiddenExits: {},
     lockedExits: {},
-    items: ['emergency_kit', 'summit_logbook', 'staff_key'],
+    items: ['emergency_kit', 'summit_logbook', 'staff_key', 'shelter_arcade'],
     npcs: [],
   },
 }

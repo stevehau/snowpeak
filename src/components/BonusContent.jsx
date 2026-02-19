@@ -3,9 +3,10 @@ import SlalomGame from '../slalom/SlalomGame'
 import DefendGame from '../defend/DefendGame'
 import SnowballGame from '../snowball/SnowballGame'
 import DriveInTrailer from './DriveInTrailer'
+import WhiteOutGame from '../whiteout/WhiteOutGame'
 
 function BonusContent({ onBack }) {
-  const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'defend' | 'snowball' | 'notes' | 'trailer'
+  const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'defend' | 'snowball' | 'whiteout' | 'notes' | 'trailer'
 
   const handleSlalomGameOver = useCallback(() => {
     setPhase('menu')
@@ -19,6 +20,10 @@ function BonusContent({ onBack }) {
     setPhase('menu')
   }, [])
 
+  const handleWhiteoutGameOver = useCallback(() => {
+    setPhase('menu')
+  }, [])
+
   // Handle keyboard shortcuts for menu navigation
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -28,9 +33,10 @@ function BonusContent({ onBack }) {
         if (key === '1') setPhase('slalom')
         else if (key === '2') setPhase('defend')
         else if (key === '3') setPhase('snowball')
-        else if (key === '4') setPhase('trailer')
-        else if (key === '5') setPhase('notes')
-        else if (key === '6') onBack()
+        else if (key === '4') setPhase('whiteout')
+        else if (key === '5') setPhase('trailer')
+        else if (key === '6') setPhase('notes')
+        else if (key === '7') onBack()
       } else if (phase === 'notes') {
         // Any key or Escape to go back from notes
         if (key === 'Escape' || key === 'b' || key === 'B') {
@@ -70,6 +76,15 @@ function BonusContent({ onBack }) {
     )
   }
 
+  if (phase === 'whiteout') {
+    return (
+      <WhiteOutGame
+        standalone={false}
+        onGameOver={handleWhiteoutGameOver}
+      />
+    )
+  }
+
   if (phase === 'trailer') {
     return <DriveInTrailer onBack={() => setPhase('menu')} />
   }
@@ -101,6 +116,17 @@ function BonusContent({ onBack }) {
           <div className="welcome-title">RELEASE NOTES</div>
           <div className="output-line output-normal">&nbsp;</div>
           <div className="output-line output-system">{'='.repeat(40)}</div>
+          <div className="output-line output-normal">&nbsp;</div>
+
+          <div className="output-line output-title">v1.9 -- White Out</div>
+          <div className="output-line output-normal">  - New arcade mini-game: White Out!</div>
+          <div className="output-line output-normal">  - Classic brick-breaking action with 5 levels</div>
+          <div className="output-line output-normal">  - Powerups: wide paddle, multiball, slow motion</div>
+          <div className="output-line output-normal">  - Hidden arcade cabinet in the Summit Shelter (expert mode)</div>
+          <div className="output-line output-normal">  - Requires bag of tokens to play</div>
+          <div className="output-line output-normal">  - Combo scoring system for consecutive hits</div>
+          <div className="output-line output-normal">  - Touch/click and keyboard controls</div>
+          <div className="output-line output-normal">  - Available in Bonus Content menu and in-game</div>
           <div className="output-line output-normal">&nbsp;</div>
 
           <div className="output-line output-title">v1.8 -- Snowball Showdown</div>
@@ -232,23 +258,30 @@ function BonusContent({ onBack }) {
         </button>
         <button
           className="mode-button"
+          onClick={() => setPhase('whiteout')}
+        >
+          [4] PLAY WHITE OUT
+          <span className="mode-desc">Classic brick-breaking arcade action!</span>
+        </button>
+        <button
+          className="mode-button"
           onClick={() => setPhase('trailer')}
         >
-          [4] WATCH TRAILER
+          [5] WATCH TRAILER
           <span className="mode-desc">Drive-in movie theater experience</span>
         </button>
         <button
           className="mode-button"
           onClick={() => setPhase('notes')}
         >
-          [5] RELEASE NOTES
+          [6] RELEASE NOTES
           <span className="mode-desc">View version history and changelog</span>
         </button>
         <button
           className="mode-button"
           onClick={onBack}
         >
-          [6] BACK
+          [7] BACK
           <span className="mode-desc">Return to the start screen</span>
         </button>
       </div>

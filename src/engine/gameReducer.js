@@ -212,6 +212,32 @@ export function gameReducer(state, action) {
       }
       break
     }
+    case 'WHITEOUT_RESULT': {
+      const { score, level, won } = action.payload
+
+      const lines = [
+        { text: '', type: 'normal' },
+        { text: 'The pixel bricks fade to black and you step back from the humming cabinet, eyes still adjusting to the dim shelter light.', type: 'normal' },
+      ]
+
+      if (won) {
+        lines.push({ text: `White Out Champion! All ${level} levels cleared with a score of ${score}!`, type: 'victory' })
+        lines.push({ text: 'The old cabinet erupts in a triumphant 8-bit fanfare. "WHITE OUT CHAMPION" blazes across the screen in neon letters.', type: 'normal' })
+      } else {
+        lines.push({ text: `Game Over... You reached level ${level} with a score of ${score}.`, type: 'system' })
+        lines.push({ text: 'The cabinet plays a melancholy dirge. "INSERT TOKEN TO CONTINUE" scrolls across the dim screen.', type: 'normal' })
+      }
+
+      newState = {
+        ...state,
+        launchWhiteout: false,
+        output: [...state.output, ...lines],
+        puzzles: won
+          ? { ...state.puzzles, whiteout_champion: true }
+          : state.puzzles,
+      }
+      break
+    }
     case 'ADD_OUTPUT':
       return {
         ...state,

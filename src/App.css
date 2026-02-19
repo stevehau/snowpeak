@@ -631,3 +631,191 @@ body {
     font-size: 16px;
   }
 }
+
+/* ══════════════════════════════════════════════
+   WHITE OUT — Responsive / Mobile overrides
+   ══════════════════════════════════════════════ */
+
+/* Keep canvas aspect ratio on all screens */
+.wo-screen-bezel {
+  aspect-ratio: 480 / 640;
+}
+
+/* Icy winter marquee override */
+.wo-marquee {
+  color: #AADDFF !important;
+  text-shadow: 0 0 8px rgba(120,180,255,0.6) !important;
+}
+
+/* ── Mobile: touch-first layout ── */
+@media (pointer: coarse) {
+  .wo-game-container {
+    height: calc(var(--wo-vh, 1vh) * 100);
+    overflow: hidden;
+    /* Prevent overscroll */
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+  }
+
+  .wo-game-container .arcade-cabinet {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
+  .wo-marquee {
+    font-size: 14px !important;
+    padding: 6px 0 !important;
+    background: #0B1628 !important;
+    border-bottom: 1px solid rgba(120,180,255,0.4) !important;
+    border-left: none !important;
+    border-right: none !important;
+    width: 100% !important;
+  }
+
+  /* Canvas screen fills available space, preserving aspect ratio */
+  .wo-screen-bezel {
+    flex: 1;
+    width: 100% !important;
+    height: auto !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0B1628 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden;
+    /* Keep canvas from stretching outside aspect ratio */
+    aspect-ratio: auto;
+    min-height: 0;
+  }
+
+  .wo-screen-bezel .slalom-canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* Mobile control bar — icy theme */
+  .wo-controls-mobile {
+    width: 100% !important;
+    border: none !important;
+    border-top: 1px solid rgba(120,180,255,0.35) !important;
+    background: #0C1830 !important;
+    padding: 0 !important;
+    flex-shrink: 0;
+  }
+
+  .wo-controls-inner-mobile {
+    display: flex !important;
+    gap: 0 !important;
+    width: 100%;
+  }
+
+  .wo-mobile-btn {
+    flex: 1 !important;
+    padding: 18px 0 !important;
+    font-size: 24px !important;
+    border-radius: 0 !important;
+    border: none !important;
+    border-right: 1px solid rgba(120,180,255,0.2) !important;
+    box-shadow: none !important;
+    background: #0C1830 !important;
+    color: #AADDFF !important;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .wo-mobile-btn:last-child {
+    border-right: none !important;
+  }
+
+  .wo-mobile-btn:active {
+    background: rgba(120,180,255,0.15) !important;
+  }
+
+  .wo-mobile-btn.arcade-touch-start {
+    font-size: 16px !important;
+    letter-spacing: 2px;
+    color: #88FFAA !important;
+  }
+
+  .wo-mobile-btn.arcade-touch-throw {
+    font-size: 16px !important;
+    letter-spacing: 1px;
+    background: #0C1830 !important;
+    color: #88BBFF !important;
+    border-color: rgba(120,180,255,0.2) !important;
+  }
+
+  .wo-mobile-btn.arcade-touch-throw:active {
+    background: rgba(68,136,255,0.2) !important;
+  }
+}
+
+/* ── Landscape on mobile ── */
+@media (pointer: coarse) and (orientation: landscape) {
+  .wo-screen-bezel {
+    aspect-ratio: 480 / 640;
+    width: auto !important;
+    height: 100% !important;
+    max-width: 56vh;
+  }
+
+  .wo-game-container .arcade-cabinet {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .wo-marquee {
+    display: none !important;
+  }
+
+  .wo-controls-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100% !important;
+    z-index: 10;
+  }
+
+  .wo-mobile-btn {
+    padding: 12px 0 !important;
+    font-size: 20px !important;
+  }
+}
+
+/* ── Small phones (iPhone SE etc) ── */
+@media (pointer: coarse) and (max-height: 600px) and (orientation: portrait) {
+  .wo-marquee {
+    padding: 3px 0 !important;
+    font-size: 11px !important;
+  }
+
+  .wo-mobile-btn {
+    padding: 14px 0 !important;
+    font-size: 20px !important;
+  }
+
+  .wo-mobile-btn.arcade-touch-start,
+  .wo-mobile-btn.arcade-touch-throw {
+    font-size: 14px !important;
+  }
+}
+
+/* ── Tall phones (iPhone 14 Pro Max etc) ── */
+@media (pointer: coarse) and (min-height: 800px) and (orientation: portrait) {
+  .wo-mobile-btn {
+    padding: 22px 0 !important;
+    font-size: 28px !important;
+  }
+
+  .wo-mobile-btn.arcade-touch-start,
+  .wo-mobile-btn.arcade-touch-throw {
+    font-size: 18px !important;
+  }
+}

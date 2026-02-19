@@ -685,6 +685,25 @@ export function handleUse(state, { itemId }) {
     return s
   }
 
+  // Summit shelter arcade cabinet — White Out (requires game tokens)
+  if (itemId === 'shelter_arcade') {
+    const room = state.rooms[state.currentRoomId]
+    if (!room.items.includes('shelter_arcade')) {
+      return addOutput(state, "There's no arcade cabinet here.", 'error')
+    }
+    if (!state.inventory.includes('game_tokens')) {
+      let s = addOutput(state, 'You brush the frost off the old arcade cabinet in the corner of the shelter. The token slot is frozen but readable: "INSERT TOKENS." You need game tokens to play this machine.', 'normal')
+      return s
+    }
+    let s = addOutput(state, 'You drop a brass token into the frozen slot. The cabinet sputters, the screen crackles through a burst of static, and neon colors flood the dim shelter...', 'normal')
+    s = addOutput(s, '', 'normal')
+    s = addOutput(s, '* WHITE OUT *', 'title')
+    s = addOutput(s, 'Rows of colorful bricks fill the screen. A glowing paddle waits at the bottom. Time to break some bricks!', 'normal')
+    s = addSound(s, 'arcade_start')
+    s = { ...s, launchWhiteout: true }
+    return s
+  }
+
   // Store bell is a room item in general_store (expert mode only)
   if (itemId === 'store_bell') {
     const room = state.rooms[state.currentRoomId]
