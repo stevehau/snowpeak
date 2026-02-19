@@ -1,4 +1,4 @@
-// White Out — Web Audio synthesized 8-bit sounds
+// Ice Breaker — Web Audio synthesized 8-bit sounds
 
 let audioCtx = null
 function getCtx() {
@@ -8,7 +8,7 @@ function getCtx() {
   return audioCtx
 }
 
-export function playWhiteoutSound(name) {
+export function playIcebreakerSound(name) {
   try {
     const fn = SOUNDS[name]
     if (fn) fn()

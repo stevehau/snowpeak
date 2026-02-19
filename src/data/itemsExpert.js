@@ -171,7 +171,7 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
   shelter_arcade: {
     id: 'shelter_arcade',
     name: 'frost-covered arcade cabinet',
-    description: 'An old arcade cabinet sits in the corner of the summit shelter, half-buried under frost and a dusty emergency blanket. The side art, barely visible under a layer of ice crystals, shows neon-colored bricks shattering as a glowing ball ricochets between walls. The marquee reads "WHITE OUT" in electric cyan letters. A brass token slot on the front panel is nearly frozen shut. Try "play white out" to play!',
+    description: 'An old arcade cabinet sits in the corner of the summit shelter, half-buried under frost and a dusty emergency blanket. The side art, barely visible under a layer of ice crystals, shows neon-colored bricks shattering as a glowing ball ricochets between walls. The marquee reads "ICE BREAKER" in electric cyan letters. A brass token slot on the front panel is nearly frozen shut. Try "play ice breaker" to play!',
     takeable: false,
   },
 

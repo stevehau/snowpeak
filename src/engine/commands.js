@@ -685,7 +685,7 @@ export function handleUse(state, { itemId }) {
     return s
   }
 
-  // Summit shelter arcade cabinet — White Out (requires game tokens)
+  // Summit shelter arcade cabinet — Ice Breaker (requires game tokens)
   if (itemId === 'shelter_arcade') {
     const room = state.rooms[state.currentRoomId]
     if (!room.items.includes('shelter_arcade')) {
@@ -697,10 +697,10 @@ export function handleUse(state, { itemId }) {
     }
     let s = addOutput(state, 'You drop a brass token into the frozen slot. The cabinet sputters, the screen crackles through a burst of static, and neon colors flood the dim shelter...', 'normal')
     s = addOutput(s, '', 'normal')
-    s = addOutput(s, '* WHITE OUT *', 'title')
+    s = addOutput(s, '* ICE BREAKER *', 'title')
     s = addOutput(s, 'Rows of colorful bricks fill the screen. A glowing paddle waits at the bottom. Time to break some bricks!', 'normal')
     s = addSound(s, 'arcade_start')
-    s = { ...s, launchWhiteout: true }
+    s = { ...s, launchIcebreaker: true }
     return s
   }
 

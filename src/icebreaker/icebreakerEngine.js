@@ -1,5 +1,5 @@
-// White Out — Pure game logic (no rendering, no sound)
-import { CANVAS, PADDLE, BALL, BRICKS, GAME, COLORS, POWERUPS } from './whiteoutConfig.js'
+// Ice Breaker — Pure game logic (no rendering, no sound)
+import { CANVAS, PADDLE, BALL, BRICKS, GAME, COLORS, POWERUPS } from './icebreakerConfig.js'
 
 // ─── Level layouts ───
 function createBricks(level) {
@@ -53,7 +53,7 @@ function createBall(speed) {
 }
 
 // ─── Initial state ───
-export function createWhiteoutState() {
+export function createIcebreakerState() {
   const speed = BALL.BASE_SPEED
   return {
     phase: 'ready',     // 'ready' | 'playing' | 'serving' | 'levelup' | 'gameover'

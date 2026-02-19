@@ -1,21 +1,21 @@
-// White Out — React component wrapper
+// Ice Breaker — React component wrapper
 // Canvas, game loop, keyboard + touch/mouse input, phase management
 // Mobile-responsive with touch-first controls
 
 import { useRef, useEffect, useCallback, useState } from 'react'
-import { CANVAS, PADDLE } from './whiteoutConfig.js'
-import { createWhiteoutState, tick, serveBall } from './whiteoutEngine.js'
-import { render } from './whiteoutRenderer.js'
-import { playWhiteoutSound } from './whiteoutSounds.js'
+import { CANVAS, PADDLE } from './icebreakerConfig.js'
+import { createIcebreakerState, tick, serveBall } from './icebreakerEngine.js'
+import { render } from './icebreakerRenderer.js'
+import { playIcebreakerSound } from './icebreakerSounds.js'
 
 // Detect touch device
 const isTouchDevice = () =>
   typeof window !== 'undefined' &&
   ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
-export default function WhiteOutGame({ standalone = false, onGameOver }) {
+export default function IceBreakerGame({ standalone = false, onGameOver }) {
   const canvasRef = useRef(null)
-  const stateRef = useRef(createWhiteoutState())
+  const stateRef = useRef(createIcebreakerState())
   const rafRef = useRef(null)
   const containerRef = useRef(null)
   const [isMobile, setIsMobile] = useState(isTouchDevice)
@@ -63,7 +63,7 @@ export default function WhiteOutGame({ standalone = false, onGameOver }) {
     // Play events from between frames
     if (prev.events.length > 0) {
       for (const event of prev.events) {
-        playWhiteoutSound(event)
+        playIcebreakerSound(event)
       }
     }
 
@@ -72,7 +72,7 @@ export default function WhiteOutGame({ standalone = false, onGameOver }) {
 
     // Play sounds from tick
     for (const event of next.events) {
-      playWhiteoutSound(event)
+      playIcebreakerSound(event)
     }
 
     // Render
@@ -101,7 +101,7 @@ export default function WhiteOutGame({ standalone = false, onGameOver }) {
   // Handle game end
   const endGame = useCallback((state) => {
     if (standalone) {
-      stateRef.current = { ...createWhiteoutState(), phase: 'ready' }
+      stateRef.current = { ...createIcebreakerState(), phase: 'ready' }
     } else if (onGameOver) {
       onGameOver({
         score: state.score,
@@ -281,7 +281,7 @@ export default function WhiteOutGame({ standalone = false, onGameOver }) {
     <div className="slalom-container wo-game-container" ref={containerRef}>
       <div className="arcade-cabinet">
         <div className="arcade-top" />
-        <div className="arcade-marquee wo-marquee">WHITE OUT</div>
+        <div className="arcade-marquee wo-marquee">ICE BREAKER</div>
         <div className="arcade-screen-bezel wo-screen-bezel">
           <canvas
             ref={canvasRef}

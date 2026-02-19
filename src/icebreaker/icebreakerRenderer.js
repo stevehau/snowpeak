@@ -1,5 +1,5 @@
-// White Out — Canvas 2D renderer (winter/snow theme)
-import { CANVAS, COLORS, FONTS, PADDLE, BALL, BRICKS, GAME, POWERUPS } from './whiteoutConfig.js'
+// Ice Breaker — Canvas 2D renderer (winter/snow theme)
+import { CANVAS, COLORS, FONTS, PADDLE, BALL, BRICKS, GAME, POWERUPS } from './icebreakerConfig.js'
 
 // Detect touch capability for instruction text
 const hasTouch = typeof window !== 'undefined' &&
@@ -639,8 +639,8 @@ function drawReadyOverlay(ctx, state) {
   ctx.font = FONTS.TITLE
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillText('WHITE', CANVAS.WIDTH / 2, CANVAS.HEIGHT * 0.28)
-  ctx.fillText('OUT', CANVAS.WIDTH / 2, CANVAS.HEIGHT * 0.38)
+  ctx.fillText('ICE', CANVAS.WIDTH / 2, CANVAS.HEIGHT * 0.28)
+  ctx.fillText('BREAKER', CANVAS.WIDTH / 2, CANVAS.HEIGHT * 0.38)
   ctx.shadowBlur = 0
 
   // Subtitle

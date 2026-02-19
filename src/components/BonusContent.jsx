@@ -3,10 +3,10 @@ import SlalomGame from '../slalom/SlalomGame'
 import DefendGame from '../defend/DefendGame'
 import SnowballGame from '../snowball/SnowballGame'
 import DriveInTrailer from './DriveInTrailer'
-import WhiteOutGame from '../whiteout/WhiteOutGame'
+import IceBreakerGame from '../icebreaker/IceBreakerGame'
 
 function BonusContent({ onBack }) {
-  const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'defend' | 'snowball' | 'whiteout' | 'notes' | 'trailer'
+  const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'defend' | 'snowball' | 'icebreaker' | 'notes' | 'trailer'
 
   const handleSlalomGameOver = useCallback(() => {
     setPhase('menu')
@@ -20,7 +20,7 @@ function BonusContent({ onBack }) {
     setPhase('menu')
   }, [])
 
-  const handleWhiteoutGameOver = useCallback(() => {
+  const handleIcebreakerGameOver = useCallback(() => {
     setPhase('menu')
   }, [])
 
@@ -33,7 +33,7 @@ function BonusContent({ onBack }) {
         if (key === '1') setPhase('slalom')
         else if (key === '2') setPhase('defend')
         else if (key === '3') setPhase('snowball')
-        else if (key === '4') setPhase('whiteout')
+        else if (key === '4') setPhase('icebreaker')
         else if (key === '5') setPhase('trailer')
         else if (key === '6') setPhase('notes')
         else if (key === '7') onBack()
@@ -76,11 +76,11 @@ function BonusContent({ onBack }) {
     )
   }
 
-  if (phase === 'whiteout') {
+  if (phase === 'icebreaker') {
     return (
-      <WhiteOutGame
+      <IceBreakerGame
         standalone={false}
-        onGameOver={handleWhiteoutGameOver}
+        onGameOver={handleIcebreakerGameOver}
       />
     )
   }
@@ -118,8 +118,8 @@ function BonusContent({ onBack }) {
           <div className="output-line output-system">{'='.repeat(40)}</div>
           <div className="output-line output-normal">&nbsp;</div>
 
-          <div className="output-line output-title">v1.9 -- White Out</div>
-          <div className="output-line output-normal">  - New arcade mini-game: White Out!</div>
+          <div className="output-line output-title">v1.9 -- Ice Breaker</div>
+          <div className="output-line output-normal">  - New arcade mini-game: Ice Breaker!</div>
           <div className="output-line output-normal">  - Classic brick-breaking action with 5 levels</div>
           <div className="output-line output-normal">  - Powerups: wide paddle, multiball, slow motion</div>
           <div className="output-line output-normal">  - Hidden arcade cabinet in the Summit Shelter (expert mode)</div>
@@ -258,9 +258,9 @@ function BonusContent({ onBack }) {
         </button>
         <button
           className="mode-button"
-          onClick={() => setPhase('whiteout')}
+          onClick={() => setPhase('icebreaker')}
         >
-          [4] PLAY WHITE OUT
+          [4] PLAY ICE BREAKER
           <span className="mode-desc">Classic brick-breaking arcade action!</span>
         </button>
         <button

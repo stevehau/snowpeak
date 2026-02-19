@@ -212,7 +212,7 @@ export function gameReducer(state, action) {
       }
       break
     }
-    case 'WHITEOUT_RESULT': {
+    case 'ICEBREAKER_RESULT': {
       const { score, level, won } = action.payload
 
       const lines = [
@@ -221,8 +221,8 @@ export function gameReducer(state, action) {
       ]
 
       if (won) {
-        lines.push({ text: `White Out Champion! All ${level} levels cleared with a score of ${score}!`, type: 'victory' })
-        lines.push({ text: 'The old cabinet erupts in a triumphant 8-bit fanfare. "WHITE OUT CHAMPION" blazes across the screen in neon letters.', type: 'normal' })
+        lines.push({ text: `Ice Breaker Champion! All ${level} levels cleared with a score of ${score}!`, type: 'victory' })
+        lines.push({ text: 'The old cabinet erupts in a triumphant 8-bit fanfare. "ICE BREAKER CHAMPION" blazes across the screen in neon letters.', type: 'normal' })
       } else {
         lines.push({ text: `Game Over... You reached level ${level} with a score of ${score}.`, type: 'system' })
         lines.push({ text: 'The cabinet plays a melancholy dirge. "INSERT TOKEN TO CONTINUE" scrolls across the dim screen.', type: 'normal' })
@@ -230,10 +230,10 @@ export function gameReducer(state, action) {
 
       newState = {
         ...state,
-        launchWhiteout: false,
+        launchIcebreaker: false,
         output: [...state.output, ...lines],
         puzzles: won
-          ? { ...state.puzzles, whiteout_champion: true }
+          ? { ...state.puzzles, icebreaker_champion: true }
           : state.puzzles,
       }
       break

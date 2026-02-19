@@ -1,4 +1,4 @@
-// White Out — Game constants and configuration (Winter/Snow theme)
+// Ice Breaker — Game constants and configuration (Winter/Snow theme)
 
 export const CANVAS = {
   WIDTH: 480,
