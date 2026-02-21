@@ -16,7 +16,7 @@ import { getHighScores, formatScoreBoard, clearAllScores, formatTime } from './s
 import { saveSlalomScore, resetSlalomScores } from '../slalom/slalomScores'
 
 export function gameReducer(state, action) {
-  if (state.gameOver && action.type !== 'ADD_OUTPUT') {
+  if (state.gameOver && action.type !== 'ADD_OUTPUT' && action.type !== 'SCORES') {
     return state
   }
 
@@ -234,6 +234,32 @@ export function gameReducer(state, action) {
         output: [...state.output, ...lines],
         puzzles: won
           ? { ...state.puzzles, icebreaker_champion: true }
+          : state.puzzles,
+      }
+      break
+    }
+    case 'POLYP_RESULT': {
+      const { score, polypHits, accuracy, won } = action.payload
+
+      const lines = [
+        { text: '', type: 'normal' },
+        { text: 'The endoscope retracts and the old cabinet screen fades to static. You blink under the harsh fluorescent glow of the storage room.', type: 'normal' },
+      ]
+
+      if (won) {
+        lines.push({ text: `CLEAN COLON! ${polypHits} polyps removed with ${accuracy}% accuracy — score: ${score}!`, type: 'victory' })
+        lines.push({ text: 'The ancient cabinet erupts in a fanfare of squelchy triumph. "POLYP CHAMPION — LICENSE TO SNIP" scrolls across the screen in neon pink letters.', type: 'normal' })
+      } else {
+        lines.push({ text: `LICENSE REVOKED! Only sniped ${polypHits} polyps at ${accuracy}% accuracy — score: ${score}.`, type: 'system' })
+        lines.push({ text: 'The cabinet lets out a mournful flatulence sound. "MALPRACTICE — INSERT TOKEN" blinks accusingly on screen.', type: 'normal' })
+      }
+
+      newState = {
+        ...state,
+        launchPolyp: false,
+        output: [...state.output, ...lines],
+        puzzles: won
+          ? { ...state.puzzles, polyp_champion: true }
           : state.puzzles,
       }
       break
