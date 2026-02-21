@@ -175,6 +175,13 @@ Congratulations! You have completed THE SECRET OF SNOWPEAK RESORT!`,
     takeable: false,
   },
 
+  clinic_arcade: {
+    id: 'clinic_arcade',
+    name: 'medical arcade cabinet',
+    description: 'A bizarre arcade cabinet shoved behind stacks of old crates in the storage room. The side art, barely visible under decades of grime, depicts a cartoonish endoscope navigating through what can only be described as... the human colon. The marquee reads "POLYP SNIPER" in lurid pink letters. A brass token slot on the front reads "INSERT TOKEN — STEADY HANDS REQUIRED." How this ended up in a ski resort is anyone\'s guess. Try "play polyp sniper" to play!',
+    takeable: false,
+  },
+
   // ===== EXPERT MODE ITEMS =====
   staff_uniform: {
     id: 'staff_uniform',

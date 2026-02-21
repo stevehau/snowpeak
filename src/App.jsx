@@ -10,6 +10,7 @@ import SnowballGame from './snowball/SnowballGame'
 import { syncSlalomScoresFromCloud } from './slalom/slalomScores'
 import DriveInTrailer from './components/DriveInTrailer'
 import IceBreakerGame from './icebreaker/IceBreakerGame'
+import PolypGame from './polyp/PolypGame'
 
 function Game({ playerInfo, onRestart }) {
   const { gameState, processCommand, dispatch } = useGame(playerInfo.name, playerInfo.mode)
@@ -44,6 +45,10 @@ function Game({ playerInfo, onRestart }) {
 
   const handleIcebreakerGameOver = useCallback((result) => {
     dispatch({ type: 'ICEBREAKER_RESULT', payload: result })
+  }, [dispatch])
+
+  const handlePolypGameOver = useCallback((result) => {
+    dispatch({ type: 'POLYP_RESULT', payload: result })
   }, [dispatch])
 
   // Check for restart flag
@@ -97,6 +102,16 @@ function Game({ playerInfo, onRestart }) {
     )
   }
 
+  // Show polyp sniper when launched from clinic arcade
+  if (gameState.launchPolyp) {
+    return (
+      <PolypGame
+        standalone={false}
+        onGameOver={handlePolypGameOver}
+      />
+    )
+  }
+
   return (
     <div className="terminal">
       <Terminal
@@ -138,6 +153,11 @@ function App() {
   // Standalone brick out via #icebreaker hash
   if (hash === '#icebreaker') {
     return <IceBreakerGame standalone={true} />
+  }
+
+  // Standalone polyp sniper via #polyp hash
+  if (hash === '#polyp') {
+    return <PolypGame standalone={true} />
   }
 
   // Standalone trailer via #trailer hash (shareable link)

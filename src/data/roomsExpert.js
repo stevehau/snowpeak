@@ -470,11 +470,11 @@ export const roomsExpert = {
     |  | =-=-=-=-=-=- |              |
     |  |_____________|               |
     |________________________________|`,
-    description: 'A cluttered storage room packed with even more ski equipment. Skis are stacked floor to ceiling, and poles lean in every corner. A heavy toolbox sits on a workbench, filled with wrenches, screwdrivers, and other maintenance tools. The dust is thick enough to write in.',
+    description: 'A cluttered storage room packed with even more ski equipment. Skis are stacked floor to ceiling, and poles lean in every corner. A heavy toolbox sits on a workbench, filled with wrenches, screwdrivers, and other maintenance tools. In the back corner, half-buried behind old crates, you can just make out the lurid pink glow of what appears to be... an arcade cabinet? The dust is thick enough to write in.',
     exits: { south: 'ski_rental' },
     hiddenExits: {},
     lockedExits: {},
-    items: ['screwdriver', 'rope'],
+    items: ['screwdriver', 'rope', 'clinic_arcade'],
     npcs: [],
   },
 

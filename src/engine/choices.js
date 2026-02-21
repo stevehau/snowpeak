@@ -119,6 +119,11 @@ export function generateChoices(state) {
     choices.push({ label: 'Play the ice breaker arcade game', command: 'play ice breaker' })
   }
 
+  // 5f. Play the storage room polyp sniper game (room item, not inventory)
+  if (state.currentRoomId === 'storage_room' && room.items.includes('clinic_arcade') && choices.length < MAX_CHOICES) {
+    choices.push({ label: 'Play the medical arcade game', command: 'play polyp sniper' })
+  }
+
   // 6. Read items in inventory or room (victory item prioritized)
   const readableItem = findReadableItem(state)
   if (readableItem && choices.length < MAX_CHOICES) {

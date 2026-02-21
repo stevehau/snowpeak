@@ -4,7 +4,6 @@ import DefendGame from '../defend/DefendGame'
 import SnowballGame from '../snowball/SnowballGame'
 import DriveInTrailer from './DriveInTrailer'
 import IceBreakerGame from '../icebreaker/IceBreakerGame'
-
 function BonusContent({ onBack }) {
   const [phase, setPhase] = useState('menu') // 'menu' | 'slalom' | 'defend' | 'snowball' | 'icebreaker' | 'notes' | 'trailer'
 

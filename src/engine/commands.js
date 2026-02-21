@@ -704,6 +704,25 @@ export function handleUse(state, { itemId }) {
     return s
   }
 
+  // Storage room arcade cabinet — Polyp Sniper (requires game tokens)
+  if (itemId === 'clinic_arcade') {
+    const room = state.rooms[state.currentRoomId]
+    if (!room.items.includes('clinic_arcade')) {
+      return addOutput(state, "There's no arcade cabinet here.", 'error')
+    }
+    if (!state.inventory.includes('game_tokens')) {
+      let s = addOutput(state, 'You shove aside the cobwebbed crates and find the old cabinet buried in the back. A faded sticker on the token slot reads "INSERT TOKENS — SURGICAL PRECISION REQUIRED." You need game tokens to play this machine.', 'normal')
+      return s
+    }
+    let s = addOutput(state, 'You drop a token into the grimy slot. The cabinet groans to life with a wet gurgling sound. The screen floods with fleshy pinks and ominous reds, casting an unsettling medical glow across the dusty storage room...', 'normal')
+    s = addOutput(s, '', 'normal')
+    s = addOutput(s, '* POLYP SNIPER *', 'title')
+    s = addOutput(s, 'An endoscope view fills the screen. The colon walls undulate gently. A green crosshair blinks: "BEGIN PROCEDURE." Time to snip some polyps!', 'normal')
+    s = addSound(s, 'arcade_start')
+    s = { ...s, launchPolyp: true }
+    return s
+  }
+
   // Store bell is a room item in general_store (expert mode only)
   if (itemId === 'store_bell') {
     const room = state.rooms[state.currentRoomId]
